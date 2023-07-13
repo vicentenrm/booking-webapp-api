@@ -4,5 +4,6 @@ const router = express.Router();
 
 router.post("/checkout", PaymentController.checkout);
 router.post("/status", PaymentController.getPaymentStatus);
+router.post("/statuswebhook", PaymentController.statusWebhook);
 
 export const PaymentRoute = router;

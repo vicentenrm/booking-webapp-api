@@ -7,22 +7,39 @@ import e, { Request, Response } from 'express';
 const axios = require('axios');
 var sdk:any = require("paymaya-node-sdk");
 //import * as sdk from 'paymaya-node-sdk';
-var PaymayaSDK = sdk.PaymayaSDK;
-
 
 var callback = function(err:any, response:any) {
-    if(err) {
-       console.log(err);
-       return;
-    }
-    console.log(JSON.stringify(response));
+  if(err) {
+     console.log(err);
+     return;
+  }
+  console.log(JSON.stringify(response));
 };
 
+var PaymayaSDK = sdk.PaymayaSDK;
 PaymayaSDK.initCheckout(
   config.env.MAYA_PK, // 'pk-TnpIh5X432Qw1DJLlMhzxRhBN4fvUp3SHPuHT3m5wv6',
   config.env.MAYA_SK, // 'sk-SNCvnXbvtAxU6mszPMoDl2M1d4e1ivko1E6PLGiOiqm',
   PaymayaSDK.ENVIRONMENT.SANDBOX
 );
+
+var Customization = sdk.Customization;
+var customization = new Customization();
+
+customization.logoUrl = "https://cdn.paymaya.com/production/checkout_api/customization_example/yourlogo.svg";
+customization.iconUrl = "https://cdn.paymaya.com/production/checkout_api/customization_example/youricon.ico";
+customization.appleTouchIconUrl = "https://cdn.paymaya.com/production/checkout_api/customization_example/youricon_ios.ico";
+customization.customTitle = "Checkout Page Title";
+customization.colorScheme = "#368d5c";
+
+customization.set(callback);
+
+customization.get(callback);
+
+//customization.remove(callback);
+
+var Webhook = sdk.Webhook;
+var webhook = new Webhook();
 
 var Checkout = sdk.Checkout;
 var Contact = sdk.Contact;
@@ -43,11 +60,12 @@ var item:any = new Item();
 export const PaymentController = {
 
   async checkout(req:Request, res:Response){
+
+    var ref_num = uuid.v4();
+
     /*
      *  SAMPLE REQUEST BODY 
      * 
-      
-      var ref_num = 'abc123';
       
       var addressOptions:any = {
           line1 : "9F Robinsons Cybergate 3",
@@ -92,9 +110,8 @@ export const PaymentController = {
     
     /*
      *
-     */
+     * 
      //[REORGANIZED]
-      var ref_num = uuid.v4();
     
       var buyerInfo = {
         firstName : "John",
@@ -125,7 +142,7 @@ export const PaymentController = {
       var itemInfo = {
         name: "Leather Belt",
         code: "pm_belt",
-        ddescription: "Medium-sv",
+        description: "Medium-sv",
         amount: {
       	currency: "PHP",
       	value: "69.00",
@@ -146,19 +163,42 @@ export const PaymentController = {
         }
       }
     
-    /*
+     *
      * 
      */
     
-     // Add all items here
-    var items:any = [];
-    items.push(itemInfo);
+    // Add all items here
+    //var items:any = [];
+    //items.push(itemInfo);
     
+    var data = req.body;
+    //TODO create dummy totalAmount
+    var val = 0.00;
+    var sFee = 0.00;
+    var tx = 0.00;
+    var subTot = 0.00;
+    for(let item in data.items){
+      console.log(data.items[item].totalAmount);
+      val += data.items[item].totalAmount.value;
+      sFee += data.items[item].totalAmount.details.shippingFee;
+      tx += data.items[item].totalAmount.details.tax;
+      subTot +=  data.items[item].totalAmount.details.subTotal;
+    }
+    var totalAmount = {
+      currency: "PHP",
+      value: val,
+       details: {
+        shippingFee: sFee,
+        tax: tx,
+        subTotal: subTot 
+       }
+    }
+
     var checkout = new Checkout();
-    checkout.buyer = buyerInfo; // buyer;
-    checkout.totalAmount = itemInfo.totalAmount; // itemOptions.totalAmount;
+    checkout.buyer = data.buyerInfo; //buyerInfo; // buyer;
+    checkout.totalAmount = totalAmount; // data.items[0].totalAmount; // itemInfo.totalAmount; // itemOptions.totalAmount;
     checkout.requestReferenceNumber = ref_num;
-    checkout.items = items;
+    checkout.items = data.items; // items;
     
     checkout.execute(function (error:any, response:any) {
         if (error) {
@@ -203,13 +243,27 @@ export const PaymentController = {
 
   async statusWebhook(req:Request, res:Response){
     console.log(req.body);
-    var checkoutId = req.body.id;
-    var status = req.body.status;
-    var source = req.body.fundSource.type;
-    var currency = req.body.currency;
-    var amount = req.body.amount;
-    var description = req.body.description;
-    var paydate = req.body.updatedAt;
+    //var checkoutId = req.body.id;
+    //var status = req.body.status;
+    //var source = req.body.fundSource.type;
+    //var currency = req.body.currency;
+    //var amount = req.body.amount;
+    //var description = req.body.description;
+    //var paydate = req.body.updatedAt;
+
+    webhook.name = "PAYMENT_SUCCESS";
+    webhook.callbackUrl ="https://google.com/"
+
+    webhook.register(callback);
+    //
+    webhook.retrieve(callback);
+    //
+    //webhook.name = "CHECKOUT_SUCCESS"; // it can be CHECKOUT_SUCCESS or CHECKOUT_FAILURE
+    //webhook.callbackUrl = "http://shop.someserver.com/success_update";
+    //
+    //webhook.update(callback);
+    //
+    //webhook.delete(callback);
 
     res.status(200).send({})    
   }
