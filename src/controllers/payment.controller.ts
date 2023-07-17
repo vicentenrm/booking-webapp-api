@@ -8,13 +8,26 @@ const axios = require('axios');
 var sdk:any = require("paymaya-node-sdk");
 //import * as sdk from 'paymaya-node-sdk';
 
-var callback = function(err:any, response:any) {
-  if(err) {
-     console.log(err);
-     return;
-  }
-  console.log(JSON.stringify(response));
-};
+//var callback = function(err:any, response:any) {
+//  if(err) {
+//     console.log(err);
+//     return;
+//  }
+//  console.log(JSON.stringify(response));
+//
+//};
+
+async function callback(err:any, response:any){
+  const resp = await new Promise((resolve, reject) => {
+    if(err){
+      console.log(err);
+      reject();
+    }
+    console.log(JSON.stringify(response));
+    resolve(response)
+  });
+  return resp;
+}
 
 var PaymayaSDK = sdk.PaymayaSDK;
 PaymayaSDK.initCheckout(
@@ -241,22 +254,15 @@ export const PaymentController = {
 
   },
 
-  async statusWebhook(req:Request, res:Response){
-    console.log(req.body);
-    //var checkoutId = req.body.id;
-    //var status = req.body.status;
-    //var source = req.body.fundSource.type;
-    //var currency = req.body.currency;
-    //var amount = req.body.amount;
-    //var description = req.body.description;
-    //var paydate = req.body.updatedAt;
-
-    webhook.name = "PAYMENT_SUCCESS";
-    webhook.callbackUrl ="https://google.com/"
+  async createWebhook(req:Request, res:Response){
+    var name = req.body.name;
+    webhook.name = name;
+    var callbackURL = req.body.callbackURL;
+    webhook.callbackUrl = callbackURL;
 
     webhook.register(callback);
     //
-    webhook.retrieve(callback);
+    //webhook.retrieve(callback);
     //
     //webhook.name = "CHECKOUT_SUCCESS"; // it can be CHECKOUT_SUCCESS or CHECKOUT_FAILURE
     //webhook.callbackUrl = "http://shop.someserver.com/success_update";
@@ -266,6 +272,74 @@ export const PaymentController = {
     //webhook.delete(callback);
 
     res.status(200).send({})    
-  }
+  },
 
+  async getWebhooks(req:Request, res:Response){
+    webhook.retrieve(callback);
+    res.status(200).send({});
+  },
+
+  async statusWebhook(req:Request, res:Response){
+    console.log(req.body);
+    var checkoutId = req.body.id;
+    var status = req.body.status;
+    var source = '';
+    if(req.body.fundSource){
+      source = req.body.fundSource.type? req.body.fundSource.type : '';
+    } else{
+      source = '';
+    }
+    var currency = req.body.currency;
+    var amount = req.body.amount;
+    var description = req.body.description;
+    var paydate = req.body.updatedAt;
+    
+    var webhooks:any = await webhook.retrieve(callback);
+    console.log("YYY: ", webhooks)
+    var webhook_callbacks:any = {};
+    for(let wh in webhooks){
+      webhook_callbacks[webhooks[wh].name] = {
+        callbackURL: webhooks[wh].callbackUrl,
+        createdAt: webhooks[wh].createdAt,
+        updatedAt: webhooks[wh].updatedAt
+      }
+    }
+
+    console.log("ZZZ: ", webhook_callbacks)
+
+    if(status === "PAYMENT_SUCCESS"){
+      res.status(200).send({
+        success: true,
+        status: "PAYMENT_SUCCESS",
+        source: source,
+        callbackURL: webhook_callbacks[status] ? webhook_callbacks[status].callbackURL : ''
+      });
+    } else if(status === "AUTHORIZED"){
+      res.status(200).send({
+        success: true,
+        status: "AUTHORIZED",
+        source: source,
+        callbackURL: webhook_callbacks[status] ? webhook_callbacks[status].callbackURL : ''
+      });
+    } else if(status === "PAYMENT_FAILED"){
+      res.status(200).send({
+        success: true,
+        status: "PAYMENT_FAILED",
+        source: source,
+        callbackURL: webhook_callbacks[status] ? webhook_callbacks[status].callbackURL : ''
+      });
+    } else if(status === "PAYMENT_EXPIRED"){
+      res.status(200).send({
+        success: true,
+        status: "PAYMENT_EXPIRED",
+        callbackURL: webhook_callbacks[status] ? webhook_callbacks[status].callbackURL : ''
+      });
+    } else if(status === "PAYMENT_CANCELLED"){
+      res.status(200).send({
+        success: true,
+        status: "PAYMENT_CANCELLED",
+        callbackURL: webhook_callbacks[status] ? webhook_callbacks[status].callbackURL : ''
+      });
+    }
+  }
 };
