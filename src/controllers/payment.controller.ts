@@ -193,9 +193,9 @@ export const PaymentController = {
     for(let item in data.items){
       console.log(data.items[item].totalAmount);
       val += data.items[item].totalAmount.value;
-      sFee += data.items[item].totalAmount.details.shippingFee;
-      tx += data.items[item].totalAmount.details.tax;
-      subTot +=  data.items[item].totalAmount.details.subTotal;
+      //sFee += data.items[item].totalAmount.details.shippingFee;
+      //tx += data.items[item].totalAmount.details.tax;
+      //subTot +=  data.items[item].totalAmount.details.subTotal;
     }
     var totalAmount = {
       currency: "PHP",
