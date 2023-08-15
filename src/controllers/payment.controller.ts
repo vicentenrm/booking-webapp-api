@@ -62,13 +62,13 @@ var ItemAmountDetails = sdk.ItemAmountDetails;
 var ItemAmount = sdk.ItemAmount;
 var Item = sdk.Item;
 
-var checkout = new Checkout();
-var contact = new Contact();
-var address = new Address();
-var buyer = new Buyer();
-var itemAmountDetails = new ItemAmountDetails();
-var itemAmount = new ItemAmount();
-var item:any = new Item();
+//var checkout = new Checkout();
+//var contact = new Contact();
+//var address = new Address();
+//var buyer = new Buyer();
+//var itemAmountDetails = new ItemAmountDetails();
+//var itemAmount = new ItemAmount();
+//var item:any = new Item();
 
 export const PaymentController = {
 
