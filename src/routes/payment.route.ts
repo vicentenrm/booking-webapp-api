@@ -7,5 +7,10 @@ router.post("/status", PaymentController.getPaymentStatus);
 router.post("/createwebhook", PaymentController.createWebhook);
 router.post("/getwebhooks", PaymentController.getWebhooks);
 router.post("/statuswebhook", PaymentController.statusWebhook);
+router.post("/book", PaymentController.addBooking);
+router.post("/getbook", PaymentController.getBooking);
+router.post("/getbooks", PaymentController.getBookings);
+router.post("/delbook", PaymentController.deleteBooking);
+router.post("/getbookeddates", PaymentController.getBookedDates);
 
 export const PaymentRoute = router;

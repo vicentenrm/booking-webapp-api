@@ -3,6 +3,9 @@
 import * as config from '../config/config';
 import * as uuid from 'uuid';
 import e, { Request, Response } from 'express';
+import{ DB } from '../db/db'; 
+import * as SqlString from 'sqlstring';
+import moment from 'moment';
 //import fetch from 'node-fetch';
 const axios = require('axios');
 var sdk:any = require("paymaya-node-sdk");
@@ -39,10 +42,10 @@ PaymayaSDK.initCheckout(
 var Customization = sdk.Customization;
 var customization = new Customization();
 
-customization.logoUrl = "https://cdn.paymaya.com/production/checkout_api/customization_example/yourlogo.svg";
-customization.iconUrl = "https://cdn.paymaya.com/production/checkout_api/customization_example/youricon.ico";
-customization.appleTouchIconUrl = "https://cdn.paymaya.com/production/checkout_api/customization_example/youricon_ios.ico";
-customization.customTitle = "Checkout Page Title";
+customization.logoUrl = "https://rti-lrmc.s3.ap-southeast-1.amazonaws.com/LinkedIn+banner+1.png"; //"https://cdn.paymaya.com/production/checkout_api/customization_example/yourlogo.svg";
+customization.iconUrl = "https://rti-lrmc.s3.ap-southeast-1.amazonaws.com/Retailgate+logo-circle.png"; //"https://cdn.paymaya.com/production/checkout_api/customization_example/youricon.ico";
+customization.appleTouchIconUrl = "https://rti-lrmc.s3.ap-southeast-1.amazonaws.com/Retailgate+logo-circle.png"; //"https://cdn.paymaya.com/production/checkout_api/customization_example/youricon_ios.ico";
+customization.customTitle = "Greetings.ph";
 customization.colorScheme = "#368d5c";
 
 customization.set(callback);
@@ -74,7 +77,7 @@ export const PaymentController = {
 
   async checkout(req:Request, res:Response){
 
-    var ref_num = uuid.v4();
+    //var ref_num = uuid.v4();
 
     /*
      *  SAMPLE REQUEST BODY 
@@ -184,7 +187,7 @@ export const PaymentController = {
     //var items:any = [];
     //items.push(itemInfo);
     
-    var data = req.body;
+    /*var data = req.body;
     //TODO create dummy totalAmount
     var val = 0.00;
     var sFee = 0.00;
@@ -207,10 +210,121 @@ export const PaymentController = {
        }
     }
 
+    // Check if customer email address already exists
+    var sqlCheck = SqlString.format(`SELECT * FROM customers WHERE emailAddr = ?;`, [data.buyerInfo.contact.email]);
+    var resultCheck:any = await DB.query(sqlCheck);
+
+    var sqlCus = '';
+    var sqlBooks = '';
+    var sqlBookItems = '';
+    var book_id = uuid.v4();
+    var bookitem_id = '';
+    if(resultCheck.length){
+      // Update customer details
+      sqlCus = SqlString.format(`UPDATE customers SET firstName = ?, middleName = ?, lastName = ? WHERE emailAddr = ?;`, 
+      [data.buyerInfo.firstName, data.buyerInfo.middleName, data.buyerInfo.lastName, data.buyerInfo.contact.email]);
+
+      // Insert booking
+      sqlBooks = SqlString.format(`INSERT INTO bookings(book_id, cus_id, refNo) VALUES(?, ?, ?);`, 
+      [book_id, resultCheck[0].cus_id, ref_num]);
+
+      // Insert booking items
+      for(let item in data.items){
+        bookitem_id = uuid.v4();
+        sqlBookItems += SqlString.format(`INSERT INTO booking_items(bookitem_id, book_id, productName, totalAmount) VALUES(?,?,?,?);`, 
+        [bookitem_id, book_id, data.items[item].name, data.items[item].totalAmount.value])
+      }
+
+    } else{
+      // Insert customer details
+      const cus_id = uuid.v4();
+      sqlCus = SqlString.format(`INSERT INTO customers(cus_id, firstName, middleName, lastName, emailAddr) VALUES(?, ?, ?, ?, ?);`, 
+      [cus_id, data.buyerInfo.firstName, data.buyerInfo.middleName, data.buyerInfo.lastName, data.buyerInfo.contact.email]);
+      console.log(sqlCus);
+      // Insert booking
+      sqlBooks = SqlString.format(`INSERT INTO bookings(book_id, cus_id, refNo) VALUES(?, ?, ?);`, 
+      [book_id, cus_id, ref_num]);
+
+      // Insert booking items
+      for(let item in data.items){
+        bookitem_id = uuid.v4();
+        sqlBookItems += SqlString.format(`INSERT INTO booking_items(bookitem_id, book_id, productName, totalAmount) VALUES(?,?,?,?);`, 
+        [bookitem_id, book_id, data.items[item].name, data.items[item].totalAmount.value])
+      }
+    }
+
+    var resultCus:any = await DB.query(sqlCus);
+    var resultBooks:any = await DB.query(sqlBooks);
+    var resultBookItems:any = await DB.query(sqlBookItems);*/
+
+
+
+
+
+    var refNo = req.body.refNo;
+
+    var sql = SqlString.format(`SELECT c.firstName, c.middleName, c.lastName, c.emailAddr, 
+    bi.productName, bi.totalAmount 
+    FROM booking_items bi 
+    JOIN bookings b ON b.book_id = bi.book_id
+    JOIN customers c ON b.cus_id = c.cus_id
+    WHERE b.refNo = ?;`, 
+    [refNo]);
+
+    var result:any = await DB.query(sql);
+
+    var data:any = {
+      buyerInfo: {
+        firstName: result[0].firstName,
+        middleName: result[0].middleName,
+        lastName: result[0].lastName,
+        contact: {
+          email: result[0].emailAddr
+        }
+      },
+      items: [
+        
+      ]
+    };
+
+    for(let row in result){
+      data["items"].push({
+        name: result[row].productName,
+        totalAmount: {
+          value: result[row].totalAmount
+        }
+      });
+    }
+
+    var val = 0.00;
+    var sFee = 0.00;
+    var tx = 0.00;
+    var subTot = 0.00;
+    for(let item in data.items){
+      console.log(data.items[item].totalAmount);
+      val += data.items[item].totalAmount.value;
+      //sFee += data.items[item].totalAmount.details.shippingFee;
+      //tx += data.items[item].totalAmount.details.tax;
+      //subTot +=  data.items[item].totalAmount.details.subTotal;
+    }
+    var totalAmount = {
+      currency: "PHP",
+      value: val,
+       details: {
+        shippingFee: sFee,
+        tax: tx,
+        subTotal: subTot 
+       }
+    }
+
+
+
+
+
     var checkout = new Checkout();
     checkout.buyer = data.buyerInfo; //buyerInfo; // buyer;
     checkout.totalAmount = totalAmount; // data.items[0].totalAmount; // itemInfo.totalAmount; // itemOptions.totalAmount;
-    checkout.requestReferenceNumber = ref_num;
+    checkout.requestReferenceNumber = refNo; // ref_num;
     checkout.items = data.items; // items;
     
     checkout.execute(function (error:any, response:any) {
@@ -341,5 +455,177 @@ export const PaymentController = {
         callbackURL: webhook_callbacks[status] ? webhook_callbacks[status].callbackURL : ''
       });
     }
+  },
+
+  async addBooking(req:Request, res:Response){
+    var data = req.body;
+    //TODO create dummy totalAmount
+    var val = 0.00;
+    var sFee = 0.00;
+    var tx = 0.00;
+    var subTot = 0.00;
+    for(let item in data.items){
+      console.log(data.items[item].totalAmount);
+      val += data.items[item].totalAmount.value;
+      //sFee += data.items[item].totalAmount.details.shippingFee;
+      //tx += data.items[item].totalAmount.details.tax;
+      //subTot +=  data.items[item].totalAmount.details.subTotal;
+    }
+    var totalAmount = {
+      currency: "PHP",
+      value: val,
+       details: {
+        shippingFee: sFee,
+        tax: tx,
+        subTotal: subTot 
+       }
+    }
+
+    // Check if customer email address already exists
+    var sqlCheck = SqlString.format(`SELECT * FROM customers WHERE emailAddr = ?;`, [data.buyerInfo.contact.email]);
+    var resultCheck:any = await DB.query(sqlCheck);
+
+    var sqlCus = '';
+    var sqlBooks = '';
+    var sqlBookItems = '';
+    var book_id = uuid.v4();
+    var bookitem_id = '';
+    var ref_num = uuid.v4();
+    if(resultCheck.length){
+      // Update customer details
+      sqlCus = SqlString.format(`UPDATE customers SET firstName = ?, middleName = ?, lastName = ? WHERE emailAddr = ?;`, 
+      [data.buyerInfo.firstName, data.buyerInfo.middleName, data.buyerInfo.lastName, data.buyerInfo.contact.email]);
+
+      // Insert booking
+      sqlBooks = SqlString.format(`INSERT INTO bookings(book_id, cus_id, refNo) VALUES(?, ?, ?);`, 
+      [book_id, resultCheck[0].cus_id, ref_num]);
+
+      // Insert booking items
+      for(let item in data.items){
+        bookitem_id = uuid.v4();
+        sqlBookItems += SqlString.format(`INSERT INTO booking_items(bookitem_id, book_id, productName, totalAmount, booked_date, status) VALUES(?,?,?,?,?,?);`, 
+        [bookitem_id, book_id, data.items[item].name, data.items[item].totalAmount.value, moment(data.items[item].bookedDate).format(), 'Pending Booking'])
+      }
+
+    } else{
+      // Insert customer details
+      const cus_id = uuid.v4();
+      sqlCus = SqlString.format(`INSERT INTO customers(cus_id, firstName, middleName, lastName, emailAddr) VALUES(?, ?, ?, ?, ?)`, 
+      [cus_id, data.buyerInfo.firstName, data.buyerInfo.middleName, data.buyerInfo.lastName, data.buyerInfo.contact.email]);
+
+      // Insert booking
+      sqlBooks = SqlString.format(`INSERT INTO bookings(book_id, cus_id, refNo) VALUES(?, ?, ?);`, 
+      [book_id, cus_id, ref_num]);
+
+      // Insert booking items
+      for(let item in data.items){
+        bookitem_id = uuid.v4();
+        sqlBookItems += SqlString.format(`INSERT INTO booking_items(bookitem_id, book_id, productName, totalAmount, booked_date, status) VALUES(?,?,?,?,?,?);`, 
+        [bookitem_id, book_id, data.items[item].name, data.items[item].totalAmount.value, moment(data.items[item].bookedDate).format(), 'Pending Booking']);
+      }
+    }
+
+    var resultCus:any = await DB.query(sqlCus);
+    var resultBooks:any = await DB.query(sqlBooks);
+    var resultBookItems:any = await DB.query(sqlBookItems);
+    
+    res.status(200).send({refNo: ref_num});
+  },
+
+  async getBooking(req:Request, res:Response){
+    var refNo = req.body.refNo;
+
+    var sql = SqlString.format(`SELECT c.firstName, c.middleName, c.lastName, c.emailAddr, 
+    bi.productName, bi.totalAmount 
+    FROM booking_items bi 
+    JOIN bookings b ON b.book_id = bi.book_id
+    JOIN customers c ON b.cus_id = c.cus_id
+    WHERE b.refNo = ?;`, 
+    [refNo]);
+
+    var result:any = await DB.query(sql);
+
+    var data:any = {
+      buyerInfo: {
+        firstName: result[0].firstName,
+        middleName: result[0].middleName,
+        lastName: result[0].lastName,
+        contact: {
+          email: result[0].emailAddr
+        }
+      },
+      items: [
+        
+      ]
+    };
+
+    for(let row in result){
+      data["items"].push({
+        name: result[row].productName,
+        totalAmount: {
+          value: result[row].totalAmount
+        }
+      });
+    }
+
+    res.status(200).send(data);
+  },
+
+  async getBookings(req:Request, res:Response){
+    var sql = SqlString.format(`SELECT c.firstName, c.middleName, c.lastName, c.emailAddr,
+    b.refNo, 
+    bi.productName, bi.totalAmount, bi.booked_date, bi.status 
+    FROM booking_items bi 
+    JOIN bookings b ON b.book_id = bi.book_id
+    JOIN customers c ON b.cus_id = c.cus_id
+    WHERE status != "Cancelled";`, 
+    []);
+
+    var result:any = await DB.query(sql);
+
+    res.status(200).send(result);
+  },
+
+  async deleteBooking(req:Request, res:Response){
+    const refNo = req.body.refNo;
+    var sqlDel = SqlString.format(`UPDATE booking_items SET status = 'Cancelled' 
+    WHERE book_id IN (SELECT book_id FROM bookings WHERE refNo = ?);`, 
+    [refNo]);
+
+    var resultDel:any = await DB.query(sqlDel);
+
+    var sql = SqlString.format(`SELECT c.firstName, c.middleName, c.lastName, c.emailAddr,
+    b.refNo, 
+    bi.productName, bi.totalAmount, bi.booked_date, bi.status 
+    FROM booking_items bi 
+    JOIN bookings b ON b.book_id = bi.book_id
+    JOIN customers c ON b.cus_id = c.cus_id
+    WHERE status != "Cancelled";`, 
+    []);
+
+    var result:any = await DB.query(sql);
+
+    res.status(200).send(result);
+  },
+
+  async getBookedDates(req:Request, res:Response){
+    var sql = SqlString.format(`SELECT bi.booked_date
+    FROM booking_items bi
+    JOIN bookings b ON b.book_id = bi.book_id
+    WHERE bi.status != "Cancelled";`, 
+    [])
+
+    var result:any = await DB.query(sql);
+
+    var dates:any = [];
+    if(result.length){
+      for(let row in result){
+        dates.push(moment(result[row].booked_date).format("YYYY-MM-DD"))
+      }
+    } else{
+      
+    }
+
+    res.status(200).send(dates);
   }
 };

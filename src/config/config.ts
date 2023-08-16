@@ -1,7 +1,13 @@
 import { load } from 'ts-dotenv';
 
 export const env = load({
-  PORT: Number,  
+  PORT: Number,
+  DB_HOST: String,
+  DB_USER: String,
+  DB_PASSWORD: String,
+  DATABASE: String,
+  AWS_ACCESS_KEY_ID: String,
+  AWS_SECRET_ACCESS_KEY: String,  
   MAYA_PK: String,
   MAYA_SK: String
 }); 
