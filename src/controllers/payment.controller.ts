@@ -257,13 +257,13 @@ export const PaymentController = {
     var resultBooks:any = await DB.query(sqlBooks);
     var resultBookItems:any = await DB.query(sqlBookItems);*/
 
-
-
-
-
     var refNo = req.body.refNo;
 
-    var sql = SqlString.format(`SELECT c.firstName, c.middleName, c.lastName, c.emailAddr, 
+    // TODO
+    // Check if there's an existing maya checkout ID for the refNo
+
+    var sql = SqlString.format(`SELECT c.firstName, c.middleName, c.lastName, c.emailAddr,
+    b.checkoutID, b.checkoutURL, 
     bi.productName, bi.totalAmount 
     FROM booking_items bi 
     JOIN bookings b ON b.book_id = bi.book_id
@@ -273,70 +273,85 @@ export const PaymentController = {
 
     var result:any = await DB.query(sql);
 
-    var data:any = {
-      buyerInfo: {
-        firstName: result[0].firstName,
-        middleName: result[0].middleName,
-        lastName: result[0].lastName,
-        contact: {
-          email: result[0].emailAddr
-        }
-      },
-      items: [
-        
-      ]
-    };
-
-    for(let row in result){
-      data["items"].push({
-        name: result[row].productName,
-        totalAmount: {
-          value: result[row].totalAmount
-        }
+    if(result[0].checkoutID){
+      res.status(200).send({
+        checkoutId: result[0].checkoutID,
+        redirectUrl: result[0].checkoutURL        
       });
+    } else{
+
+      var data:any = {
+        buyerInfo: {
+          firstName: result[0].firstName,
+          middleName: result[0].middleName,
+          lastName: result[0].lastName,
+          contact: {
+            email: result[0].emailAddr
+          }
+        },
+        items: [
+          
+        ]
+      };
+  
+      for(let row in result){
+        data["items"].push({
+          name: result[row].productName,
+          totalAmount: {
+            value: result[row].totalAmount
+          }
+        });
+      }
+  
+      var val = 0.00;
+      var sFee = 0.00;
+      var tx = 0.00;
+      var subTot = 0.00;
+      for(let item in data.items){
+        console.log(data.items[item].totalAmount);
+        val += data.items[item].totalAmount.value;
+        //sFee += data.items[item].totalAmount.details.shippingFee;
+        //tx += data.items[item].totalAmount.details.tax;
+        //subTot +=  data.items[item].totalAmount.details.subTotal;
+      }
+      var totalAmount = {
+        currency: "PHP",
+        value: val,
+         details: {
+          shippingFee: sFee,
+          tax: tx,
+          subTotal: subTot 
+         }
+      }
+  
+      var redirectUrl = {
+        success: "http://localhost:3000/checkout/success/?refno=" + refNo,
+        failure: "http://localhost:3000/checkout/failed",
+        cancel: "http://localhost:3000/pendingbookings",
+      }
+  
+      var checkout = new Checkout();
+      checkout.buyer = data.buyerInfo; //buyerInfo; // buyer;
+      checkout.totalAmount = totalAmount; // data.items[0].totalAmount; // itemInfo.totalAmount; // itemOptions.totalAmount;
+      checkout.requestReferenceNumber = refNo; // ref_num;
+      checkout.items = data.items; // items;
+      checkout.redirectUrl = redirectUrl;
+      
+      checkout.execute(async function (error:any, response:any) {
+          if (error) {
+            // handle error
+          } else {
+            // track response.checkoutId
+            // redirect to response.redirectUrl
+      	    console.log(response);
+            var sqlUpd = SqlString.format(`UPDATE bookings SET checkoutID = ?, checkoutURL = ? WHERE refNo = ?;`, 
+            [response.checkoutId, response.redirectUrl, refNo]);
+            var resultUpd:any = await DB.query(sqlUpd);
+            res.status(200).send(response);
+          }
+      });
+
     }
-
-    var val = 0.00;
-    var sFee = 0.00;
-    var tx = 0.00;
-    var subTot = 0.00;
-    for(let item in data.items){
-      console.log(data.items[item].totalAmount);
-      val += data.items[item].totalAmount.value;
-      //sFee += data.items[item].totalAmount.details.shippingFee;
-      //tx += data.items[item].totalAmount.details.tax;
-      //subTot +=  data.items[item].totalAmount.details.subTotal;
-    }
-    var totalAmount = {
-      currency: "PHP",
-      value: val,
-       details: {
-        shippingFee: sFee,
-        tax: tx,
-        subTotal: subTot 
-       }
-    }
-
-
-
-
-
-    var checkout = new Checkout();
-    checkout.buyer = data.buyerInfo; //buyerInfo; // buyer;
-    checkout.totalAmount = totalAmount; // data.items[0].totalAmount; // itemInfo.totalAmount; // itemOptions.totalAmount;
-    checkout.requestReferenceNumber = refNo; // ref_num;
-    checkout.items = data.items; // items;
-    
-    checkout.execute(function (error:any, response:any) {
-        if (error) {
-          // handle error
-        } else {
-          // track response.checkoutId
-          // redirect to response.redirectUrl
-    	  console.log(response);
-          res.status(200).send(response);
-        }
-    });
     
     //console.log(checkout.retrieve(callback));
   },
@@ -583,7 +598,22 @@ export const PaymentController = {
 
     var result:any = await DB.query(sql);
 
-    res.status(200).send(result);
+    var data:any = [];
+    for(let row in result){
+      data.push({
+        firstName: result[row].firstName,
+        middleName: result[row].middleName,
+        lastName: result[row].lastName,
+        emailAddr: result[row].emailAddr,
+        refNo: result[row].refNo,
+        productName: result[row].productName,
+        totalAmount: result[row].totalAmount,
+        booked_date: moment(result[row].booked_date).format("YYYY-MM-DD"),
+        status: result[row].status
+      });
+    }
+
+    res.status(200).send(data);
   },
 
   async deleteBooking(req:Request, res:Response){
@@ -627,5 +657,27 @@ export const PaymentController = {
     }
 
     res.status(200).send(dates);
-  }
+  },
+
+  async setStatusPaid(req:Request, res:Response){
+    const refNo = req.body.refNo;
+    var sqlPaid = SqlString.format(`UPDATE booking_items SET status = 'Paid' 
+    WHERE book_id IN (SELECT book_id FROM bookings WHERE refNo = ?);`, 
+    [refNo]);
+
+    var resultPaid:any = await DB.query(sqlPaid);
+
+    /*var sql = SqlString.format(`SELECT c.firstName, c.middleName, c.lastName, c.emailAddr,
+    b.refNo, 
+    bi.productName, bi.totalAmount, bi.booked_date, bi.status 
+    FROM booking_items bi 
+    JOIN bookings b ON b.book_id = bi.book_id
+    JOIN customers c ON b.cus_id = c.cus_id
+    WHERE status != "Cancelled";`, 
+    []);
+
+    var result:any = await DB.query(sql);*/
+
+    res.status(200).send({success: true});
+  },
 };

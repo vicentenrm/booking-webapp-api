@@ -12,5 +12,6 @@ router.post("/getbook", PaymentController.getBooking);
 router.post("/getbooks", PaymentController.getBookings);
 router.post("/delbook", PaymentController.deleteBooking);
 router.post("/getbookeddates", PaymentController.getBookedDates);
+router.post("/setpaid", PaymentController.setStatusPaid);
 
 export const PaymentRoute = router;
