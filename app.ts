@@ -4,6 +4,7 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import cluster from 'cluster';
 import { PaymentRoute } from './src/routes/payment.route';
+import { UserRoute } from './src/routes/user.route';
 
 const numCPUs = require('os').cpus().length;
 const app = express();
@@ -29,6 +30,7 @@ if(cluster.isMaster){
   app.use(express.text());
   app.use(express.json());
   app.use('/payment', PaymentRoute);
+  app.use('/user', UserRoute);
 
 
   app.get('/', (req, res) => {
