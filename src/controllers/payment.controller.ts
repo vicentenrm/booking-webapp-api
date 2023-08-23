@@ -6,6 +6,7 @@ import e, { Request, Response } from 'express';
 import{ DB } from '../db/db'; 
 import * as SqlString from 'sqlstring';
 import moment from 'moment';
+import { FileUtils } from '../utils/FileUtils'
 //import fetch from 'node-fetch';
 const axios = require('axios');
 var sdk:any = require("paymaya-node-sdk");
@@ -506,6 +507,7 @@ export const PaymentController = {
     var book_id = uuid.v4();
     var bookitem_id = '';
     var ref_num = uuid.v4();
+    var mat:any = '';
     if(resultCheck.length){
       // Update customer details
       sqlCus = SqlString.format(`UPDATE customers SET firstName = ?, middleName = ?, lastName = ? WHERE emailAddr = ?;`, 
@@ -518,8 +520,11 @@ export const PaymentController = {
       // Insert booking items
       for(let item in data.items){
         bookitem_id = uuid.v4();
-        sqlBookItems += SqlString.format(`INSERT INTO booking_items(bookitem_id, book_id, productName, totalAmount, booked_date, status) VALUES(?,?,?,?,?,?);`, 
-        [bookitem_id, book_id, data.items[item].name, data.items[item].totalAmount.value, moment(data.items[item].bookedDate).format(), 'Pending Booking'])
+
+        mat = await FileUtils.storeB64PDF(data.materialFile, "greetings", "mat_" + data.buyerInfo.contact.email + moment(data.items[item].bookedDate).format().split('T')[0]);
+
+        sqlBookItems += SqlString.format(`INSERT INTO booking_items(bookitem_id, book_id, productName, totalAmount, booked_date, status, materialURL) VALUES(?,?,?,?,?,?,?);`, 
+        [bookitem_id, book_id, data.items[item].name, data.items[item].totalAmount.value, moment(data.items[item].bookedDate).format(), 'Pending Booking', mat])
       }
 
     } else{
@@ -535,8 +540,11 @@ export const PaymentController = {
       // Insert booking items
       for(let item in data.items){
         bookitem_id = uuid.v4();
-        sqlBookItems += SqlString.format(`INSERT INTO booking_items(bookitem_id, book_id, productName, totalAmount, booked_date, status) VALUES(?,?,?,?,?,?);`, 
-        [bookitem_id, book_id, data.items[item].name, data.items[item].totalAmount.value, moment(data.items[item].bookedDate).format(), 'Pending Booking']);
+
+        mat = await FileUtils.storeB64PDF(data.materialFile, "greetings", "mat_" + data.buyerInfo.contact.email + moment(data.items[item].bookedDate).format().split('T')[0]);
+
+        sqlBookItems += SqlString.format(`INSERT INTO booking_items(bookitem_id, book_id, productName, totalAmount, booked_date, status, materialURL) VALUES(?,?,?,?,?,?,?);`, 
+        [bookitem_id, book_id, data.items[item].name, data.items[item].totalAmount.value, moment(data.items[item].bookedDate).format(), 'Pending Booking', mat]);
       }
     }
 
