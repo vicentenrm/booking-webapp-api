@@ -597,7 +597,7 @@ export const PaymentController = {
   async getBookings(req:Request, res:Response){
     var sql = SqlString.format(`SELECT c.firstName, c.middleName, c.lastName, c.emailAddr,
     b.refNo, 
-    bi.productName, bi.totalAmount, bi.booked_date, bi.status 
+    bi.productName, bi.totalAmount, bi.booked_date, bi.status, bi.materialURL 
     FROM booking_items bi 
     JOIN bookings b ON b.book_id = bi.book_id
     JOIN customers c ON b.cus_id = c.cus_id
@@ -617,7 +617,8 @@ export const PaymentController = {
         productName: result[row].productName,
         totalAmount: result[row].totalAmount,
         booked_date: moment(result[row].booked_date).format("YYYY-MM-DD"),
-        status: result[row].status
+        status: result[row].status,
+        materialURL: result[row].materialURL
       });
     }
 
