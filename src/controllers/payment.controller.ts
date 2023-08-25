@@ -625,6 +625,50 @@ export const PaymentController = {
     res.status(200).send(data);
   },
 
+  async getBookDetails(req:Request, res:Response){
+    var sql = SqlString.format(`SELECT c.firstName, c.middleName, c.lastName, c.emailAddr,
+    b.refNo, 
+    bi.productName, bi.totalAmount, bi.booked_date, bi.status, bi.materialURL 
+    FROM booking_items bi 
+    JOIN bookings b ON b.book_id = bi.book_id
+    JOIN customers c ON b.cus_id = c.cus_id
+    WHERE status != "Cancelled"
+    AND b.refNo = ?;`, 
+    [req.body.refNo]);
+
+    var result:any = await DB.query(sql);
+
+    /*var data:any = [];
+    for(let row in result){
+      data.push({
+        firstName: result[row].firstName,
+        middleName: result[row].middleName,
+        lastName: result[row].lastName,
+        emailAddr: result[row].emailAddr,
+        refNo: result[row].refNo,
+        productName: result[row].productName,
+        totalAmount: result[row].totalAmount,
+        booked_date: moment(result[row].booked_date).format("YYYY-MM-DD"),
+        status: result[row].status,
+        materialURL: result[row].materialURL
+      });
+    }
+
+    res.status(200).send(data);*/
+    res.status(200).send({
+      firstName: result[0].firstName,
+      middleName: result[0].middleName,
+      lastName: result[0].lastName,
+      emailAddr: result[0].emailAddr,
+      refNo: result[0].refNo,
+      productName: result[0].productName,
+      totalAmount: result[0].totalAmount,
+      booked_date: moment(result[0].booked_date).format("YYYY-MM-DD"),
+      status: result[0].status,
+      materialURL: result[0].materialURL
+    });
+  },
+
   async deleteBooking(req:Request, res:Response){
     const refNo = req.body.refNo;
     var sqlDel = SqlString.format(`UPDATE booking_items SET status = 'Cancelled' 
@@ -689,4 +733,18 @@ export const PaymentController = {
 
     res.status(200).send({success: true});
   },
+
+  async setStatus(req:Request, res:Response){
+    const refNo = req.body.refNo;
+    const status = req.body.status;
+
+    var sql = SqlString.format(`UPDATE booking_items 
+    SET status = ?
+    WHERE book_id IN (SELECT book_id FROM bookings WHERE refNo = ?);`,
+    [status, refNo]);
+
+    var result:any = await DB.query(sql);
+
+    res.status(200).send({success: true});
+  }
 };
