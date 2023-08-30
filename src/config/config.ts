@@ -10,5 +10,8 @@ export const env = load({
   AWS_SECRET_ACCESS_KEY: String,  
   MAYA_PK: String,
   MAYA_SK: String,
-  TOKEN_SECRET: String
+  TOKEN_SECRET: String,
+  MAILER_API_KEY: String,
+  EMAIL: String,
+  EMAIL_PASS: String
 }); 

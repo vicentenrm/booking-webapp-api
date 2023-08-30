@@ -7,6 +7,7 @@ import{ DB } from '../db/db';
 import * as SqlString from 'sqlstring';
 import moment from 'moment';
 import { FileUtils } from '../utils/FileUtils'
+import { EmailUtils } from '../utils/email_sender';
 //import fetch from 'node-fetch';
 const axios = require('axios');
 var sdk:any = require("paymaya-node-sdk");
@@ -328,7 +329,7 @@ export const PaymentController = {
       var redirectUrl = {
         success: "http://localhost:3000/checkout/success/?refno=" + refNo,
         failure: "http://localhost:3000/checkout/failed",
-        cancel: "http://localhost:3000/pendingbookings",
+        cancel: "http://localhost:3000/",
       }
   
       var checkout = new Checkout();
@@ -744,6 +745,218 @@ export const PaymentController = {
     [status, refNo]);
 
     var result:any = await DB.query(sql);
+
+    res.status(200).send({success: true});
+  },
+
+  async setEvalResult(req:Request, res:Response){
+    const refNo = req.body.refNo;
+    const status = req.body.status;
+
+
+    var sql = SqlString.format(`UPDATE booking_items 
+    SET status = ?
+    WHERE book_id IN (SELECT book_id FROM bookings WHERE refNo = ?);`,
+    [status, refNo]);
+
+    var result:any = await DB.query(sql);
+
+    var sqlSel = SqlString.format(`SELECT c.firstName, c.middleName, c.lastName, c.emailAddr,
+    b.checkoutID, b.checkoutURL, 
+    bi.productName, bi.totalAmount 
+    FROM booking_items bi 
+    JOIN bookings b ON b.book_id = bi.book_id
+    JOIN customers c ON b.cus_id = c.cus_id
+    WHERE b.refNo = ?;`, 
+    [refNo]);
+
+    var resultSel:any = await DB.query(sqlSel);
+
+
+    var email_body = '';
+    if(status === "Approved"){
+      //Set approval email
+      var email_addr = 'nesthy@retailgate.tech';
+      var full_name = resultSel[0].firstName + ' ' + resultSel[0].middleName + ' ' + resultSel[0].lastName;
+      var subject = 'TEST';
+      var attachments = null;
+      email_body += `
+        <body
+          style="
+            font-family: 'Montserrat', sans-serif;
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 3px 8px 12px rgba(0, 0, 0, 0.3);
+            border-radius: 20px;
+            transition: all 0.3s;
+            padding-bottom: 2px;
+            width: 60%;
+            height: auto;
+            background-color: #f2f2f2;
+          "
+        >
+          <table 
+            style="
+              background-color: #c8ffff;
+              width: 100%;
+              padding: 1rem;
+              border-top-left-radius:20px;
+              border-top-right-radius:20px;
+              table-layout: fixed;
+            "
+          >
+            <tbody>
+              <tr>
+                <td style="
+                    width=50%;
+                  "
+                >
+                  <table>
+                  
+                  
+                    <tbody>
+                      <tr>
+                        <td>
+                          <h1>GREETINGS PH</h1>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <h3>&ltinsert tagline&gt</h3>
+                        </td>
+                      </tr>
+                    </tbody>
+                  
+                  
+                  </table>
+                </td>
+      
+                <td style="
+                    width=50%;
+                    text-align:right;
+                  "
+                >
+                  <img 
+                   style="
+                     width:25%;
+                     height:25%;
+                   "
+                   src="https://rti-lrmc.s3.ap-southeast-1.amazonaws.com/Retailgate+logo-circle.png">
+                  </img>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          
+          <table
+            style="
+              background-color: #ffffff;
+              width: 100%;
+              padding: 1rem;
+            "
+          >
+            <tbody>
+              <tr>
+                <td>
+                  <h2>INVOICE</h2>
+                </td>
+              </tr>
+              <tr>
+                <table
+                  style="        
+                    width: 100%;
+                    padding-left: 1rem;
+                    padding-right: 1rem;
+                  "
+                >
+                  <thead
+                    style="
+                      background-color: hsla(0,0%,69%,.5);
+                    "
+                  >
+                    <th
+                      style="
+                        text-align: left;
+                      "
+                    >
+                    Service
+                    </th>
+                    <th
+                      style="
+                        text-align: left;
+                      "
+                    >
+                    Qty
+                    </th>
+                    <th
+                      style="
+                        text-align: left;
+                      "
+                    >
+                    Amount
+                    </th>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td  
+                        style="
+                          text-align: left;
+                          background-color: #e5e5e5;
+                        "
+                      >`
+                      + resultSel[0].productName + 
+                      `</td>
+                      <td  
+                        style="
+                          text-align: left;
+                          background-color: #e5e5e5;
+                        "
+                      >
+                      1
+                      </td>
+                      <td  
+                        style="
+                          text-align: left;
+                          background-color: #e5e5e5;
+                        "
+                      >`
+                      + resultSel[0].totalAmount +
+                      `</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </tr>
+              <tr>
+                <div 
+                  style="
+                    margin:1rem;
+                    text-align: center;
+                  "
+                >
+                  <a href="http://localhost:3000/payment-redirect?refno=` + refNo + `">
+                    <img 
+                      style="
+                        width: 50%;
+                        height: 25%;
+                      "
+                      src="https://www.clker.com/cliparts/3/X/i/6/j/i/light-blue-pay-now-button.svg.hi.png"
+                    > </img>
+                  </a>
+                </div>
+              </tr>
+            </tbody>
+          </table>  
+        </body>
+      `;
+      
+      EmailUtils.sendEmailMS(email_addr, full_name, subject, email_body, attachments);
+
+      //http://localhost:3000/eval?refno=
+    } else if(status === "Rejected"){
+      //Set rejection email body
+    }
 
     res.status(200).send({success: true});
   }
