@@ -109,6 +109,10 @@ export const Auth = {
 
                 resolve(encrypted_key)*/
                 resolve({
+                  firstName: result[0].firstName,
+                  middleName: result[0].middleName,
+                  lastName: result[0].lastName,
+                  emailAddr: result[0].emailAddr,
                   role: result[0].role,
                   token
                 })

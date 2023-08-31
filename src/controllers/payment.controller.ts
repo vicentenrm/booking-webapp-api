@@ -763,7 +763,7 @@ export const PaymentController = {
 
     var sqlSel = SqlString.format(`SELECT c.firstName, c.middleName, c.lastName, c.emailAddr,
     b.checkoutID, b.checkoutURL, 
-    bi.productName, bi.totalAmount 
+    bi.productName, bi.totalAmount, bi.booked_date 
     FROM booking_items bi 
     JOIN bookings b ON b.book_id = bi.book_id
     JOIN customers c ON b.cus_id = c.cus_id
@@ -772,14 +772,18 @@ export const PaymentController = {
 
     var resultSel:any = await DB.query(sqlSel);
 
-
+    var email_addr = '';
+    var full_name = '';
+    var subject = '';
+    var attachments = null;
     var email_body = '';
+
     if(status === "Approved"){
-      //Set approval email
-      var email_addr = 'nesthy@retailgate.tech';
-      var full_name = resultSel[0].firstName + ' ' + resultSel[0].middleName + ' ' + resultSel[0].lastName;
-      var subject = 'TEST';
-      var attachments = null;
+      //Send approval email
+      email_addr = resultSel[0].emailAddr // 'nesthy@retailgate.tech';
+      full_name = resultSel[0].firstName + ' ' + resultSel[0].middleName + ' ' + resultSel[0].lastName;
+      subject = 'GreetingsPH Payment';
+      attachments = null;
       email_body += `
         <body
           style="
@@ -852,7 +856,7 @@ export const PaymentController = {
           
           <table
             style="
-              background-color: #ffffff;
+              background-color: #f2f2f2;
               width: 100%;
               padding: 1rem;
             "
@@ -897,6 +901,13 @@ export const PaymentController = {
                     >
                     Amount
                     </th>
+                    <th
+                      style="
+                        text-align: left;
+                      "
+                    >
+                    Booked Date
+                    </th>
                   </thead>
                   <tbody>
                     <tr>
@@ -923,6 +934,14 @@ export const PaymentController = {
                         "
                       >`
                       + resultSel[0].totalAmount +
+                      `</td>
+                      <td  
+                        style="
+                          text-align: left;
+                          background-color: #e5e5e5;
+                        "
+                      >`
+                      + moment(resultSel[0].booked_date).format("YYYY-MM-DD") + 
                       `</td>
                     </tr>
                   </tbody>
@@ -955,7 +974,102 @@ export const PaymentController = {
 
       //http://localhost:3000/eval?refno=
     } else if(status === "Rejected"){
-      //Set rejection email body
+      //Send rejection email
+      email_addr = resultSel[0].emailAddr // 'nesthy@retailgate.tech';
+      full_name = resultSel[0].firstName + ' ' + resultSel[0].middleName + ' ' + resultSel[0].lastName;
+      subject = 'GreetingsPH Material Rejection';
+      attachments = null;
+      email_body += `
+      <body
+        style="
+          font-family: 'Montserrat', sans-serif;
+          margin-left: auto;
+          margin-right: auto;
+          margin-top: 2rem;
+          margin-bottom: 2rem;
+          box-shadow: 3px 8px 12px rgba(0, 0, 0, 0.3);
+          border-radius: 20px;
+          transition: all 0.3s;
+          padding-bottom: 2px;
+          width: 60%;
+          height: 300px;
+          background-color: #f2f2f2;
+        "
+      >
+        <table 
+          style="
+            background-color: #c8ffff;
+            width: 100%;
+            padding: 1rem;
+            border-top-left-radius:20px;
+            border-top-right-radius:20px;
+            table-layout: fixed;
+          "
+        >
+          <tbody>
+            <tr>
+              <td style="
+                  width=50%;
+                "
+              >
+                <table>
+                
+                
+                  <tbody>
+                    <tr>
+                      <td>
+                        <h1>GREETINGS PH</h1>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <h3>&ltinsert tagline&gt</h3>
+                      </td>
+                    </tr>
+                  </tbody>
+                
+                
+                </table>
+              </td>
+    
+              <td style="
+                  width=50%;
+                  text-align:right;
+                "
+              >
+                <img 
+                 style="
+                   width:25%;
+                   height:25%;
+                 "
+                 src="https://rti-lrmc.s3.ap-southeast-1.amazonaws.com/Retailgate+logo-circle.png">
+                </img>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        
+        <table
+          style="
+            background-color: #f2f2f2;
+            width: 100%;
+            padding: 1rem;
+          "
+        >
+          <tbody>
+            <tr>
+              <td>
+                <p>Hello ` + resultSel[0].firstName + `,</p>
+                <p style="text-indent:1rem;"> Sorry to inform you that your greeting material is rejected. To check the guidelines, go to <a href="http://localhost:3000/guide">Materials Guideline</a>. You may go to <a href="http://localhost:3000/">Greetings PH</a> anytime to book another date with an accepted material.</p>
+              </td>
+            </tr>
+    
+          </tbody>
+        </table>  
+      </body>
+      `;
+
+      EmailUtils.sendEmailMS(email_addr, full_name, subject, email_body, attachments);
     }
 
     res.status(200).send({success: true});
