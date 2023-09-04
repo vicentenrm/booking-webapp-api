@@ -275,12 +275,12 @@ export const PaymentController = {
 
     var result:any = await DB.query(sql);
 
-    if(result[0].checkoutID){
-      res.status(200).send({
-        checkoutId: result[0].checkoutID,
-        redirectUrl: result[0].checkoutURL        
-      });
-    } else{
+    //if(result[0].checkoutID){
+    //  res.status(200).send({
+    //    checkoutId: result[0].checkoutID,
+    //    redirectUrl: result[0].checkoutURL        
+    //  });
+    //} else{
 
       var data:any = {
         buyerInfo: {
@@ -353,7 +353,7 @@ export const PaymentController = {
           }
       });
 
-    }
+    //}
     
     //console.log(checkout.retrieve(callback));
   },
