@@ -524,8 +524,8 @@ export const PaymentController = {
 
         mat = await FileUtils.storeB64PDF(data.materialFile, "greetings", "mat_" + data.buyerInfo.contact.email + moment(data.items[item].bookedDate).format().split('T')[0]);
 
-        sqlBookItems += SqlString.format(`INSERT INTO booking_items(bookitem_id, book_id, productName, totalAmount, booked_date, status, materialURL) VALUES(?,?,?,?,?,?,?);`, 
-        [bookitem_id, book_id, data.items[item].name, data.items[item].totalAmount.value, moment(data.items[item].bookedDate).format(), 'Pending Booking', mat])
+        sqlBookItems += SqlString.format(`INSERT INTO booking_items(bookitem_id, book_id, productName, loc_id, totalAmount, booked_date, status, materialURL) VALUES(?,?,?,?,?,?,?,?);`, 
+        [bookitem_id, book_id, data.items[item].name, data.loc_id, data.items[item].totalAmount.value, moment(data.items[item].bookedDate).format(), 'Pending Booking', mat])
       }
 
     } else{
@@ -544,8 +544,8 @@ export const PaymentController = {
 
         mat = await FileUtils.storeB64PDF(data.materialFile, "greetings", "mat_" + data.buyerInfo.contact.email + moment(data.items[item].bookedDate).format().split('T')[0]);
 
-        sqlBookItems += SqlString.format(`INSERT INTO booking_items(bookitem_id, book_id, productName, totalAmount, booked_date, status, materialURL) VALUES(?,?,?,?,?,?,?);`, 
-        [bookitem_id, book_id, data.items[item].name, data.items[item].totalAmount.value, moment(data.items[item].bookedDate).format(), 'Pending Booking', mat]);
+        sqlBookItems += SqlString.format(`INSERT INTO booking_items(bookitem_id, book_id, productName, loc_id, totalAmount, booked_date, status, materialURL) VALUES(?,?,?,?,?,?,?,?);`, 
+        [bookitem_id, book_id, data.items[item].name, data.loc_id, data.items[item].totalAmount.value, moment(data.items[item].bookedDate).format(), 'Pending Booking', mat]);
       }
     }
 
@@ -597,10 +597,12 @@ export const PaymentController = {
 
   async getBookings(req:Request, res:Response){
     var sql = SqlString.format(`SELECT c.firstName, c.middleName, c.lastName, c.emailAddr,
-    b.refNo, 
-    bi.productName, bi.totalAmount, bi.booked_date, bi.status, bi.materialURL 
+    b.refNo, b.created_at,
+    bi.productName, bi.totalAmount, bi.booked_date, bi.status, bi.materialURL,
+    l.locName 
     FROM booking_items bi 
     JOIN bookings b ON b.book_id = bi.book_id
+    JOIN locations l on l.loc_id = bi.loc_id
     JOIN customers c ON b.cus_id = c.cus_id
     WHERE status != "Cancelled";`, 
     []);
@@ -615,11 +617,13 @@ export const PaymentController = {
         lastName: result[row].lastName,
         emailAddr: result[row].emailAddr,
         refNo: result[row].refNo,
+        booking_date: moment(result[row].created_at).format("YYYY-MM-DD hh:mm:ss"),
         productName: result[row].productName,
         totalAmount: result[row].totalAmount,
         booked_date: moment(result[row].booked_date).format("YYYY-MM-DD"),
         status: result[row].status,
-        materialURL: result[row].materialURL
+        materialURL: result[row].materialURL,
+        locName: result[row].locName
       });
     }
 
