@@ -14,7 +14,7 @@ export const UserController = {
     const response:any = await Auth.getToken(email, pass, res);
 
     if(response == null){
-        res.status(401).send({"token": response});
+        res.status(401).send({"encryptedData": response});
     } else{
         res.status(200).send(response);
     }

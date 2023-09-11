@@ -13,5 +13,7 @@ export const env = load({
   TOKEN_SECRET: String,
   MAILER_API_KEY: String,
   EMAIL: String,
-  EMAIL_PASS: String
+  EMAIL_PASS: String,
+  CRYPTO_KEY: String,
+  IV: String
 }); 

@@ -13,11 +13,11 @@ import * as crypto from 'crypto';
 //process.env.TOKEN_SECRET;
 
 const algorithm = 'aes-256-cbc'; //Using AES encryption
-//const key = config.env.CRYPTO_KEY //crypto.randomBytes(32);
-//const iv = config.env.IV // crypto.randomBytes(16);
+const key = config.env.CRYPTO_KEY //crypto.randomBytes(32);
+const iv = config.env.IV // crypto.randomBytes(16);
 
 //Encrypting text
-/*async function encrypt(text:any) {
+async function encrypt(text:any) {
   var response = new Promise(async (resolve, reject)=>{
     try{
         let cipher = crypto.createCipheriv('aes-256-cbc', key, Buffer.from(iv, 'hex'));
@@ -33,7 +33,7 @@ const algorithm = 'aes-256-cbc'; //Using AES encryption
   });
   return response;
 
-}*/
+}
 
 //Decrypting text
 /*async function decrypt(text:any) {
@@ -61,7 +61,7 @@ export const Auth = {
     getToken:(email:any, password:any, res:any)=>{
         return new Promise(async (resolve, reject)=>{
             try{ 
-                var sql =  SqlString.format(`SELECT u.firstName, u.middleName, u.lastName, u.emailAddr, u.role, p.password 
+                var sql =  SqlString.format(`SELECT u.user_id, u.firstName, u.middleName, u.lastName, u.emailAddr, u.role, p.password 
                 FROM users u 
                 JOIN password p
                 ON p.user_id = u.user_id 
@@ -92,30 +92,32 @@ export const Auth = {
                 const token = jwt.sign(data, config.env.TOKEN_SECRET, { expiresIn: '1d'});  
 
                 /*var sqlPassCount = SqlString.format(`SELECT COUNT(password) as cnt FROM password WHERE user_id = ?;`, [result[0].user_id])
-                var resultPassCount:any = await DB.query(sqlPassCount);
+                var resultPassCount:any = await DB.query(sqlPassCount);*/
 
-                console.log(token);
+                console.log(token)
                 var encrypted_key:any = await encrypt(token + "___" + result[0].role + "___" + result[0].user_id);
 
-                encrypted_key["firstname"] = result[0].first_name;
-                encrypted_key["lastname"] = result[0].last_name;
-                encrypted_key["company"] = result[0].company;
-                encrypted_key["contact_number"] = result[0].contact_number;
-                encrypted_key["image_url"] = result[0].photo;
-                encrypted_key["countpass"] = resultPassCount[0].cnt
+                encrypted_key["firstName"] = result[0].firstName;
+                encrypted_key["middleName"] = result[0].middleName;
+                encrypted_key["lastName"] = result[0].lastName;
+                encrypted_key["emailAddr"] = result[0].emailAddr;
+                //encrypted_key["company"] = result[0].company;
+                //encrypted_key["contact_number"] = result[0].contact_number;
+                //encrypted_key["image_url"] = result[0].photo;
+                //encrypted_key["countpass"] = resultPassCount[0].cnt
 
-                sqlLog = SqlString.format(`INSERT INTO login_records(user_id, success) VALUES(?,?);`, [result[0].user_id, 1])
-                resultLog = await DB.query(sqlLog);
+                //sqlLog = SqlString.format(`INSERT INTO login_records(user_id, success) VALUES(?,?);`, [result[0].user_id, 1])
+                //resultLog = await DB.query(sqlLog);
 
-                resolve(encrypted_key)*/
-                resolve({
+                resolve(encrypted_key)
+                /*resolve({
                   firstName: result[0].firstName,
                   middleName: result[0].middleName,
                   lastName: result[0].lastName,
                   emailAddr: result[0].emailAddr,
                   role: result[0].role,
                   token
-                })
+                })*/
 
             }catch(err){ 
                 reject(err);
