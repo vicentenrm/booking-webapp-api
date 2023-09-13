@@ -22,6 +22,8 @@ var sdk:any = require("paymaya-node-sdk");
 //
 //};
 
+
+// callback function for maya api integration
 async function callback(err:any, response:any){
   const resp = await new Promise((resolve, reject) => {
     if(err){
@@ -34,6 +36,7 @@ async function callback(err:any, response:any){
   return resp;
 }
 
+// Initialize Maya SDK with public key and secret key 
 var PaymayaSDK = sdk.PaymayaSDK;
 PaymayaSDK.initCheckout(
   config.env.MAYA_PK, // 'pk-TnpIh5X432Qw1DJLlMhzxRhBN4fvUp3SHPuHT3m5wv6',
@@ -41,9 +44,11 @@ PaymayaSDK.initCheckout(
   PaymayaSDK.ENVIRONMENT.SANDBOX
 );
 
+// Initialize Maya checkout page customization
 var Customization = sdk.Customization;
 var customization = new Customization();
 
+// Customize checkout page
 customization.logoUrl = "https://rti-lrmc.s3.ap-southeast-1.amazonaws.com/LinkedIn+banner+1.png"; //"https://cdn.paymaya.com/production/checkout_api/customization_example/yourlogo.svg";
 customization.iconUrl = "https://rti-lrmc.s3.ap-southeast-1.amazonaws.com/Retailgate+logo-circle.png"; //"https://cdn.paymaya.com/production/checkout_api/customization_example/youricon.ico";
 customization.appleTouchIconUrl = "https://rti-lrmc.s3.ap-southeast-1.amazonaws.com/Retailgate+logo-circle.png"; //"https://cdn.paymaya.com/production/checkout_api/customization_example/youricon_ios.ico";
@@ -56,6 +61,7 @@ customization.get(callback);
 
 //customization.remove(callback);
 
+// 
 var Webhook = sdk.Webhook;
 var webhook = new Webhook();
 
@@ -77,6 +83,7 @@ var Item = sdk.Item;
 
 export const PaymentController = {
 
+  // Request maya checkout transaction
   async checkout(req:Request, res:Response){
 
     //var ref_num = uuid.v4();
@@ -358,6 +365,7 @@ export const PaymentController = {
     //console.log(checkout.retrieve(callback));
   },
 
+  // Get payment status
   async getPaymentStatus(req:Request, res:Response){
     var checkoutId = req.body.checkoutId;
   
@@ -385,6 +393,7 @@ export const PaymentController = {
 
   },
 
+  // Creating webhook
   async createWebhook(req:Request, res:Response){
     var name = req.body.name;
     webhook.name = name;
@@ -405,11 +414,13 @@ export const PaymentController = {
     res.status(200).send({})    
   },
 
+  // Getting list of created Maya webhooks
   async getWebhooks(req:Request, res:Response){
     webhook.retrieve(callback);
     res.status(200).send({});
   },
 
+  // Get payment status
   async statusWebhook(req:Request, res:Response){
     console.log(req.body);
     var checkoutId = req.body.id;
@@ -474,6 +485,7 @@ export const PaymentController = {
     }
   },
 
+  // Add customer booking for approval
   async addBooking(req:Request, res:Response){
     var data = req.body;
     //TODO create dummy totalAmount
@@ -556,6 +568,7 @@ export const PaymentController = {
     res.status(200).send({refNo: ref_num});
   },
 
+  //
   async getBooking(req:Request, res:Response){
     var refNo = req.body.refNo;
 
@@ -595,6 +608,7 @@ export const PaymentController = {
     res.status(200).send(data);
   },
 
+  // Get list of bookings
   async getBookings(req:Request, res:Response){
     var sql = SqlString.format(`SELECT c.firstName, c.middleName, c.lastName, c.emailAddr,
     b.refNo, b.created_at,
@@ -630,6 +644,7 @@ export const PaymentController = {
     res.status(200).send(data);
   },
 
+  // Get booking details by provided reference number
   async getBookDetails(req:Request, res:Response){
     var sql = SqlString.format(`SELECT c.firstName, c.middleName, c.lastName, c.emailAddr,
     b.refNo, 
@@ -674,6 +689,7 @@ export const PaymentController = {
     });
   },
 
+  // Delete booking by reference number and send back updated list
   async deleteBooking(req:Request, res:Response){
     const refNo = req.body.refNo;
     var sqlDel = SqlString.format(`UPDATE booking_items SET status = 'Cancelled' 
@@ -696,6 +712,7 @@ export const PaymentController = {
     res.status(200).send(result);
   },
 
+  // Get booked dates
   async getBookedDates(req:Request, res:Response){
     var sql = SqlString.format(`SELECT bi.booked_date
     FROM booking_items bi
@@ -717,6 +734,7 @@ export const PaymentController = {
     res.status(200).send(dates);
   },
 
+  // Set status as "Paid"
   async setStatusPaid(req:Request, res:Response){
     const refNo = req.body.refNo;
     var sqlPaid = SqlString.format(`UPDATE booking_items SET status = 'Paid' 
@@ -739,6 +757,7 @@ export const PaymentController = {
     res.status(200).send({success: true});
   },
 
+  // Set provided status as status of provided reference number
   async setStatus(req:Request, res:Response){
     const refNo = req.body.refNo;
     const status = req.body.status;
@@ -753,6 +772,7 @@ export const PaymentController = {
     res.status(200).send({success: true});
   },
 
+  // Set provided status as status of provided reference number and send corresponding email
   async setEvalResult(req:Request, res:Response){
     const refNo = req.body.refNo;
     const status = req.body.status;
