@@ -3,18 +3,18 @@ import { PaymentController } from '../controllers/payment.controller';
 const router = express.Router();
 
 router.post("/checkout", PaymentController.checkout);
-router.post("/status", PaymentController.getPaymentStatus);
-router.post("/createwebhook", PaymentController.createWebhook);
-router.post("/getwebhooks", PaymentController.getWebhooks);
-router.post("/statuswebhook", PaymentController.statusWebhook);
-router.post("/book", PaymentController.addBooking);
-router.post("/getbook", PaymentController.getBooking);
-router.post("/getbooks", PaymentController.getBookings);
-router.post("/delbook", PaymentController.deleteBooking);
-router.post("/getbookeddates", PaymentController.getBookedDates);
+router.post("/status", PaymentController.getPaymentStatus); // Not used
+router.post("/createwebhook", PaymentController.createWebhook); // Not used
+router.post("/getwebhooks", PaymentController.getWebhooks); // Not used
+router.post("/statuswebhook", PaymentController.statusWebhook); // Not used
+router.post("/book", PaymentController.addBooking); // reimplemented call in frontend
+router.post("/getbook", PaymentController.getBooking); // used by CheckoutModal in frontend
+router.post("/getbooks", PaymentController.getBookings); // reimplemented call in frontend
+router.post("/delbook", PaymentController.deleteBooking); // Not used
+router.post("/getbookeddates", PaymentController.getBookedDates); // reimplemented call in frontend
 router.post("/setpaid", PaymentController.setStatusPaid);
-router.post("/getbookdet", PaymentController.getBookDetails);
+router.post("/getbookdet", PaymentController.getBookDetails); // reimplemented call in frontend
 router.post("/setstatus", PaymentController.setStatus);
-router.post("/eval", PaymentController.setEvalResult);
+router.post("/eval", PaymentController.setEvalResult); // reimplemented call in frontend
 
 export const PaymentRoute = router;

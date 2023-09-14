@@ -267,6 +267,7 @@ export const PaymentController = {
     var resultBookItems:any = await DB.query(sqlBookItems);*/
 
     var refNo = req.body.refNo;
+    console.log(refNo);
 
     // TODO
     // Check if there's an existing maya checkout ID for the refNo
