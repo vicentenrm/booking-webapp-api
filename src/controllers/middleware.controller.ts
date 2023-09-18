@@ -132,8 +132,18 @@ export const Auth = {
                 token,
                 config.env.TOKEN_SECRET
             ); 
-            var sql = SqlString.format(`SELECT u.user_id FROM users as u JOIN password as p ON p.user_id = u.user_id WHERE email = ? and password = ?`,[decoded.email,decoded.password])
+            //var sql = SqlString.format(`SELECT u.user_id FROM users as u JOIN password as p ON p.user_id = u.user_id WHERE email = ? and password = ?`,[decoded.email,decoded.password])
+            //var result:any = await DB.query(sql);
+            var sql =  SqlString.format(`SELECT u.user_id, u.firstName, u.middleName, u.lastName, u.emailAddr, u.role, p.password 
+            FROM users u 
+            JOIN password p
+            ON p.user_id = u.user_id 
+            WHERE u.emailAddr = ?
+            AND p.password = ?
+            AND p.isActive = 1;`,
+            [decoded.emailAddr, decoded.password])
             var result:any = await DB.query(sql); 
+            
             if(!result.length){
                 return res.status(401).send({error_message:"Unauthorized"});
             } 
