@@ -11,6 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "@aws-sdk/client-s3": "^3.397.0",
+    "api": "^6.1.1",
     "axios": "^1.4.0",
     "body-parser": "^1.20.2",
     "cluster": "^0.7.7",

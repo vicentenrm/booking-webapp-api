@@ -12,6 +12,7 @@ import { EmailUtils } from '../utils/email_sender';
 const axios = require('axios');
 var sdk:any = require("paymaya-node-sdk");
 //import * as sdk from 'paymaya-node-sdk';
+const sdk2:any = require('api')('@paymaya/v5.18#3kztl4pdq51t');
 
 //var callback = function(err:any, response:any) {
 //  if(err) {
@@ -1098,5 +1099,16 @@ export const PaymentController = {
     }
 
     res.status(200).send({success: true});
+  },
+
+  async disburseFund(req:Request, res:Response){
+    sdk2.auth('xL4njVZKZLL7Pd0Q4UOnP68Hqkpo7COG');  //('sk-8MqXdZYWV9UJB92Mc0i149CtzTWT7BYBQeiarM27iAi'); //('xL4njVZKZLL7Pd0Q4UOnP68Hqkpo7COG');
+    sdk2.submitDisbursementFile({
+      wallet: '1dca39e7-6b99-408a-8642-b9929e90b6b4',
+      name: 'Reward',
+      file: '../sample-disbursement-file.csv'
+    })
+      .then(({ data }:any) => console.log(data))
+      .catch((err:any) => console.error(err));
   }
 };
