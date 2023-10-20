@@ -612,16 +612,31 @@ export const PaymentController = {
 
   // Get list of bookings
   async getBookings(req:Request, res:Response){
-    var sql = SqlString.format(`SELECT c.firstName, c.middleName, c.lastName, c.emailAddr,
-    b.refNo, b.created_at,
-    bi.productName, bi.totalAmount, bi.booked_date, bi.status, bi.materialURL,
-    l.locName 
-    FROM booking_items bi 
-    JOIN bookings b ON b.book_id = bi.book_id
-    JOIN locations l on l.loc_id = bi.loc_id
-    JOIN customers c ON b.cus_id = c.cus_id
-    WHERE status != "Cancelled";`, 
-    []);
+    var role = req.body.role;
+    var sql = '';
+    if(role === "ADMIN"){
+      sql += SqlString.format(`SELECT c.firstName, c.middleName, c.lastName, c.emailAddr,
+      b.refNo, b.created_at,
+      bi.productName, bi.totalAmount, bi.booked_date, bi.status, bi.materialURL,
+      l.locName 
+      FROM booking_items bi 
+      JOIN bookings b ON b.book_id = bi.book_id
+      JOIN locations l on l.loc_id = bi.loc_id
+      JOIN customers c ON b.cus_id = c.cus_id
+      WHERE status != "Cancelled";`, 
+      []);
+    } else if(role === "APPROVER"){
+      sql += SqlString.format(`SELECT c.firstName, c.middleName, c.lastName, c.emailAddr,
+      b.refNo, b.created_at,
+      bi.productName, bi.totalAmount, bi.booked_date, bi.status, bi.materialURL,
+      l.locName 
+      FROM booking_items bi 
+      JOIN bookings b ON b.book_id = bi.book_id
+      JOIN locations l on l.loc_id = bi.loc_id
+      JOIN customers c ON b.cus_id = c.cus_id
+      WHERE status IN ("APPROVED", "REVIEWED", "PAID");`, 
+      []);
+    }
 
     var result:any = await DB.query(sql);
 
