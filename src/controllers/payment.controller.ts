@@ -566,6 +566,111 @@ export const PaymentController = {
     var resultCus:any = await DB.query(sqlCus);
     var resultBooks:any = await DB.query(sqlBooks);
     var resultBookItems:any = await DB.query(sqlBookItems);
+
+    var sqlAdmin = SqlString.format(`SELECT firstName, middleName, lastName, emailAddr
+    FROM users
+    WHERE role = "admin";`, 
+    []);
+
+    var resultAdmin:any = await DB.query(sqlAdmin);
+
+    // Send email to Reviewer
+    var email_addr = data.buyerInfo.contact.email; // "nesthy@retailgate.tech";
+    var full_name = data.buyerInfo.firstName + ' ' + data.buyerInfo.middleName + ' ' + data.buyerInfo.lastName;
+    var subject = 'GreetingsPH Booking Request';
+    var attachments = null;
+    var email_body = `
+    <body
+      style="
+        font-family: 'Montserrat', sans-serif;
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: 3px 8px 12px rgba(0, 0, 0, 0.3);
+        border-radius: 20px;
+        transition: all 0.3s;
+        padding-bottom: 2px;
+        width: 60%;
+        height: 300px;
+        background-color: #f2f2f2;
+      "
+    >
+      <table 
+        style="
+          background-color: #c8ffff;
+          width: 100%;
+          padding: 1rem;
+          border-top-left-radius:20px;
+          border-top-right-radius:20px;
+          table-layout: fixed;
+        "
+      >
+        <tbody>
+          <tr>
+            <td style="
+                width=50%;
+              "
+            >
+              <table>
+              
+              
+                <tbody>
+                  <tr>
+                    <td>
+                      <h1>GREETINGS PH</h1>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <h3>&ltinsert tagline&gt</h3>
+                    </td>
+                  </tr>
+                </tbody>
+              
+              
+              </table>
+            </td>
+  
+            <td style="
+                width=50%;
+                text-align:right;
+              "
+            >
+              <img 
+               style="
+                 width:25%;
+                 height:25%;
+               "
+               src="https://rti-lrmc.s3.ap-southeast-1.amazonaws.com/Retailgate+logo-circle.png">
+              </img>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      
+      <table
+        style="
+          background-color: #f2f2f2;
+          width: 100%;
+          padding: 1rem;
+        "
+      >
+        <tbody>
+          <tr>
+            <td>
+              <p>Hello Reviewer ` + resultAdmin[0].firstName + `,</p>
+              <p style="text-indent:1rem;"> A new booking request has arrived. Please go to <a href="http://localhost:3000/pendingbookings">Greetings PH Dashboard</a> to review the material.</p>
+            </td>
+          </tr>
+  
+        </tbody>
+      </table>  
+    </body>
+    `;
+
+    EmailUtils.sendEmailMS(email_addr, full_name, subject, email_body, attachments);
+
     
     res.status(200).send({refNo: ref_num});
   },
@@ -813,11 +918,116 @@ export const PaymentController = {
 
     var resultSel:any = await DB.query(sqlSel);
 
+    var sqlApprovers = SqlString.format(`SELECT firstName, middleName, lastName, emailAddr
+    FROM users
+    WHERE role = "approver";`, 
+    []);
+
+    var resultApprovers:any = await DB.query(sqlApprovers);
+
     var email_addr = '';
     var full_name = '';
     var subject = '';
     var attachments = null;
     var email_body = '';
+
+    if(status === "Reviewed"){
+      email_addr = resultApprovers[0].emailAddr; // "nesthy@retailgate.tech";
+      full_name = resultApprovers[0].firstName + ' ' + resultApprovers[0].middleName + ' ' + resultApprovers[0].lastName;
+      subject = 'GreetingsPH Booking Request';
+      attachments = null;
+      email_body += `
+      <body
+        style="
+          font-family: 'Montserrat', sans-serif;
+          margin-left: auto;
+          margin-right: auto;
+          margin-top: 2rem;
+          margin-bottom: 2rem;
+          box-shadow: 3px 8px 12px rgba(0, 0, 0, 0.3);
+          border-radius: 20px;
+          transition: all 0.3s;
+          padding-bottom: 2px;
+          width: 60%;
+          height: 300px;
+          background-color: #f2f2f2;
+        "
+      >
+        <table 
+          style="
+            background-color: #c8ffff;
+            width: 100%;
+            padding: 1rem;
+            border-top-left-radius:20px;
+            border-top-right-radius:20px;
+            table-layout: fixed;
+          "
+        >
+          <tbody>
+            <tr>
+              <td style="
+                  width=50%;
+                "
+              >
+                <table>
+                
+                
+                  <tbody>
+                    <tr>
+                      <td>
+                        <h1>GREETINGS PH</h1>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <h3>&ltinsert tagline&gt</h3>
+                      </td>
+                    </tr>
+                  </tbody>
+                
+                
+                </table>
+              </td>
+    
+              <td style="
+                  width=50%;
+                  text-align:right;
+                "
+              >
+                <img 
+                 style="
+                   width:25%;
+                   height:25%;
+                 "
+                 src="https://rti-lrmc.s3.ap-southeast-1.amazonaws.com/Retailgate+logo-circle.png">
+                </img>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        
+        <table
+          style="
+            background-color: #f2f2f2;
+            width: 100%;
+            padding: 1rem;
+          "
+        >
+          <tbody>
+            <tr>
+              <td>
+                <p>Hello Approver ` + resultApprovers[0].firstName + `,</p>
+                <p style="text-indent:1rem;"> A new booking request has been reviewed and is now subject to your approval. Please go to <a href="http://localhost:3000/pendingbookings">Greetings PH Dashboard</a> to review the material.</p>
+              </td>
+            </tr>
+    
+          </tbody>
+        </table>  
+      </body>
+      `;
+
+      EmailUtils.sendEmailMS(email_addr, full_name, subject, email_body, attachments);
+    }
 
     if(status === "Approved"){
       //Send approval email
