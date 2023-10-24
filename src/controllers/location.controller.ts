@@ -6,7 +6,7 @@ import * as SqlString from 'sqlstring';
 
 export const LocationController = {
   async getLocations(req:Request, res:Response){
-    var sql = SqlString.format(`SELECT loc_id, locName
+    var sql = SqlString.format(`SELECT loc_id, locName, videoWidth, videoHeight
     FROM locations;`, 
     []);
     
