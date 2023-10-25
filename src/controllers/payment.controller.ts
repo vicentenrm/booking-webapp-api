@@ -491,6 +491,7 @@ export const PaymentController = {
   async addBooking(req:Request, res:Response){
     var data = req.body;
     //TODO create dummy totalAmount
+    console.log(data.materialFile);
     var val = 0.00;
     var sFee = 0.00;
     var tx = 0.00;
