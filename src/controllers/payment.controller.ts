@@ -1098,6 +1098,116 @@ export const PaymentController = {
 
     var result:any = await DB.query(sql);
 
+    var sqlCus = SqlString.format(`SELECT firstName, middleName, lastName, emailAddr FROM customers WHERE cus_id IN (SELECT cus_id FROM bookings WHERE refNo = ?);`,
+    [refNo]);
+
+    var resultCus:any = await DB.query(sqlCus);
+
+    var sqlBook = SqlString.format(`SELECT bi.booked_date, l.locName FROM booking_items bi
+    JOIN locations l ON bi.loc_id = l.loc_id
+    WHERE book_id IN (SELECT book_id FROM bookings WHERE refNo = ?);`,
+    [refNo]);
+
+    var resultBook:any = await DB.query(sqlBook);
+
+    // Send email to customer -> Payment received message and booking details
+    var email_addr = resultCus[0].emailAddr; // "nesthy@retailgate.tech";
+    var full_name = resultCus[0].firstName + ' ' + resultCus[0].middleName + ' ' + resultCus[0].lastName;
+    var subject = 'GreetingsPH Booking Request';
+    var attachments = null;
+    var email_body = `
+    <body
+      style="
+        font-family: 'Montserrat', sans-serif;
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: 3px 8px 12px rgba(0, 0, 0, 0.3);
+        border-radius: 20px;
+        transition: all 0.3s;
+        padding-bottom: 2px;
+        width: 60%;
+        height: 300px;
+        background-color: #f2f2f2;
+      "
+    >
+      <table 
+        style="
+          background-color: #c8ffff;
+          width: 100%;
+          padding: 1rem;
+          border-top-left-radius:20px;
+          border-top-right-radius:20px;
+          table-layout: fixed;
+        "
+      >
+        <tbody>
+          <tr>
+            <td style="
+                width=50%;
+              "
+            >
+              <table>
+              
+              
+                <tbody>
+                  <tr>
+                    <td>
+                      <h1>GREETINGS PH</h1>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <h3>&ltinsert tagline&gt</h3>
+                    </td>
+                  </tr>
+                </tbody>
+              
+              
+              </table>
+            </td>
+  
+            <td style="
+                width=50%;
+                text-align:right;
+              "
+            >
+              <img 
+               style="
+                 width:25%;
+                 height:25%;
+               "
+               src="https://rti-lrmc.s3.ap-southeast-1.amazonaws.com/Retailgate+logo-circle.png">
+              </img>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      
+      <table
+        style="
+          background-color: #f2f2f2;
+          width: 100%;
+          padding: 1rem;
+        "
+      >
+        <tbody>
+          <tr>
+            <td>
+              <p>Hello ` + resultCus[0].firstName + `,</p>
+              <p style="text-indent:1rem;"> We received your booking payment. Thank you! Your greeting will be displayed at your selected location [` + resultBook[0].locName + `] on your selected date [`+ resultBook[0].booked_date + `]. You're always welcome to visit <a href="http://localhost:3000/booking">Greetings PH</a> and book more greetings.</p>
+            </td>
+          </tr>
+  
+        </tbody>
+      </table>  
+    </body>
+    `;
+
+    EmailUtils.sendEmailMS(email_addr, full_name, subject, email_body, attachments);
+
+
     res.status(200).send({success: true});
   },
 
