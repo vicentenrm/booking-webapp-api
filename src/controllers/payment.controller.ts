@@ -491,13 +491,13 @@ export const PaymentController = {
   async addBooking(req:Request, res:Response){
     var data = req.body;
     //TODO create dummy totalAmount
-    console.log(data.materialFile);
+    //console.log(data.materialFile);
     var val = 0.00;
     var sFee = 0.00;
     var tx = 0.00;
     var subTot = 0.00;
     for(let item in data.items){
-      console.log(data.items[item].totalAmount);
+      //console.log(data.items[item].totalAmount);
       val += data.items[item].totalAmount.value;
       //sFee += data.items[item].totalAmount.details.shippingFee;
       //tx += data.items[item].totalAmount.details.tax;
