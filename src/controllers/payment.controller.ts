@@ -537,6 +537,7 @@ export const PaymentController = {
       for(let item in data.items){
         bookitem_id = uuid.v4();
 
+        console.log("Booked date: ", moment(data.items[item].bookedDate).format("YYYY-MM-DD"));
         mat = await FileUtils.storeB64PDF(data.materialFile, "greetings", "mat_" + data.buyerInfo.contact.email + moment(data.items[item].bookedDate).format().split('T')[0]);
 
         sqlBookItems += SqlString.format(`INSERT INTO booking_items(bookitem_id, book_id, productName, loc_id, totalAmount, booked_date, status, materialURL) VALUES(?,?,?,?,?,?,?,?);`, 
