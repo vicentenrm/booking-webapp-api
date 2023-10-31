@@ -568,6 +568,103 @@ export const PaymentController = {
     var resultBooks:any = await DB.query(sqlBooks);
     var resultBookItems:any = await DB.query(sqlBookItems);
 
+    // Send confirmation email to customer
+    var cus_email_addr = data.buyerInfo.contact.email; // "nesthy@retailgate.tech";
+    var cus_full_name = data.buyerInfo.firstName + ' ' + data.buyerInfo.middleName + ' ' + data.buyerInfo.lastName;
+    var cus_subject = 'GreetingsPH Booking Request';
+    var cus_attachments = null;
+    var cus_email_body = `
+    <body
+      style="
+        font-family: 'Montserrat', sans-serif;
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: 3px 8px 12px rgba(0, 0, 0, 0.3);
+        border-radius: 20px;
+        transition: all 0.3s;
+        padding-bottom: 2px;
+        width: 60%;
+        height: 300px;
+        background-color: #f2f2f2;
+      "
+    >
+      <table 
+        style="
+          background-color: #c8ffff;
+          width: 100%;
+          padding: 1rem;
+          border-top-left-radius:20px;
+          border-top-right-radius:20px;
+          table-layout: fixed;
+        "
+      >
+        <tbody>
+          <tr>
+            <td style="
+                width=50%;
+              "
+            >
+              <table>
+              
+              
+                <tbody>
+                  <tr>
+                    <td>
+                      <h1>GREETINGS PH</h1>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <h3>&ltinsert tagline&gt</h3>
+                    </td>
+                  </tr>
+                </tbody>
+              
+              
+              </table>
+            </td>
+  
+            <td style="
+                width=50%;
+                text-align:right;
+              "
+            >
+              <img 
+               style="
+                 width:25%;
+                 height:25%;
+               "
+               src="https://rti-lrmc.s3.ap-southeast-1.amazonaws.com/Retailgate+logo-circle.png">
+              </img>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      
+      <table
+        style="
+          background-color: #f2f2f2;
+          width: 100%;
+          padding: 1rem;
+        "
+      >
+        <tbody>
+          <tr>
+            <td>
+              <p>Hello ` + data.buyerInfo.firstName + `,</p>
+              <p style="text-indent:1rem;"> We received your booking request. Please give us ample time to review your greeting material. We'll let you know right away once your booking is approved. You may visit <a href="http://localhost:3000/bookstatus">Booking Tracker</a> to check the status of your booking.</p>
+            </td>
+          </tr>
+  
+        </tbody>
+      </table>  
+    </body>
+    `;
+
+    EmailUtils.sendEmailMS(cus_email_addr, cus_full_name, cus_subject, cus_email_body, cus_attachments);
+
     var sqlAdmin = SqlString.format(`SELECT firstName, middleName, lastName, emailAddr
     FROM users
     WHERE role = "admin";`, 
