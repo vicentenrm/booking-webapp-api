@@ -819,7 +819,7 @@ export const PaymentController = {
     var role = req.body.role;
     var sql = '';
     if(role === "ADMIN"){
-      sql += SqlString.format(`SELECT c.firstName, c.middleName, c.lastName, c.emailAddr,
+      sql += SqlString.format(`SELECT c.firstName, c.middleName, c.lastName, c.contactNo, c.emailAddr,
       b.refNo, b.created_at,
       bi.productName, bi.totalAmount, bi.booked_date, bi.status, bi.materialURL,
       l.locName 
@@ -830,7 +830,7 @@ export const PaymentController = {
       WHERE status != "Cancelled";`, 
       []);
     } else if(role === "APPROVER"){
-      sql += SqlString.format(`SELECT c.firstName, c.middleName, c.lastName, c.emailAddr,
+      sql += SqlString.format(`SELECT c.firstName, c.middleName, c.lastName, c.contactNo, c.emailAddr,
       b.refNo, b.created_at,
       bi.productName, bi.totalAmount, bi.booked_date, bi.status, bi.materialURL,
       l.locName 
@@ -850,6 +850,7 @@ export const PaymentController = {
         firstName: result[row].firstName,
         middleName: result[row].middleName,
         lastName: result[row].lastName,
+        contactNo: result[row].contactNo,
         emailAddr: result[row].emailAddr,
         refNo: result[row].refNo,
         booking_date: moment(result[row].created_at).format("YYYY-MM-DD hh:mm:ss"),
@@ -867,7 +868,7 @@ export const PaymentController = {
 
   // Get booking details by provided reference number
   async getBookDetails(req:Request, res:Response){
-    var sql = SqlString.format(`SELECT c.firstName, c.middleName, c.lastName, c.emailAddr,
+    var sql = SqlString.format(`SELECT c.firstName, c.middleName, c.lastName, c.contactNo, c.emailAddr,
     b.refNo, 
     bi.productName, bi.totalAmount, bi.booked_date, bi.status, bi.materialURL 
     FROM booking_items bi 
@@ -900,6 +901,7 @@ export const PaymentController = {
       firstName: result[0].firstName,
       middleName: result[0].middleName,
       lastName: result[0].lastName,
+      contactNo: result[0].contactNo,
       emailAddr: result[0].emailAddr,
       refNo: result[0].refNo,
       productName: result[0].productName,
@@ -919,7 +921,7 @@ export const PaymentController = {
 
     var resultDel:any = await DB.query(sqlDel);
 
-    var sql = SqlString.format(`SELECT c.firstName, c.middleName, c.lastName, c.emailAddr,
+    var sql = SqlString.format(`SELECT c.firstName, c.middleName, c.lastName, c.contactNo, c.emailAddr,
     b.refNo, 
     bi.productName, bi.totalAmount, bi.booked_date, bi.status 
     FROM booking_items bi 
