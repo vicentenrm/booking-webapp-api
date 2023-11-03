@@ -547,7 +547,7 @@ export const PaymentController = {
     } else{
       // Insert customer details
       const cus_id = uuid.v4();
-      sqlCus = SqlString.format(`INSERT INTO customers(cus_id, firstName, middleName, lastName, contactNo, emailAddr) VALUES(?, ?, ?, ?, ?)`, 
+      sqlCus = SqlString.format(`INSERT INTO customers(cus_id, firstName, middleName, lastName, contactNo, emailAddr) VALUES(?, ?, ?, ?, ?, ?)`, 
       [cus_id, data.buyerInfo.firstName, data.buyerInfo.middleName, data.buyerInfo.lastName, data.buyerInfo.contact.phone, data.buyerInfo.contact.email]);
 
       // Insert booking
