@@ -526,8 +526,8 @@ export const PaymentController = {
     var mat:any = '';
     if(resultCheck.length){
       // Update customer details
-      sqlCus = SqlString.format(`UPDATE customers SET firstName = ?, middleName = ?, lastName = ? WHERE emailAddr = ?;`, 
-      [data.buyerInfo.firstName, data.buyerInfo.middleName, data.buyerInfo.lastName, data.buyerInfo.contact.email]);
+      sqlCus = SqlString.format(`UPDATE customers SET firstName = ?, middleName = ?, lastName = ?, contactNo = ? WHERE emailAddr = ?;`, 
+      [data.buyerInfo.firstName, data.buyerInfo.middleName, data.buyerInfo.lastName, data.buyerInfo.contact.phone, data.buyerInfo.contact.email]);
 
       // Insert booking
       sqlBooks = SqlString.format(`INSERT INTO bookings(book_id, cus_id, refNo) VALUES(?, ?, ?);`, 
@@ -547,8 +547,8 @@ export const PaymentController = {
     } else{
       // Insert customer details
       const cus_id = uuid.v4();
-      sqlCus = SqlString.format(`INSERT INTO customers(cus_id, firstName, middleName, lastName, emailAddr) VALUES(?, ?, ?, ?, ?)`, 
-      [cus_id, data.buyerInfo.firstName, data.buyerInfo.middleName, data.buyerInfo.lastName, data.buyerInfo.contact.email]);
+      sqlCus = SqlString.format(`INSERT INTO customers(cus_id, firstName, middleName, lastName, contactNo, emailAddr) VALUES(?, ?, ?, ?, ?)`, 
+      [cus_id, data.buyerInfo.firstName, data.buyerInfo.middleName, data.buyerInfo.lastName, data.buyerInfo.contact.phone, data.buyerInfo.contact.email]);
 
       // Insert booking
       sqlBooks = SqlString.format(`INSERT INTO bookings(book_id, cus_id, refNo) VALUES(?, ?, ?);`, 
