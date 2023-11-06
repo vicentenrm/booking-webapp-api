@@ -88,8 +88,12 @@ var Item = sdk.Item;
 export const PaymentController = {
   // test endpoint
   async test(req:Request, res:Response) {
-    var b64 = fs.readFileSync(__dirname.replace('src/controllers', '') + 'test/sample_vid_720_960_2.mp4', { encoding: 'base64' });
-    res.status(200).send(b64);
+    var fs_b64 = fs.readFileSync(__dirname.replace('src/controllers', '') + 'test/sample_vid_720_960_2.mp4', { encoding: 'base64' });
+    var b64 = await FileUtils.urlToB64('https://s3.console.aws.amazon.com/s3/object/rti-elem-attendance?region=ap-southeast-1&prefix=greetings/mat_a%40gmail.com2023-11-02');
+    res.status(200).send({
+      fs_b64,
+      b64
+    });
   },
 
   // Request maya checkout transaction
