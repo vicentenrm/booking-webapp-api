@@ -1232,6 +1232,7 @@ export const PaymentController = {
       })
     }
 
+    console.log(admin_details);
     //var ad_email_addr = resultCus[0].emailAddr; // "nesthy@retailgate.tech";
     //var ad_full_name = resultCus[0].firstName + ' ' + resultCus[0].middleName + ' ' + resultCus[0].lastName;
     var ad_subject = 'GreetingsPH [Payment Received]';
