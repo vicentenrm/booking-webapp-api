@@ -8,11 +8,14 @@ import * as SqlString from 'sqlstring';
 import moment from 'moment';
 import { FileUtils } from '../utils/FileUtils'
 import { EmailUtils } from '../utils/email_sender';
+
+import * as fs from 'fs';
 //import fetch from 'node-fetch';
 const axios = require('axios');
 var sdk:any = require("paymaya-node-sdk");
 //import * as sdk from 'paymaya-node-sdk';
 const sdk2:any = require('api')('@paymaya/v5.18#3kztl4pdq51t');
+
 
 //var callback = function(err:any, response:any) {
 //  if(err) {
@@ -83,6 +86,11 @@ var Item = sdk.Item;
 //var item:any = new Item();
 
 export const PaymentController = {
+  // test endpoint
+  async test(req:Request, res:Response) {
+    var b64 = fs.readFileSync(__dirname.replace('src/controllers', '') + 'test/sample_vid_720_960_2.mp4', { encoding: 'base64' });
+    res.status(200).send(b64);
+  },
 
   // Request maya checkout transaction
   async checkout(req:Request, res:Response){
