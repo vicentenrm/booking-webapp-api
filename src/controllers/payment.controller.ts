@@ -1242,7 +1242,7 @@ export const PaymentController = {
     var vid_attach:any = [];
     vid_attach.push({
         b64: videoFile,
-        fname: resultCus[0].lastName + "_" + resultCus[0].firstName
+        fname: resultCus[0].lastName + "_" + resultCus[0].firstName + ".mp4"
     })
     
     for(let a in resultAdmins){
