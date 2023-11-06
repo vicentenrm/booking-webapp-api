@@ -60,7 +60,11 @@ export const EmailUtils = {
           )
         }
 
+        try{
         await mailerSend.email.sendBulk(recipients);
+        } catch(err){
+          console.log(err);
+        }
         resolve(true);
       } catch(err){
         console.log(err);
