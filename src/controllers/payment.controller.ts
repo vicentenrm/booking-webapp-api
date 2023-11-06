@@ -1238,7 +1238,7 @@ export const PaymentController = {
     // Get video from URL
     var videoFile = await FileUtils.urlToB64(resultBook[0].materialURL);
 
-    console.log("Video B64 string: ", videoFile)
+    //console.log("Video B64 string: ", videoFile)
     var vid_attach:any = [];
     vid_attach.push({
         b64: videoFile,
