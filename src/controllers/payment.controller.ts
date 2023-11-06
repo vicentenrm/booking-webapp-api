@@ -538,7 +538,7 @@ export const PaymentController = {
         bookitem_id = uuid.v4();
 
         console.log("Booked date: ", moment(data.items[item].bookedDate).format("YYYY-MM-DD"));
-        mat = await FileUtils.storeB64PDF(data.materialFile, "greetings", "mat_" + data.buyerInfo.contact.email + moment(data.items[item].bookedDate).format().split('T')[0]);
+        mat = await FileUtils.storeFile(data.materialFile, "greetings", "mat_" + data.buyerInfo.contact.email + moment(data.items[item].bookedDate).format().split('T')[0]);
 
         sqlBookItems += SqlString.format(`INSERT INTO booking_items(bookitem_id, book_id, productName, loc_id, totalAmount, booked_date, status, materialURL) VALUES(?,?,?,?,?,?,?,?);`, 
         [bookitem_id, book_id, data.items[item].name, data.loc_id, data.items[item].totalAmount.value, moment(data.items[item].bookedDate).format(), 'Pending Booking', mat])
@@ -558,7 +558,7 @@ export const PaymentController = {
       for(let item in data.items){
         bookitem_id = uuid.v4();
 
-        mat = await FileUtils.storeB64PDF(data.materialFile, "greetings", "mat_" + data.buyerInfo.contact.email + moment(data.items[item].bookedDate).format().split('T')[0]);
+        mat = await FileUtils.storeFile(data.materialFile, "greetings", "mat_" + data.buyerInfo.contact.email + moment(data.items[item].bookedDate).format().split('T')[0]);
 
         sqlBookItems += SqlString.format(`INSERT INTO booking_items(bookitem_id, book_id, productName, loc_id, totalAmount, booked_date, status, materialURL) VALUES(?,?,?,?,?,?,?,?);`, 
         [bookitem_id, book_id, data.items[item].name, data.loc_id, data.items[item].totalAmount.value, moment(data.items[item].bookedDate).format(), 'Pending Booking', mat]);
@@ -1109,7 +1109,8 @@ export const PaymentController = {
     var resultCus:any = await DB.query(sqlCus);
 
     // Get booking details
-    var sqlBook = SqlString.format(`SELECT bi.booked_date, l.locName FROM booking_items bi
+    var sqlBook = SqlString.format(`SELECT bi.booked_date, bi.materialURL, l.locName 
+    FROM booking_items bi
     JOIN locations l ON bi.loc_id = l.loc_id
     WHERE book_id IN (SELECT book_id FROM bookings WHERE refNo = ?);`,
     [refNo]);
@@ -1233,6 +1234,16 @@ export const PaymentController = {
     }
 
     console.log(admin_details);*/
+
+    // Get video from URL
+    var videoFile = await FileUtils.urlToB64(resultBook[0].materialURL);
+
+    console.log("Video B64 string: ", videoFile)
+    var vid_attach:any = [];
+    vid_attach.push({
+        b64: videoFile,
+        fname: resultCus[0].lastName + "_" + resultCus[0].firstName
+    })
     
     for(let a in resultAdmins){
 
@@ -1326,7 +1337,7 @@ export const PaymentController = {
                 <li>Location: ` + resultBook[0].locName +`</li>
                 <li>Booked Date: ` + resultBook[0].booked_date + `</li>
               </ul>
-              <p>A copy of the customer's material is attached to this email for checking. You may also check the booking details and material at <a href="http://localhost:3000/booking">Greetings PH</a></p>
+              <p style="text-indent:1rem;">A copy of the customer's material is attached to this email for checking. You may also check the booking details and material at <a href="http://localhost:3000/booking">Greetings PH</a></p>
             </td>
           </tr>
   
@@ -1345,7 +1356,7 @@ export const PaymentController = {
 
     }
 
-    EmailUtils.sendBulk(admin_details);
+    EmailUtils.sendBulk(admin_details, vid_attach);
     //EmailUtils.sendEmailMS_withCC(admin_details, cc_details, ad_subject, ad_email_body, ad_attachments);
 
     res.status(200).send({success: true});

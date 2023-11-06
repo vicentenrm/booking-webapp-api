@@ -34,17 +34,27 @@ export const EmailUtils = {
     return response;
   },
 
-  async sendBulk(admin_details:any) {  
+  async sendBulk(admin_details:any, attachment:any) {  
     const response = await new Promise(async (resolve, reject) => {
       try{
 
         var recipients:any = [];
+
+        const attachments = [
+          new Attachment(
+            attachment[0].b64,
+            attachment[0].fname,
+            'attachment',
+            //'0123456789'
+          )
+        ]
+
         for(let admin in admin_details){
           recipients.push(new EmailParams()
             .setFrom(sentFrom)
             .setTo([ new Recipient(admin_details[admin].emailAddr, admin_details[admin].fullName)])
             .setReplyTo(sentFrom)
-            //.setAttachments(attachments)
+            .setAttachments(attachments)
             .setSubject(admin_details[admin].subject)
             .setHtml(admin_details[admin].emailBody)
           )

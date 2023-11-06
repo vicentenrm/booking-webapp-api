@@ -3,7 +3,7 @@ import * as uuid from 'uuid';
 // Create service client module using ES6 syntax.
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 //import imageToBase64 from 'image-to-base64';
-
+const axios = require('axios');
 import * as config from '../config/config';
 
 // Set the AWS Region.
@@ -22,8 +22,8 @@ const s3Client =new S3Client({
 export const FileUtils = {
   
   
-  // Send base64 string image to S3
-  async storeB64PDF(b64String:any, folderName:any, fileName:any){
+  // Send base64 string video to S3
+  async storeFile(b64String:any, folderName:any, fileName:any){
     const response = await new Promise(async (resolve, reject) => {
       //var buf = Buffer.from(b64String.replace(/^data:image\/\w+;base64,/, ""),'base64')
       var buf = Buffer.from(b64String.split('base64,')[1],'base64')
@@ -50,6 +50,32 @@ export const FileUtils = {
         console.log("Error", err);
       }
   
+    });
+    return response;
+  },
+
+  // Convert video from URL to base64 string
+  async urlToB64(url:any){
+    const response = await new Promise(async (resolve, reject) => {
+      
+
+      try {
+        const response = await axios.get(url, {
+          responseType: 'arraybuffer',
+        });
+    
+        const contentType = response.headers['content-type'];
+    
+        const base64String = `data:${contentType};base64,${Buffer.from(
+          response.data,
+        ).toString('base64')}`;
+    
+        resolve(base64String);
+      } catch (err) {
+        console.log(err);
+      }
+
+
     });
     return response;
   }
