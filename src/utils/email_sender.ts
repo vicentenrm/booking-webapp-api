@@ -37,7 +37,7 @@ export const EmailUtils = {
   async sendBulk(admin_details:any, attachment:any) {  
     const response = await new Promise(async (resolve, reject) => {
       try{
-
+        console.log("AAAAA");
         var recipients:any = [];
 
         const attachments = [

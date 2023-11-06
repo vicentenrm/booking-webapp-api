@@ -1356,6 +1356,7 @@ export const PaymentController = {
 
     }
 
+    console.log(admin_details);
     EmailUtils.sendBulk(admin_details, vid_attach);
     //EmailUtils.sendEmailMS_withCC(admin_details, cc_details, ad_subject, ad_email_body, ad_attachments);
 
