@@ -34,6 +34,55 @@ export const EmailUtils = {
     return response;
   },
 
+  async sendEmailMS_withCC(recipients:any, ccs:any, subject:any, emailBody:any, attachments:any) {
+    const response = await new Promise(async (resolve, reject) => {
+      try{
+
+      const processed_recipients:any = [];
+      const processed_ccs:any = [];
+
+      if(recipients.length){
+        for(let r in recipients){
+          processed_recipients.push(new Recipient(recipients[r].emailAddr, recipients[r].fullName));
+        }
+      }
+
+      if(ccs.length){
+        for(let c in ccs){
+          processed_ccs.push(new Recipient(ccs[c].emailAddr, ccs[c].fullName));
+        }
+      }
+
+      var emailParams:any;
+
+      if(ccs.length){
+        emailParams = new EmailParams()
+        .setFrom(sentFrom)
+        .setTo(processed_recipients)
+        .setCc(processed_ccs)
+        .setReplyTo(sentFrom)
+        //.setAttachments(attachments)
+        .setSubject(subject)
+        .setHtml(emailBody);
+      } else{
+        emailParams = new EmailParams()
+        .setFrom(sentFrom)
+        .setTo(processed_recipients)
+        .setReplyTo(sentFrom)
+        //.setAttachments(attachments)
+        .setSubject(subject)
+        .setHtml(emailBody);
+      }
+
+      await mailerSend.email.send(emailParams);
+      resolve(true);
+      } catch(err){
+        console.log(err);
+      } 
+    });
+    return response;
+  },
+
   async sendEmail(emailAdd:any, subject:any, emailBody:any, attachments:any){
     const response = await new Promise(async (resolve, reject) => {
       var transporter = nodemailer.createTransport({

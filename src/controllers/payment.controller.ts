@@ -1094,6 +1094,7 @@ export const PaymentController = {
     const refNo = req.body.refNo;
     const status = req.body.status;
 
+    // Set status
     var sql = SqlString.format(`UPDATE booking_items 
     SET status = ?
     WHERE book_id IN (SELECT book_id FROM bookings WHERE refNo = ?);`,
@@ -1101,17 +1102,27 @@ export const PaymentController = {
 
     var result:any = await DB.query(sql);
 
+    // Get Customer Info
     var sqlCus = SqlString.format(`SELECT firstName, middleName, lastName, emailAddr FROM customers WHERE cus_id IN (SELECT cus_id FROM bookings WHERE refNo = ?);`,
     [refNo]);
 
     var resultCus:any = await DB.query(sqlCus);
 
+    // Get booking details
     var sqlBook = SqlString.format(`SELECT bi.booked_date, l.locName FROM booking_items bi
     JOIN locations l ON bi.loc_id = l.loc_id
     WHERE book_id IN (SELECT book_id FROM bookings WHERE refNo = ?);`,
     [refNo]);
 
     var resultBook:any = await DB.query(sqlBook);
+
+    // Get admins and stakeholders
+    var sqlAdmins = SqlString.format(`SELECT firstName, role, emailAddr 
+    FROM users 
+    WHERE role IN ("admin", "approver", "stakeholder");`,
+    []);
+
+    var resultAdmins:any = await DB.query(sqlAdmins);
 
     // Send email to customer -> Payment received message and booking details
     var email_addr = resultCus[0].emailAddr; // "nesthy@retailgate.tech";
@@ -1210,6 +1221,117 @@ export const PaymentController = {
 
     EmailUtils.sendEmailMS(email_addr, full_name, subject, email_body, attachments);
 
+    // Send email to admins and stakeholders
+    var admin_details:any = [];
+    var cc_details:any = [];
+
+    for(let a in resultAdmins){
+      admin_details.push({
+        emailAddr: resultAdmins[a].emailAddr,
+        fullName: resultAdmins[a].firstName + " " + resultAdmins[a].lastName
+      })
+    }
+
+    //var ad_email_addr = resultCus[0].emailAddr; // "nesthy@retailgate.tech";
+    //var ad_full_name = resultCus[0].firstName + ' ' + resultCus[0].middleName + ' ' + resultCus[0].lastName;
+    var ad_subject = 'GreetingsPH [Payment Received]';
+    var ad_attachments = null;
+    var ad_email_body = `
+    <body
+      style="
+        font-family: 'Montserrat', sans-serif;
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: 3px 8px 12px rgba(0, 0, 0, 0.3);
+        border-radius: 20px;
+        transition: all 0.3s;
+        padding-bottom: 2px;
+        width: 60%;
+        height: 300px;
+        background-color: #f2f2f2;
+      "
+    >
+      <table 
+        style="
+          background-color: #c8ffff;
+          width: 100%;
+          padding: 1rem;
+          border-top-left-radius:20px;
+          border-top-right-radius:20px;
+          table-layout: fixed;
+        "
+      >
+        <tbody>
+          <tr>
+            <td style="
+                width=50%;
+              "
+            >
+              <table>
+              
+              
+                <tbody>
+                  <tr>
+                    <td>
+                      <h1>GREETINGS PH</h1>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <h3>&ltinsert tagline&gt</h3>
+                    </td>
+                  </tr>
+                </tbody>
+              
+              
+              </table>
+            </td>
+  
+            <td style="
+                width=50%;
+                text-align:right;
+              "
+            >
+              <img 
+               style="
+                 width:25%;
+                 height:25%;
+               "
+               src="https://rti-lrmc.s3.ap-southeast-1.amazonaws.com/Retailgate+logo-circle.png">
+              </img>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      
+      <table
+        style="
+          background-color: #f2f2f2;
+          width: 100%;
+          padding: 1rem;
+        "
+      >
+        <tbody>
+          <tr>
+            <td>
+              <p>Hello` + `,</p>
+              <p style="text-indent:1rem;"> We received payment from customer ` + resultCus[0].firstName + ` (`+ resultCus[0].emailAddr + `). The details of the customer's booking are provided below:
+              <ul>
+                <li>Location: ` + resultBook[0].locName +`</li>
+                <li>Booked Date: ` + resultBook[0].booked_date + `</li>
+              </ul>
+              <p>A copy of the customer's material is attached to this email for checking. You may also check the booking details and material at <a href="http://localhost:3000/booking">Greetings PH</a></p>
+            </td>
+          </tr>
+  
+        </tbody>
+      </table>  
+    </body>
+    `;
+
+    EmailUtils.sendEmailMS_withCC(admin_details, cc_details, ad_subject, ad_email_body, ad_attachments);
 
     res.status(200).send({success: true});
   },
