@@ -1249,14 +1249,14 @@ export const PaymentController = {
     console.log(admin_details);*/
 
     // Get video from URL
-    var videoFile = await FileUtils.urlToB64(resultBook[0].materialURL);
+    //var videoFile = await FileUtils.urlToB64(resultBook[0].materialURL);
 
     //console.log("Video B64 string: ", videoFile)
     var vid_attach:any = [];
-    vid_attach.push({
+    /*vid_attach.push({
         b64: videoFile,
         fname: resultCus[0].lastName + "_" + resultCus[0].firstName + ".mp4"
-    })
+    })*/
     
     for(let a in resultAdmins){
 
@@ -1350,7 +1350,7 @@ export const PaymentController = {
                 <li>Location: ` + resultBook[0].locName +`</li>
                 <li>Booked Date: ` + resultBook[0].booked_date + `</li>
               </ul>
-              <p style="text-indent:1rem;">A copy of the customer's material is attached to this email for checking. You may also check the booking details and material at <a href="http://localhost:3000/booking">Greetings PH</a></p>
+              <p style="text-indent:1rem;">Get a copy of the customer's material <a href="` + resultBook[0].materialURL + ` ">here</a>. You may also check the booking details and material by logging in at <a href="http://localhost:3000/pendingbookings">Greetings PH</a></p>
             </td>
           </tr>
   
@@ -1369,7 +1369,7 @@ export const PaymentController = {
 
     }
 
-    console.log(admin_details);
+    //console.log(admin_details);
     EmailUtils.sendBulk(admin_details, vid_attach);
     //EmailUtils.sendEmailMS_withCC(admin_details, cc_details, ad_subject, ad_email_body, ad_attachments);
 

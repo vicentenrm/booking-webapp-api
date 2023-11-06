@@ -40,14 +40,14 @@ export const EmailUtils = {
         console.log("AAAAA");
         var recipients:any = [];
 
-        const attachments = [
+        /*const attachments = [
           new Attachment(
             attachment[0].b64,
             attachment[0].fname,
             'attachment',
             //'0123456789'
           )
-        ]
+        ]*/
 
         for(let admin in admin_details){
           recipients.push(new EmailParams()
