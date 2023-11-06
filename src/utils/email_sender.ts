@@ -34,6 +34,31 @@ export const EmailUtils = {
     return response;
   },
 
+  async sendBulk(admin_details:any) {  
+    const response = await new Promise(async (resolve, reject) => {
+      try{
+
+        var recipients:any = [];
+        for(let admin in admin_details){
+          recipients.push(new EmailParams()
+            .setFrom(sentFrom)
+            .setTo([ new Recipient(admin_details[admin].emailAddr, admin_details[admin].fullName)])
+            .setReplyTo(sentFrom)
+            //.setAttachments(attachments)
+            .setSubject(admin_details[admin].subject)
+            .setHtml(admin_details[admin].emailBody)
+          )
+        }
+
+        await mailerSend.email.sendBulk(recipients);
+        resolve(true);
+      } catch(err){
+        console.log(err);
+      } 
+    });
+    return response;    
+  },
+
   async sendEmailMS_withCC(recipients:any, ccs:any, subject:any, emailBody:any, attachments:any) {
     const response = await new Promise(async (resolve, reject) => {
       try{

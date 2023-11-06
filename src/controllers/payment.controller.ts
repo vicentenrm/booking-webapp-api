@@ -1223,18 +1223,21 @@ export const PaymentController = {
 
     // Send email to admins and stakeholders
     var admin_details:any = [];
-    var cc_details:any = [];
+    //var cc_details:any = [];
 
-    for(let a in resultAdmins){
+    /*for(let a in resultAdmins){
       admin_details.push({
         emailAddr: resultAdmins[a].emailAddr,
         fullName: resultAdmins[a].firstName + " " + resultAdmins[a].lastName
       })
     }
 
-    console.log(admin_details);
-    //var ad_email_addr = resultCus[0].emailAddr; // "nesthy@retailgate.tech";
-    //var ad_full_name = resultCus[0].firstName + ' ' + resultCus[0].middleName + ' ' + resultCus[0].lastName;
+    console.log(admin_details);*/
+    
+    for(let a in resultAdmins){
+
+    var ad_email_addr = resultAdmins[a].emailAddr; // "nesthy@retailgate.tech";
+    var ad_full_name = resultAdmins[a].firstName + ' ' + resultAdmins[a].middleName + ' ' + resultAdmins[a].lastName;
     var ad_subject = 'GreetingsPH [Payment Received]';
     var ad_attachments = null;
     var ad_email_body = `
@@ -1317,7 +1320,7 @@ export const PaymentController = {
         <tbody>
           <tr>
             <td>
-              <p>Hello` + `,</p>
+              <p>Hello sir/ma'am ` + resultAdmins[a].firstName + `,</p>
               <p style="text-indent:1rem;"> We received payment from customer ` + resultCus[0].firstName + ` (`+ resultCus[0].emailAddr + `). The details of the customer's booking are provided below:
               <ul>
                 <li>Location: ` + resultBook[0].locName +`</li>
@@ -1332,7 +1335,18 @@ export const PaymentController = {
     </body>
     `;
 
-    EmailUtils.sendEmailMS_withCC(admin_details, cc_details, ad_subject, ad_email_body, ad_attachments);
+    admin_details.push({
+      emailAddr: ad_email_addr,
+      fullName: ad_full_name,
+      subject: ad_subject,
+      attachments: ad_attachments,
+      emailBody: ad_email_body
+    });
+
+    }
+
+    EmailUtils.sendBulk(admin_details);
+    //EmailUtils.sendEmailMS_withCC(admin_details, cc_details, ad_subject, ad_email_body, ad_attachments);
 
     res.status(200).send({success: true});
   },
