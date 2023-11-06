@@ -54,7 +54,7 @@ export const EmailUtils = {
             .setFrom(sentFrom)
             .setTo([ new Recipient(admin_details[admin].emailAddr, admin_details[admin].fullName)])
             .setReplyTo(sentFrom)
-            .setAttachments(attachments)
+            //.setAttachments(attachments)
             .setSubject(admin_details[admin].subject)
             .setHtml(admin_details[admin].emailBody)
           )
