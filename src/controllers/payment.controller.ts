@@ -349,9 +349,9 @@ export const PaymentController = {
       }
   
       var redirectUrl = {
-        success: "http://localhost:3000/checkout/success/?refno=" + refNo,
-        failure: "http://localhost:3000/checkout/failed",
-        cancel: "http://localhost:3000/",
+        success: config.env.BASE_URL + "checkout/success/?refno=" + refNo, // "http://localhost:3000/checkout/success/?refno=" + refNo,
+        failure: config.env.BASE_URL + "checkout/failed", // "http://localhost:3000/checkout/failed",
+        cancel: config.env.BASE_URL, // "http://localhost:3000/",
       }
   
       var checkout = new Checkout();
@@ -668,7 +668,7 @@ export const PaymentController = {
           <tr>
             <td>
               <p>Hello ` + data.buyerInfo.firstName + `,</p>
-              <p style="text-indent:1rem;"> We received your booking request. Please give us ample time to review your greeting material. We'll let you know right away once your booking is approved. You may visit <a href="http://localhost:3000/bookstatus">Booking Tracker</a> to check the status of your booking.</p>
+              <p style="text-indent:1rem;"> We received your booking request. Please give us ample time to review your greeting material. We'll let you know right away once your booking is approved. You may visit <a href="` + config.env.BASE_URL + `bookstatus/?refno=` + ref_num +`">Booking Tracker</a> to check the status of your booking.</p>
             </td>
           </tr>
   
@@ -772,7 +772,7 @@ export const PaymentController = {
           <tr>
             <td>
               <p>Hello Reviewer ` + resultAdmin[0].firstName + `,</p>
-              <p style="text-indent:1rem;"> A new booking request has arrived. Please go to <a href="http://localhost:3000/pendingbookings">Greetings PH Dashboard</a> to review the material.</p>
+              <p style="text-indent:1rem;"> A new booking request has arrived. Please go to <a href="` + config.env.BASE_URL + `pendingbookings">Greetings PH Dashboard</a> to review the material.</p>
             </td>
           </tr>
   
@@ -879,13 +879,15 @@ export const PaymentController = {
     res.status(200).send(data);
   },
 
-  // Get booking details by provided reference number
+  // Get booking details by provided reference number // For Material Viewing
   async getBookDetails(req:Request, res:Response){
     var sql = SqlString.format(`SELECT c.firstName, c.middleName, c.lastName, c.contactNo, c.emailAddr,
-    b.refNo, 
-    bi.productName, bi.totalAmount, bi.booked_date, bi.status, bi.materialURL 
+    b.refNo, b.created_at,
+    bi.productName, bi.totalAmount, bi.booked_date, bi.status, bi.materialURL,
+    l.locName 
     FROM booking_items bi 
     JOIN bookings b ON b.book_id = bi.book_id
+    JOIN locations l on l.loc_id = bi.loc_id
     JOIN customers c ON b.cus_id = c.cus_id
     WHERE status != "Cancelled"
     AND b.refNo = ?;`, 
@@ -917,11 +919,63 @@ export const PaymentController = {
       contactNo: result[0].contactNo,
       emailAddr: result[0].emailAddr,
       refNo: result[0].refNo,
+      booking_date: result[0].created_at,
       productName: result[0].productName,
       totalAmount: result[0].totalAmount,
       booked_date: moment(result[0].booked_date).format("YYYY-MM-DD"),
       status: result[0].status,
-      materialURL: result[0].materialURL
+      materialURL: result[0].materialURL,
+      locName: result[0].locName
+    });
+  },
+
+  // Get booking details by provided reference number // For Customer Booking Tracker
+  async getBookTracking(req:Request, res:Response){
+    var sql = SqlString.format(`SELECT c.firstName, c.middleName, c.lastName, c.contactNo, c.emailAddr,
+    b.refNo, b.created_at,
+    bi.productName, bi.totalAmount, bi.booked_date, bi.status, bi.materialURL,
+    l.locName 
+    FROM booking_items bi 
+    JOIN bookings b ON b.book_id = bi.book_id
+    JOIN locations l on l.loc_id = bi.loc_id
+    JOIN customers c ON b.cus_id = c.cus_id
+    WHERE status != "Cancelled"
+    AND b.refNo = ?;`, 
+    [req.body.refNo]);
+
+    var result:any = await DB.query(sql);
+
+    /*var data:any = [];
+    for(let row in result){
+      data.push({
+        firstName: result[row].firstName,
+        middleName: result[row].middleName,
+        lastName: result[row].lastName,
+        emailAddr: result[row].emailAddr,
+        refNo: result[row].refNo,
+        productName: result[row].productName,
+        totalAmount: result[row].totalAmount,
+        booked_date: moment(result[row].booked_date).format("YYYY-MM-DD"),
+        status: result[row].status,
+        materialURL: result[row].materialURL
+      });
+    }
+
+    res.status(200).send(data);*/
+    res.status(200).send({
+      firstName: result[0].firstName,
+      middleName: result[0].middleName,
+      lastName: result[0].lastName,
+      contactNo: result[0].contactNo,
+      emailAddr: result[0].emailAddr,
+      refNo: result[0].refNo,
+      booking_date: result[0].created_at,
+      productName: result[0].productName,
+      totalAmount: result[0].totalAmount,
+      booked_date: moment(result[0].booked_date).format("YYYY-MM-DD"),
+      status: result[0].status,
+      materialURL: result[0].materialURL,
+      locName: result[0].locName
     });
   },
 
@@ -1088,7 +1142,7 @@ export const PaymentController = {
           <tr>
             <td>
               <p>Hello ` + resultCus[0].firstName + `,</p>
-              <p style="text-indent:1rem;"> We received your booking payment. Thank you! Your greeting will be displayed at your selected location [` + resultBook[0].locName + `] on your selected date [`+ resultBook[0].booked_date + `]. You're always welcome to visit <a href="http://localhost:3000/booking">Greetings PH</a> and book more greetings.</p>
+              <p style="text-indent:1rem;"> We received your booking payment. Thank you! Your greeting will be displayed at your selected location [` + resultBook[0].locName + `] on your selected date [`+ resultBook[0].booked_date + `]. You're always welcome to visit <a href="` + config.env.BASE_URL + `booking">Greetings PH</a> and book more greetings.</p>
             </td>
           </tr>
   
@@ -1224,7 +1278,7 @@ export const PaymentController = {
           <tr>
             <td>
               <p>Hello ` + resultCus[0].firstName + `,</p>
-              <p style="text-indent:1rem;"> We received your booking payment. Thank you! Your greeting will be displayed at your selected location [` + resultBook[0].locName + `] on your selected date [`+ resultBook[0].booked_date + `]. You're always welcome to visit <a href="http://localhost:3000/booking">Greetings PH</a> and book more greetings.</p>
+              <p style="text-indent:1rem;"> We received your booking payment. Thank you! Your greeting will be displayed at your selected location [` + resultBook[0].locName + `] on your selected date [`+ resultBook[0].booked_date + `]. You're always welcome to visit <a href="` + config.env.BASE_URL + `booking">Greetings PH</a> and book more greetings.</p>
             </td>
           </tr>
   
@@ -1350,7 +1404,7 @@ export const PaymentController = {
                 <li>Location: ` + resultBook[0].locName +`</li>
                 <li>Booked Date: ` + resultBook[0].booked_date + `</li>
               </ul>
-              <p style="text-indent:1rem;">Get a copy of the customer's material <a href="` + resultBook[0].materialURL + ` ">here</a>. You may also check the booking details and material by logging in at <a href="http://localhost:3000/pendingbookings">Greetings PH</a></p>
+              <p style="text-indent:1rem;">Get a copy of the customer's material <a href="` + resultBook[0].materialURL + ` ">here</a>. You may also check the booking details and material by logging in at <a href="` + config.env.BASE_URL + `pendingbookings">Greetings PH</a></p>
             </td>
           </tr>
   
@@ -1499,7 +1553,7 @@ export const PaymentController = {
             <tr>
               <td>
                 <p>Hello Approver ` + resultApprovers[0].firstName + `,</p>
-                <p style="text-indent:1rem;"> A new booking request has been reviewed and is now subject to your approval. Please go to <a href="http://localhost:3000/pendingbookings">Greetings PH Dashboard</a> to review the material.</p>
+                <p style="text-indent:1rem;"> A new booking request has been reviewed and is now subject to your approval. Please go to <a href="` + config.env.BASE_URL + `pendingbookings">Greetings PH Dashboard</a> to review the material.</p>
               </td>
             </tr>
     
@@ -1687,7 +1741,7 @@ export const PaymentController = {
                     text-align: center;
                   "
                 >
-                  <a href="http://localhost:3000/payment-redirect?refno=` + refNo + `">
+                  <a href="` + config.env.BASE_URL + `payment-redirect?refno=` + refNo + `">
                     <img 
                       style="
                         width: 50%;
@@ -1793,7 +1847,7 @@ export const PaymentController = {
             <tr>
               <td>
                 <p>Hello ` + resultSel[0].firstName + `,</p>
-                <p style="text-indent:1rem;"> Sorry to inform you that your greeting material is rejected. To check the guidelines, go to <a href="http://localhost:3000/guide">Materials Guideline</a>. You may go to <a href="http://localhost:3000/">Greetings PH</a> anytime to book another date with an accepted material.</p>
+                <p style="text-indent:1rem;"> Sorry to inform you that your greeting material is rejected. To check the guidelines, go to <a href="` + config.env.BASE_URL + `guide">Materials Guideline</a>. You may go to <a href="` + config.env.BASE_URL + `">Greetings PH</a> anytime to book another date with an accepted material.</p>
               </td>
             </tr>
     

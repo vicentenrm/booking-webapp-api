@@ -15,5 +15,6 @@ export const env = load({
   EMAIL: String,
   EMAIL_PASS: String,
   CRYPTO_KEY: String,
-  IV: String
+  IV: String,
+  BASE_URL: String
 }); 
