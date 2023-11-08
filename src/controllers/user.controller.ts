@@ -160,12 +160,13 @@ export const UserController = {
   },
 
   async confirmChangePassCode(req:Request, res:Response){
+    const emailAddr = req.body.emailAddr;
     const code = req.body.code;
 
     var sqlCode = SqlString.format(`SELECT changePassCode
     FROM users
-    WHERE emailAddr`, 
-    []);
+    WHERE emailAddr = ?;`, 
+    [emailAddr]);
 
     var resultCode:any = await DB.query(sqlCode);
 
