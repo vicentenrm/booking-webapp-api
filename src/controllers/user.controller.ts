@@ -5,6 +5,7 @@ import{ DB } from '../db/db';
 import * as SqlString from 'sqlstring';
 import { Auth } from './middleware.controller';
 import { CodeUtils } from '../utils/CodeUtils';
+import { EmailUtils } from '../utils/email_sender';
 
 export const UserController = {
 
@@ -50,6 +51,107 @@ export const UserController = {
       var result = await DB.query(sql);
 
       // Send Change Password Email
+      var sqlUser = SqlString.format(`SELECT firstName, middleName, lastName, role
+      FROM users
+      WHERE emailAddr = ?;`,
+      [email]);
+      var resultUser:any = await DB.query(sqlUser);
+
+      var full_name = resultUser.firstName + ' ' + resultUser.middleName + ' ' + resultUser.lastName;
+      var subject = 'Password Reset';
+      var attachments = null;
+      var email_body = `
+      <body
+        style="
+          font-family: 'Montserrat', sans-serif;
+          margin-left: auto;
+          margin-right: auto;
+          margin-top: 2rem;
+          margin-bottom: 2rem;
+          box-shadow: 3px 8px 12px rgba(0, 0, 0, 0.3);
+          border-radius: 20px;
+          transition: all 0.3s;
+          padding-bottom: 2px;
+          width: 60%;
+          height: 300px;
+          background-color: #f2f2f2;
+        "
+      >
+        <table 
+          style="
+            background-color: #c8ffff;
+            width: 100%;
+            padding: 1rem;
+            border-top-left-radius:20px;
+            border-top-right-radius:20px;
+            table-layout: fixed;
+          "
+        >
+          <tbody>
+            <tr>
+              <td style="
+                  width=50%;
+                "
+              >
+                <table>
+                
+                
+                  <tbody>
+                    <tr>
+                      <td>
+                        <h1>GREETINGS PH</h1>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <h3>&ltinsert tagline&gt</h3>
+                      </td>
+                    </tr>
+                  </tbody>
+                
+                
+                </table>
+              </td>
+    
+              <td style="
+                  width=50%;
+                  text-align:right;
+                "
+              >
+                <img 
+                 style="
+                   width:25%;
+                   height:25%;
+                 "
+                 src="https://rti-lrmc.s3.ap-southeast-1.amazonaws.com/Retailgate+logo-circle.png">
+                </img>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        
+        <table
+          style="
+            background-color: #f2f2f2;
+            width: 100%;
+            padding: 1rem;
+          "
+        >
+          <tbody>
+            <tr>
+              <td>
+                <p>Hello ` + resultUser[0].firstName + `,</p>
+                <p style="text-indent:1rem;"> A password reset code is provided below. Ignore this email if you didn't request for password reset.</p>
+                <h1 style="text-align:center;">code</h1>
+              </td>
+            </tr>
+    
+          </tbody>
+        </table>  
+      </body>
+      `;
+  
+      EmailUtils.sendEmailMS(email, full_name, subject, email_body, attachments);
 
       res.status(200).send({"success": true});
     } else{ 
