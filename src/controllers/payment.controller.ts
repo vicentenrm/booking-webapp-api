@@ -288,7 +288,7 @@ export const PaymentController = {
 
     var sql = SqlString.format(`SELECT c.firstName, c.middleName, c.lastName, c.emailAddr,
     b.checkoutID, b.checkoutURL, 
-    bi.productName, bi.totalAmount 
+    bi.productName, bi.totalAmount, bi.status
     FROM booking_items bi 
     JOIN bookings b ON b.book_id = bi.book_id
     JOIN customers c ON b.cus_id = c.cus_id
@@ -303,7 +303,7 @@ export const PaymentController = {
     //    redirectUrl: result[0].checkoutURL        
     //  });
     //} else{
-
+    if(result[0].status != "Paid"){
       var data:any = {
         buyerInfo: {
           firstName: result[0].firstName,
@@ -376,7 +376,11 @@ export const PaymentController = {
       });
 
     //}
-    
+    } else{
+      res.status(200).send({
+        status: "paid"
+      })
+    }
     //console.log(checkout.retrieve(callback));
   },
 
