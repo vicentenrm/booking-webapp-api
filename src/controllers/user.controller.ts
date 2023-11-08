@@ -157,6 +157,25 @@ export const UserController = {
     } else{ 
       res.status(400).send({"error": "No account associated with the email address you provided."});
     }
+  },
+
+  async confirmChangePassCode(req:Request, res:Response){
+    const code = req.body.code;
+
+    var sqlCode = SqlString.format(`SELECT changePassCode
+    FROM users
+    WHERE emailAddr`, 
+    []);
+
+    var resultCode:any = await DB.query(sqlCode);
+
+    if(resultCode.length){
+      if(code === resultCode[0].changePassCode){
+        res.status(200).send({success: true});
+      }
+    } else{
+      res.status(200).send({success: false});
+    }
   }
 }
 
