@@ -142,7 +142,7 @@ export const UserController = {
               <td>
                 <p>Hello ` + resultUser[0].firstName + `,</p>
                 <p style="text-indent:1rem;"> A password reset code is provided below. Ignore this email if you didn't request for password reset.</p>
-                <h1 style="text-align:center;">code</h1>
+                <h1 style="text-align:center;">` + code + `</h1>
               </td>
             </tr>
     
