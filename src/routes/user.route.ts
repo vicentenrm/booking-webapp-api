@@ -5,5 +5,6 @@ const router = express.Router();
 router.post("/login", UserController.login); //reimplemented call in frontend
 router.post("/reqchangepass", UserController.requestChangePass);
 router.post("/confchangepasscode", UserController.confirmChangePassCode);
+router.post("/savenewpass", UserController.saveNewPassword);
 
 export const UserRoute = router;

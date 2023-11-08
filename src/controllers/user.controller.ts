@@ -177,6 +177,19 @@ export const UserController = {
     } else{
       res.status(200).send({success: false});
     }
+  },
+
+  async saveNewPassword(req:Request, res:Response){
+    const emailAddr = req.body.emailAddr;
+    const newpass = req.body.newpass;
+
+    var sqlUpdatePass = SqlString.format(`UPDATE password SET password = ?
+    WHERE user_id IN (SELECT user_id FROM users WHERE emailAddr = ?);`,
+    [newpass, emailAddr]);
+
+    var resultUpdatePass:any = await DB.query(sqlUpdatePass);
+
+    res.status(200).send({success: true});
   }
 }
 
