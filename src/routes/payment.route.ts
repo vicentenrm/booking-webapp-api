@@ -3,7 +3,7 @@ import { PaymentController } from '../controllers/payment.controller';
 import { Auth } from '../controllers/middleware.controller';
 const router = express.Router();
 
-router.post("/test", PaymentController.test); // reimplemented call in frontend
+router.post("/test", PaymentController.test); 
 router.post("/checkout", PaymentController.checkout); // reimplemented call in frontend
 router.post("/status", PaymentController.getPaymentStatus); // Not used
 router.post("/createwebhook", PaymentController.createWebhook); // Not used
