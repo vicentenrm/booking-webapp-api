@@ -1012,18 +1012,35 @@ export const PaymentController = {
     FROM booking_items bi
     JOIN bookings b ON b.book_id = bi.book_id
     WHERE bi.status != "Cancelled";`, 
-    [])
+    []);
 
     var result:any = await DB.query(sql);
 
+    var grouped_dates:any = {}
+    for(let row in result){
+      if(!Object(result).keys.includes(moment(result[row].booked_date).format("YYYY-MM-DD"))){
+        grouped_dates[moment(result[row].booked_date).format("YYYY-MM-DD")] = 1;
+      } else{
+        grouped_dates[moment(result[row].booked_date).format("YYYY-MM-DD")] += 1;
+      }
+    }
+
     var dates:any = [];
-    if(result.length){
+    for(let d in grouped_dates){
+      if(grouped_dates[d] >= 3){
+        dates.push(d);
+      } else{
+        // If not more than 3, don't include to blocked off dates
+      }
+    }
+
+    /*if(result.length){
       for(let row in result){
         dates.push(moment(result[row].booked_date).format("YYYY-MM-DD"))
       }
     } else{
       
-    }
+    }*/
 
     res.status(200).send(dates);
   },
