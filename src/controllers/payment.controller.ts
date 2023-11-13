@@ -855,7 +855,7 @@ export const PaymentController = {
       JOIN bookings b ON b.book_id = bi.book_id
       JOIN locations l on l.loc_id = bi.loc_id
       JOIN customers c ON b.cus_id = c.cus_id
-      WHERE status IN ("APPROVED", "REVIEWED", "PAID");`, 
+      WHERE status IN ("APPROVED", "REVIEWED", "PAID", "EXPIRED");`, 
       []);
     }
 
