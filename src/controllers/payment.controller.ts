@@ -1008,7 +1008,7 @@ export const PaymentController = {
 
   // Get booked dates
   async getBookedDates(req:Request, res:Response){
-    var sql = SqlString.format(`SELECT bi.booked_date
+    var sql = SqlString.format(`SELECT bi.booked_date, bi.status
     FROM booking_items bi
     JOIN bookings b ON b.book_id = bi.book_id
     WHERE bi.status != "Cancelled";`, 
@@ -1018,12 +1018,18 @@ export const PaymentController = {
 
     var grouped_dates:any = {}
     for(let row in result){
-      if(!Object.keys(result).includes(moment(result[row].booked_date).format("YYYY-MM-DD"))){
-        grouped_dates[moment(result[row].booked_date).format("YYYY-MM-DD")] = 1;
+      if(result[row].status.toUpperCase() === "APPROVED"){
+        if(!Object.keys(result).includes(moment(result[row].booked_date).format("YYYY-MM-DD"))){
+          grouped_dates[moment(result[row].booked_date).format("YYYY-MM-DD")] = 1;
+        } else{
+          grouped_dates[moment(result[row].booked_date).format("YYYY-MM-DD")] += 1;
+        }
       } else{
-        grouped_dates[moment(result[row].booked_date).format("YYYY-MM-DD")] += 1;
+        // Booking on other statuses not to be included
       }
     }
+ 
+    console.log(grouped_dates);
 
     var dates:any = [];
     for(let d in grouped_dates){
