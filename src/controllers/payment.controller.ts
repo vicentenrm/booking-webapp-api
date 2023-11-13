@@ -1018,7 +1018,7 @@ export const PaymentController = {
 
     var grouped_dates:any = {}
     for(let row in result){
-      if(!Object(result).keys.includes(moment(result[row].booked_date).format("YYYY-MM-DD"))){
+      if(!Object.keys(result).includes(moment(result[row].booked_date).format("YYYY-MM-DD"))){
         grouped_dates[moment(result[row].booked_date).format("YYYY-MM-DD")] = 1;
       } else{
         grouped_dates[moment(result[row].booked_date).format("YYYY-MM-DD")] += 1;
