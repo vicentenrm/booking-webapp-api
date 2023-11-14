@@ -1472,7 +1472,7 @@ export const PaymentController = {
 
     var sqlSel = SqlString.format(`SELECT c.firstName, c.middleName, c.lastName, c.emailAddr,
     b.checkoutID, b.checkoutURL, 
-    bi.productName, bi.totalAmount, bi.booked_date 
+    bi.productName, bi.loc_id, bi.totalAmount, bi.booked_date 
     FROM booking_items bi 
     JOIN bookings b ON b.book_id = bi.book_id
     JOIN customers c ON b.cus_id = c.cus_id
@@ -1787,6 +1787,147 @@ export const PaymentController = {
       EmailUtils.sendEmailMS(email_addr, full_name, subject, email_body, attachments);
 
       //http://localhost:3000/eval?refno=
+
+      // After latest approval, check if all slots of the site for the specified date is already taken
+      // Get number of approved bookings for the site for the specified date
+      var sqlApproved = SqlString.format(`SELECT COUNT(bookitem_id) AS cnt
+      FROM booking_items
+      WHERE status = "Approved"
+      AND loc_id = ?
+      AND booked_date = ?;`,
+      [resultSel[0].loc_id, moment(resultSel[0].booked_date).format("YYYY-MM-DD")]);
+      var resultApproved:any = await DB.query(sqlApproved);
+
+      // If no slots left after latest approval, send email to other customers who booked the site on the same date
+      if(resultApproved[0].cnt >= 3){
+        // Get other customers who booked for the site on the same date
+        var sqlCus = SqlString.format(`SELECT c.firstName, c.middleName, c.lastName, c.emailAddr
+        FROM customers c
+        JOIN bookings b ON b.cus_id = c.cus_id
+        JOIN booking_items bi ON bi.book_id = b.book_id
+        AND loc_id = ?
+        WHERE bi.booked_date = ?
+        AND bi.status != "Approved"; `,
+        [resultSel[0].loc_id, moment(resultSel[0].booked_date).format("YYYY-MM-DD")]);
+
+        var resultCus:any = await DB.query(sqlCus);
+
+        // Send email to unfortunate customers
+        var vid_attach:any = [];
+        var customer_details:any = [];
+
+        for(let c in resultCus){
+
+          var cus_email_addr = resultCus[c].emailAddr; // "nesthy@retailgate.tech";
+          var cus_full_name = resultCus[c].firstName + ' ' + resultCus[c].middleName + ' ' + resultCus[c].lastName;
+          var cus_subject = 'GreetingsPH Site Fully Booked';
+          var cus_attachments = null;
+          var cus_email_body = `
+          <body
+          style="
+            font-family: 'Montserrat', sans-serif;
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 3px 8px 12px rgba(0, 0, 0, 0.3);
+            border-radius: 20px;
+            transition: all 0.3s;
+            padding-bottom: 2px;
+            width: 60%;
+            height: 300px;
+            background-color: #f2f2f2;
+          "
+        >
+          <table 
+            style="
+              background-color: #c8ffff;
+              width: 100%;
+              padding: 1rem;
+              border-top-left-radius:20px;
+              border-top-right-radius:20px;
+              table-layout: fixed;
+            "
+          >
+            <tbody>
+              <tr>
+                <td style="
+                    width=50%;
+                  "
+                >
+                  <table>
+                  
+                  
+                    <tbody>
+                      <tr>
+                        <td>
+                          <h1>GREETINGS PH</h1>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <h3>&ltinsert tagline&gt</h3>
+                        </td>
+                      </tr>
+                    </tbody>
+                  
+                  
+                  </table>
+                </td>
+      
+                <td style="
+                    width=50%;
+                    text-align:right;
+                  "
+                >
+                  <img 
+                   style="
+                     width:25%;
+                     height:25%;
+                   "
+                   src="https://rti-lrmc.s3.ap-southeast-1.amazonaws.com/Retailgate+logo-circle.png">
+                  </img>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          
+          <table
+            style="
+              background-color: #f2f2f2;
+              width: 100%;
+              padding: 1rem;
+            "
+          >
+            <tbody>
+              <tr>
+                <td>
+                  <p>Hello ` + resultCus[c].firstName + `,</p>
+                  <p style="text-indent:1rem;"> We're very sorry to inform you that your booking will not proceed due to site unavailability after bookings, submitted earlier than yours, were approved. Feel free to go back to <a href="` + config.env.BASE_URL + `">Greetings PH</a> and make a booking for a different location or on a different date.</p>
+                </td>
+              </tr>
+      
+            </tbody>
+          </table>  
+        </body>
+          `;
+      
+          customer_details.push({
+            emailAddr: cus_email_addr,
+            fullName: cus_full_name,
+            subject: cus_subject,
+            attachments: cus_attachments,
+            emailBody: cus_email_body
+          });
+      
+          }
+      
+          //console.log(admin_details);
+          EmailUtils.sendBulk(customer_details, vid_attach);
+
+
+      }
+
     } else if(status === "Rejected"){
       //Send rejection email
       email_addr = resultSel[0].emailAddr // 'nesthy@retailgate.tech';
