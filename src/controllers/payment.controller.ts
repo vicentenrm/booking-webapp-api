@@ -1461,12 +1461,17 @@ export const PaymentController = {
   async setEvalResult(req:Request, res:Response){
     const refNo = req.body.refNo;
     const status = req.body.status;
+    var reason = '';
+
+    if(req.body.reason){
+      reason += req.body.reason;
+    }
 
 
     var sql = SqlString.format(`UPDATE booking_items 
-    SET status = ?
+    SET status = ?, reason = ?
     WHERE book_id IN (SELECT book_id FROM bookings WHERE refNo = ?);`,
-    [status, refNo]);
+    [status, reason, refNo]);
 
     var result:any = await DB.query(sql);
 
@@ -2015,7 +2020,11 @@ export const PaymentController = {
             <tr>
               <td>
                 <p>Hello ` + resultSel[0].firstName + `,</p>
-                <p style="text-indent:1rem;"> Sorry to inform you that your greeting material is rejected. To check the guidelines, go to <a href="` + config.env.BASE_URL + `guide">Materials Guideline</a>. You may go to <a href="` + config.env.BASE_URL + `">Greetings PH</a> anytime to book another date with an accepted material.</p>
+                <p style="text-indent:1rem;">Sorry to inform you that your greeting material is rejected for the reason provided below:</p> 
+                <ul>
+                  <li>` + reason + `</li>
+                </ul>
+                <p style="text-indent:1rem;"> To check the guidelines, go to <a href="` + config.env.BASE_URL + `guide">Materials Guideline</a>. You may go to <a href="` + config.env.BASE_URL + `">Greetings PH</a> anytime to book another date with an accepted material.</p>
               </td>
             </tr>
     
