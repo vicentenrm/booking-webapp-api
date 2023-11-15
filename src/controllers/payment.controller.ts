@@ -211,7 +211,7 @@ export const PaymentController = {
     //items.push(itemInfo);
     
     /*var data = req.body;
-    //TODO create dummy totalAmount
+    // create dummy totalAmount
     var val = 0.00;
     var sFee = 0.00;
     var tx = 0.00;
@@ -507,7 +507,7 @@ export const PaymentController = {
   // Add customer booking for approval
   async addBooking(req:Request, res:Response){
     var data = req.body;
-    //TODO create dummy totalAmount
+    // create dummy totalAmount
     //console.log(data.materialFile);
     var val = 0.00;
     var sFee = 0.00;
@@ -1203,7 +1203,8 @@ export const PaymentController = {
     var resultCus:any = await DB.query(sqlCus);
 
     // Get booking details
-    var sqlBook = SqlString.format(`SELECT bi.booked_date, bi.materialURL, l.locName 
+    var sqlBook = SqlString.format(`SELECT bi.booked_date, bi.materialURL, bi.loc_id,
+    l.locName 
     FROM booking_items bi
     JOIN locations l ON bi.loc_id = l.loc_id
     WHERE book_id IN (SELECT book_id FROM bookings WHERE refNo = ?);`,
@@ -1453,6 +1454,141 @@ export const PaymentController = {
     //console.log(admin_details);
     EmailUtils.sendBulk(admin_details, vid_attach);
     //EmailUtils.sendEmailMS_withCC(admin_details, cc_details, ad_subject, ad_email_body, ad_attachments);
+
+    //TODO
+    // After latest payment, check if all slots of the site for the specified date is already taken
+    // Get number of paid bookings for the site for the specified date
+    var sqlPaid = SqlString.format(`SELECT COUNT(bookitem_id) AS cnt
+    FROM booking_items
+    WHERE status = "Paid"
+    AND loc_id = ?
+    AND booked_date = ?;`,
+    [resultBook[0].loc_id, moment(resultBook[0].booked_date).format("YYYY-MM-DD")]);
+    var resultPaid:any = await DB.query(sqlPaid);
+    
+    // If no slots left after latest payment, send email to other customers who booked the site on the same date
+    if(resultPaid[0].cnt >= 3){
+      // Get other customers who booked for the site on the same date
+      var sqlCus = SqlString.format(`SELECT c.firstName, c.middleName, c.lastName, c.emailAddr
+      FROM customers c
+      JOIN bookings b ON b.cus_id = c.cus_id
+      JOIN booking_items bi ON bi.book_id = b.book_id
+      WHERE loc_id = ?
+      AND bi.booked_date = ?
+      AND bi.status = "Pending Booking"; `,
+      [resultBook[0].loc_id, moment(resultBook[0].booked_date).format("YYYY-MM-DD")]);
+      var resultCus:any = await DB.query(sqlCus);
+      // Send email to unfortunate customers
+      var vid_attach:any = [];
+      var customer_details:any = [];
+      for(let c in resultCus){
+        var cus_email_addr = resultCus[c].emailAddr; // "nesthy@retailgate.tech";
+        var cus_full_name = resultCus[c].firstName + ' ' + resultCus[c].middleName + ' ' + resultCus[c].lastName;
+        var cus_subject = 'GreetingsPH Site Fully Booked';
+        var cus_attachments = null;
+        var cus_email_body = `
+        <body
+        style="
+          font-family: 'Montserrat', sans-serif;
+          margin-left: auto;
+          margin-right: auto;
+          margin-top: 2rem;
+          margin-bottom: 2rem;
+          box-shadow: 3px 8px 12px rgba(0, 0, 0, 0.3);
+          border-radius: 20px;
+          transition: all 0.3s;
+          padding-bottom: 2px;
+          width: 60%;
+          height: 300px;
+          background-color: #f2f2f2;
+        "
+        >
+          <table 
+            style="
+              background-color: #c8ffff;
+              width: 100%;
+              padding: 1rem;
+              border-top-left-radius:20px;
+              border-top-right-radius:20px;
+              table-layout: fixed;
+            "
+          >
+            <tbody>
+              <tr>
+                <td style="
+                    width=50%;
+                  "
+                >
+                  <table>
+                  
+                  
+                    <tbody>
+                      <tr>
+                        <td>
+                          <h1>GREETINGS PH</h1>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <h3>&ltinsert tagline&gt</h3>
+                        </td>
+                      </tr>
+                    </tbody>
+                  
+                  
+                  </table>
+                </td>
+      
+                <td style="
+                    width=50%;
+                    text-align:right;
+                  "
+                >
+                  <img 
+                   style="
+                     width:25%;
+                     height:25%;
+                   "
+                   src="https://rti-lrmc.s3.ap-southeast-1.amazonaws.com/Retailgate+logo-circle.png">
+                  </img>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          
+          <table
+            style="
+              background-color: #f2f2f2;
+              width: 100%;
+              padding: 1rem;
+            "
+          >
+            <tbody>
+              <tr>
+                <td>
+                  <p>Hello ` + resultCus[c].firstName + `,</p>
+                  <p style="text-indent:1rem;"> We're very sorry to inform you that your booking will not proceed due to site unavailability after bookings, submitted earlier than yours, were approved and paid for. Feel free to go back to <a href="` + config.env.BASE_URL + `">Greetings PH</a> and make a booking for a different location or on a different date.</p>
+                </td>
+              </tr>
+      
+            </tbody>
+          </table>  
+        </body>
+        `;
+    
+        customer_details.push({
+          emailAddr: cus_email_addr,
+          fullName: cus_full_name,
+          subject: cus_subject,
+          attachments: cus_attachments,
+          emailBody: cus_email_body
+        });
+    
+      }
+    
+      //console.log(customer_details);
+      EmailUtils.sendBulk(customer_details, vid_attach);        
+    }
 
     res.status(200).send({success: true});
   },
@@ -1793,7 +1929,8 @@ export const PaymentController = {
 
       //http://localhost:3000/eval?refno=
 
-      // After latest approval, check if all slots of the site for the specified date is already taken
+      
+      /*// After latest approval, check if all slots of the site for the specified date is already taken
       // Get number of approved bookings for the site for the specified date
       var sqlApproved = SqlString.format(`SELECT COUNT(bookitem_id) AS cnt
       FROM booking_items
@@ -1802,7 +1939,7 @@ export const PaymentController = {
       AND booked_date = ?;`,
       [resultSel[0].loc_id, moment(resultSel[0].booked_date).format("YYYY-MM-DD")]);
       var resultApproved:any = await DB.query(sqlApproved);
-
+      
       // If no slots left after latest approval, send email to other customers who booked the site on the same date
       if(resultApproved[0].cnt >= 3){
         // Get other customers who booked for the site on the same date
@@ -1810,8 +1947,9 @@ export const PaymentController = {
         FROM customers c
         JOIN bookings b ON b.cus_id = c.cus_id
         JOIN booking_items bi ON bi.book_id = b.book_id
-        AND loc_id = ?
-        WHERE bi.booked_date = ?
+        
+        WHERE loc_id = ? 
+        AND bi.booked_date = ?
         AND bi.status != "Approved"; `,
         [resultSel[0].loc_id, moment(resultSel[0].booked_date).format("YYYY-MM-DD")]);
 
@@ -1929,9 +2067,10 @@ export const PaymentController = {
       
           //console.log(admin_details);
           EmailUtils.sendBulk(customer_details, vid_attach);
+          
 
 
-      }
+      }*/
 
     } else if(status === "Rejected"){
       //Send rejection email
