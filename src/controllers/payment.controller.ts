@@ -1455,7 +1455,6 @@ export const PaymentController = {
     EmailUtils.sendBulk(admin_details, vid_attach);
     //EmailUtils.sendEmailMS_withCC(admin_details, cc_details, ad_subject, ad_email_body, ad_attachments);
 
-    //TODO
     // After latest payment, check if all slots of the site for the specified date is already taken
     // Get number of paid bookings for the site for the specified date
     var sqlPaid = SqlString.format(`SELECT COUNT(bookitem_id) AS cnt
@@ -1587,7 +1586,16 @@ export const PaymentController = {
       }
     
       //console.log(customer_details);
-      EmailUtils.sendBulk(customer_details, vid_attach);        
+      EmailUtils.sendBulk(customer_details, vid_attach);
+      
+      //TODO Update status of bookings on fully booked day for the specified site
+      var sqlExpire = SqlString.format(`UPDATE booking_items 
+      SET status = "Expired"
+      WHERE loc_id = ?
+      AND booked_date = ?
+      AND status = "Pending Booking";`,
+      [resultBook[0].loc_id, moment(resultBook[0].booked_date).format("YYYY-MM-DD")])
+
     }
 
     res.status(200).send({success: true});
