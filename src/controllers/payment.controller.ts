@@ -1588,13 +1588,17 @@ export const PaymentController = {
       //console.log(customer_details);
       EmailUtils.sendBulk(customer_details, vid_attach);
       
+      console.log(resultBook[0].loc_id);
+      console.log(moment(resultBook[0].booked_date).format("YYYY-MM-DD"));
       //TODO Update status of bookings on fully booked day for the specified site
       var sqlExpire = SqlString.format(`UPDATE booking_items 
       SET status = "Expired"
       WHERE loc_id = ?
       AND booked_date = ?
       AND status = "Pending Booking";`,
-      [resultBook[0].loc_id, moment(resultBook[0].booked_date).format("YYYY-MM-DD")])
+      [resultBook[0].loc_id, moment(resultBook[0].booked_date).format("YYYY-MM-DD")]);
+
+      var resultExpire:any = await DB.query(sqlExpire);
 
     }
 
