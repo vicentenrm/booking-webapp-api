@@ -868,20 +868,20 @@ export const PaymentController = {
       // Check booking count for given location on given date
       if(result[row].status != "Payment Failed"){
         if(Object.keys(booking_cnt).includes(result[row].locName)){
-          if(Object.keys(booking_cnt[result[row].locName]).includes(moment(result[row].created_at).format("YYYY-MM-DD hh:mm:ss"))){
-            if(booking_cnt[result[row].locName][moment(result[row].created_at).format("YYYY-MM-DD hh:mm:ss")] >= 3){
+          if(Object.keys(booking_cnt[result[row].locName]).includes(moment(result[row].booked_date).format("YYYY-MM-DD"))){
+            if(booking_cnt[result[row].locName][moment(result[row].booked_date).format("YYYY-MM-DD")] >= 3){
               queue_stat = "Waitlisted";
             } else{
               queue_stat = "Open";
-              booking_cnt[result[row].locName][moment(result[row].created_at).format("YYYY-MM-DD hh:mm:ss")] += 1;
+              booking_cnt[result[row].locName][moment(result[row].booked_date).format("YYYY-MM-DD")] += 1;
             }
           } else {
-            booking_cnt[result[row].locName][moment(result[row].created_at).format("YYYY-MM-DD hh:mm:ss")] = 1;
+            booking_cnt[result[row].locName][moment(result[row].booked_date).format("YYYY-MM-DD")] = 1;
             queue_stat = "Open";
           } 
         } else {
           booking_cnt[result[row].locName] = {};
-          booking_cnt[result[row].locName][moment(result[row].created_at).format("YYYY-MM-DD hh:mm:ss")] = 1;
+          booking_cnt[result[row].locName][moment(result[row].booked_date).format("YYYY-MM-DD")] = 1;
           queue_stat = "Open";
         }
       } else{
