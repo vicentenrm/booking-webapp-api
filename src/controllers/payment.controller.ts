@@ -1018,7 +1018,8 @@ export const PaymentController = {
 
     var grouped_dates:any = {}
     for(let row in result){
-      if(result[row].status.toUpperCase() === "APPROVED" || result[row].status.toUpperCase() === "PAID"){
+      //if(result[row].status.toUpperCase() === "APPROVED" || result[row].status.toUpperCase() === "PAID"){
+      if(result[row].status.toUpperCase() === "PAID"){
         if(!Object.keys(grouped_dates).includes(moment(result[row].booked_date).format("YYYY-MM-DD"))){
           grouped_dates[moment(result[row].booked_date).format("YYYY-MM-DD")] = 1;
         } else{
