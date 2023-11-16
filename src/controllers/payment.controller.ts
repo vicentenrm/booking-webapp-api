@@ -844,7 +844,8 @@ export const PaymentController = {
       JOIN bookings b ON b.book_id = bi.book_id
       JOIN locations l on l.loc_id = bi.loc_id
       JOIN customers c ON b.cus_id = c.cus_id
-      WHERE status NOT IN ("Cancelled", "Expired");`, 
+      WHERE status NOT IN ("Cancelled", "Expired")
+      ORDER BY b.created_at;`, 
       []);
     } else if(role === "APPROVER"){
       sql += SqlString.format(`SELECT c.firstName, c.middleName, c.lastName, c.contactNo, c.emailAddr,
@@ -855,7 +856,8 @@ export const PaymentController = {
       JOIN bookings b ON b.book_id = bi.book_id
       JOIN locations l on l.loc_id = bi.loc_id
       JOIN customers c ON b.cus_id = c.cus_id
-      WHERE status IN ("APPROVED", "REVIEWED", "PAID", "Rejected", "Payment Failed");`, 
+      WHERE status IN ("APPROVED", "REVIEWED", "PAID", "Rejected", "Payment Failed")
+      ORDER BY b.created_at;`, 
       []);
     }
 
