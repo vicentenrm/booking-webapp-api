@@ -6,7 +6,8 @@ const mailerSend = new MailerSend({
   apiKey: config.env.MAILER_API_KEY
 })
 
-const sentFrom = new Sender("nesthy@retailgate.tech", "Greetings PH")
+//const sentFrom = new Sender("nesthy@retailgate.tech", "Greetings PH")
+const sentFrom = new Sender(config.env.EMAIL_SENDER, "Greetings PH");
 
 export const EmailUtils = {
   // Send email using Mailersend

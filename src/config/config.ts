@@ -12,6 +12,7 @@ export const env = load({
   MAYA_SK: String,
   TOKEN_SECRET: String,
   MAILER_API_KEY: String,
+  EMAIL_SENDER: String,
   EMAIL: String,
   EMAIL_PASS: String,
   CRYPTO_KEY: String,
