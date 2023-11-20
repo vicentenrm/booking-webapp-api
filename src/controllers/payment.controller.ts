@@ -691,8 +691,8 @@ export const PaymentController = {
     var resultAdmin:any = await DB.query(sqlAdmin);
 
     // Send email to Reviewer
-    var email_addr = data.buyerInfo.contact.email; // "nesthy@retailgate.tech";
-    var full_name = data.buyerInfo.firstName + ' ' + data.buyerInfo.middleName + ' ' + data.buyerInfo.lastName;
+    var email_addr = resultAdmin[0].emailAddr; // "nesthy@retailgate.tech";
+    var full_name = resultAdmin[0].firstName + ' ' + resultAdmin[0].middleName + ' ' + resultAdmin[0].lastName; // data.buyerInfo.firstName + ' ' + data.buyerInfo.middleName + ' ' + data.buyerInfo.lastName;
     var subject = 'GreetingsPH Booking Request';
     var attachments = null;
     var email_body = `
@@ -775,8 +775,8 @@ export const PaymentController = {
         <tbody>
           <tr>
             <td>
-              <p>Hello Reviewer ` + resultAdmin[0].firstName + `,</p>
-              <p style="text-indent:1rem;"> A new booking request has arrived. Please go to <a href="` + config.env.BASE_URL + `pendingbookings">Greetings PH Dashboard</a> to review the material.</p>
+              <p>Hello ` + resultAdmin[0].firstName + `,</p>
+              <p style="text-indent:1rem;"> A new booking request has been received. See the material here: <a href="` + config.env.BASE_URL + `pendingbookings">Greetings PH Dashboard</a> for your review and approval.</p>
             </td>
           </tr>
   
@@ -1761,8 +1761,8 @@ export const PaymentController = {
           <tbody>
             <tr>
               <td>
-                <p>Hello Approver ` + resultApprovers[0].firstName + `,</p>
-                <p style="text-indent:1rem;"> A new booking request has been reviewed and is now subject to your approval. Please go to <a href="` + config.env.BASE_URL + `pendingbookings">Greetings PH Dashboard</a> to review the material.</p>
+                <p>Hello ` + resultApprovers[0].firstName + `,</p>
+                <p style="text-indent:1rem;"> A new booking request has been reviewed and is now subject to your approval. Please check this link: <a href="` + config.env.BASE_URL + `pendingbookings">Greetings PH Dashboard</a> to review the material for your final approval.</p>
               </td>
             </tr>
     
