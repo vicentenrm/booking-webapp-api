@@ -17,7 +17,7 @@ router.post("/getbookeddates", PaymentController.getBookedDates); // reimplement
 router.post("/setpaid", PaymentController.setStatusPaid); // Not used
 router.post("/getbookdet", Auth.verifyToken, PaymentController.getBookDetails); // reimplemented call in frontend
 router.post("/setstatus", PaymentController.setStatus); // reimplemented call in frontend
-router.post("/eval", PaymentController.setEvalResult); // reimplemented call in frontend
+router.post("/eval", Auth.verifyToken, PaymentController.setEvalResult); // reimplemented call in frontend
 router.post("/getbooktracker", PaymentController.getBookTracking);
 router.post("/disburse", PaymentController.disburseFund);
 
