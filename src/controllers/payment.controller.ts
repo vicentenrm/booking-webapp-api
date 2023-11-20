@@ -1654,9 +1654,11 @@ export const PaymentController = {
 
     var sqlSel = SqlString.format(`SELECT c.firstName, c.middleName, c.lastName, c.emailAddr,
     b.checkoutID, b.checkoutURL, 
-    bi.productName, bi.loc_id, bi.totalAmount, bi.booked_date 
+    bi.productName, bi.loc_id, bi.totalAmount, bi.booked_date,
+    l.locName 
     FROM booking_items bi 
     JOIN bookings b ON b.book_id = bi.book_id
+    JOIN locations l ON l.loc_id = bi.loc_id
     JOIN customers c ON b.cus_id = c.cus_id
     WHERE b.refNo = ?;`, 
     [refNo]);
@@ -1776,6 +1778,8 @@ export const PaymentController = {
 
     if(status === "Approved"){
       //Send approval email
+      var units = 128;
+      var qty = 1;
       email_addr = resultSel[0].emailAddr // 'nesthy@retailgate.tech';
       full_name = resultSel[0].firstName + ' ' + resultSel[0].middleName + ' ' + resultSel[0].lastName;
       subject = 'GreetingsPH Payment';
@@ -1864,6 +1868,236 @@ export const PaymentController = {
                 </td>
               </tr>
               <tr>
+
+
+                <table
+                  style="        
+                    width: 100%;
+                    padding-left: 1rem;
+                    padding-right: 1rem;
+                    border-spacing: 0px;
+                  "
+                >
+                  <tbody>
+                    <tr>
+                      <th                       
+                        style="
+                          text-align: left;
+                          background-color: #dfdfdf;
+                          padding-left: 1rem;
+                          height: 2.5rem;
+                          border-top: 1px solid; 
+                          border-bottom: 1px solid;
+                        "
+                      >
+                      Service
+                      </th>
+                      <td  
+                        style="
+                          text-align: left;
+                          background-color: #dfdfdf;
+                          padding-left: 1rem;
+                          height: 2.5rem;
+                          border-top: 1px solid; 
+                          border-bottom: 1px solid;
+                        "
+                      >`
+                        + resultSel[0].productName +
+                      `</td>
+                    </tr>
+    
+                    <tr>
+                      <th                       
+                        style="
+                          text-align: left;
+                          background-color: #fffff;
+                          padding-left: 1rem;
+                          height: 2.5rem;
+                          border-top: 1px solid; 
+                          border-bottom: 1px solid;
+                        "
+                      >
+                      Booking Location
+                      </th>
+                      <td  
+                        style="
+                          text-align: left;
+                          background-color: #fffff;
+                          padding-left: 1rem;
+                          height: 2.5rem;
+                          border-top: 1px solid; 
+                          border-bottom: 1px solid;
+                        "
+                      >`
+                        + resultSel[0].locName +
+                      `</td>
+                    </tr>
+    
+    
+                    <tr>
+                      <th                       
+                        style="
+                          text-align: left;
+                          background-color: #dfdfdf;
+                          padding-left: 1rem;
+                          height: 2.5rem;
+                          border-top: 1px solid; 
+                          border-bottom: 1px solid;
+                        "
+                      >
+                      Booking Date
+                      </th>
+                      <td  
+                        style="
+                          text-align: left;
+                          background-color: #dfdfdf;
+                          padding-left: 1rem;
+                          height: 2.5rem;
+                          border-top: 1px solid; 
+                          border-bottom: 1px solid;
+                        "
+                      >`
+                        + moment(resultSel[0].booked_date).format("YYYY-MM-DD") +
+                      `</td>
+                    </tr>
+    
+                    <tr>
+                      <th                       
+                        style="
+                          text-align: left;
+                          background-color: #fffff;
+                          padding-left: 1rem;
+                          height: 2.5rem;
+                          border-top: 1px solid; 
+                          border-bottom: 1px solid;
+                        "
+                      >
+                      Unit (spots)
+                      </th>
+                      <td  
+                        style="
+                          text-align: left;
+                          background-color: #fffff;
+                          padding-left: 1rem;
+                          height: 2.5rem;
+                          border-top: 1px solid; 
+                          border-bottom: 1px solid;
+                        "
+                      >`
+                        + units +
+                      `</td>
+                    </tr>
+    
+                    <tr>
+                      <th                       
+                        style="
+                          text-align: left;
+                          background-color: #dfdfdf;
+                          padding-left: 1rem;
+                          height: 2.5rem;
+                          border-top: 1px solid; 
+                          border-bottom: 1px solid;
+                        "
+                      >
+                      Unit Cost
+                      </th>
+                      <td  
+                        style="
+                          text-align: left;
+                          background-color: #dfdfdf;
+                          padding-left: 1rem;
+                          height: 2.5rem;
+                          border-top: 1px solid; 
+                          border-bottom: 1px solid;
+                        "
+                      >`
+                        + resultSel[0].totalAmount +
+                      `</td>
+                    </tr>
+    
+                    <tr>
+                      <th                       
+                        style="
+                          text-align: left;
+                          background-color: #fffff;
+                          padding-left: 1rem;
+                          height: 2.5rem;
+                          border-top: 1px solid; 
+                          border-bottom: 1px solid;
+                        "
+                      >
+                      Qty
+                      </th>
+                      <td  
+                        style="
+                          text-align: left;
+                          background-color: #fffff;
+                          padding-left: 1rem;
+                          height: 2.5rem;
+                          border-top: 1px solid; 
+                          border-bottom: 1px solid;
+                        "
+                      >`
+                        + qty +
+                      `</td>
+                    </tr>
+    
+                    <tr>
+                      <th                       
+                        style="
+                          text-align: left;
+                          background-color: #dfdfdf;
+                          padding-left: 1rem;
+                          height: 2.5rem;
+                          border-top: 1px solid; 
+                          border-bottom: 1px solid;
+                        "
+                      >
+                      Total Cost
+                      </th>
+                      <td  
+                        style="
+                          text-align: left;
+                          background-color: #dfdfdf;
+                          padding-left: 1rem;
+                          height: 2.5rem;
+                          border-top: 1px solid; 
+                          border-bottom: 1px solid;
+                        "
+                      >`
+                        + resultSel[0].totalAmount * units +
+                      `</td>
+                    </tr>
+    
+                  </tbody>
+                </table>
+
+
+              </tr>
+              <tr>
+                <div 
+                  style="
+                    margin:1rem;
+                    text-align: center;
+                  "
+                >
+                  <a href="` + config.env.BASE_URL + `payment-redirect?refno=` + refNo + `">
+                    <img 
+                      style="
+                        width: 50%;
+                        height: 25%;
+                      "
+                      src="https://www.clker.com/cliparts/3/X/i/6/j/i/light-blue-pay-now-button.svg.hi.png"
+                    > </img>
+                  </a>
+                </div>
+              </tr>
+            </tbody>
+          </table>  
+        </body>
+      `;
+
+      /*
                 <table
                   style="        
                     width: 100%;
@@ -1942,29 +2176,7 @@ export const PaymentController = {
                     </tr>
                   </tbody>
                 </table>
-              </tr>
-              <tr>
-                <div 
-                  style="
-                    margin:1rem;
-                    text-align: center;
-                  "
-                >
-                  <a href="` + config.env.BASE_URL + `payment-redirect?refno=` + refNo + `">
-                    <img 
-                      style="
-                        width: 50%;
-                        height: 25%;
-                      "
-                      src="https://www.clker.com/cliparts/3/X/i/6/j/i/light-blue-pay-now-button.svg.hi.png"
-                    > </img>
-                  </a>
-                </div>
-              </tr>
-            </tbody>
-          </table>  
-        </body>
-      `;
+      */
       
       EmailUtils.sendEmailMS(email_addr, full_name, subject, email_body, attachments);
 
@@ -2199,12 +2411,12 @@ export const PaymentController = {
           <tbody>
             <tr>
               <td>
-                <p>Hello ` + resultSel[0].firstName + `,</p>
-                <p style="text-indent:1rem;">Sorry to inform you that your greeting material is rejected for the reason provided below:</p> 
+                <p>Dear ` + resultSel[0].firstName + `,</p>
+                <p style="text-indent:1rem;">We regret to inform you that your greeting material has been rejected for the following reason(s):</p> 
                 <ul>
                   <li>` + reason + `</li>
                 </ul>
-                <p style="text-indent:1rem;"> To check the guidelines, go to <a href="` + config.env.BASE_URL + `guide">Materials Guideline</a>. You may go to <a href="` + config.env.BASE_URL + `">Greetings PH</a> anytime to book another date with an accepted material.</p>
+                <p style="text-indent:1rem;"> Please see the guidelines through this link <a href="` + config.env.BASE_URL + `guide">Materials Guideline</a> and you may book another date with your updated material through <a href="` + config.env.BASE_URL + `">Greetings PH</a>.</p>
               </td>
             </tr>
     
