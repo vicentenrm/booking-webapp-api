@@ -1332,10 +1332,86 @@ export const PaymentController = {
         "
       >
         <tbody>
+
           <tr>
             <td>
               <p>Hello ` + resultCus[0].firstName + `,</p>
-              <p style="text-indent:1rem;"> We received your booking payment. Thank you! Your greeting will be displayed at your selected location [` + resultBook[0].locName + `] on your selected date [`+ resultBook[0].booked_date + `]. You're always welcome to visit <a href="` + config.env.BASE_URL + `booking">Greetings PH</a> and book more greetings.</p>
+              <p style="text-indent:1rem;" align="justify"> Thank you for your payment. This is to confirm that we have received your booking payment with reference # refNo. Watch out for your greeting to be displayed according to the following details:</p>
+            </td>
+          </tr>
+          <tr>
+            <table
+              style="        
+                width: 100%;
+                padding-left: 1rem;
+                padding-right: 1rem;
+                border-spacing: 0px;
+              "
+            >
+              <tbody>
+                <tr>
+                  <th                       
+                    style="
+                      text-align: left;
+                      background-color: #dfdfdf;
+                      padding-left: 1rem;
+                      height: 2.5rem;
+                      border-top: 1px solid; 
+                      border-bottom: 1px solid;
+                    "
+                  >
+                    Location
+                  </th>
+                  <td  
+                    style="
+                      text-align: left;
+                      background-color: #dfdfdf;
+                      padding-left: 1rem;
+                      height: 2.5rem;
+                      border-top: 1px solid; 
+                      border-bottom: 1px solid;
+                    "
+                  >`
+                    + resultBook[0].locName +
+                  `</td>
+                </tr>
+                <tr>
+                  <th                       
+                    style="
+                      text-align: left;
+                      background-color: #dfdfdf;
+                      padding-left: 1rem;
+                      height: 2.5rem;
+                      border-top: 1px solid; 
+                      border-bottom: 1px solid;
+                    "
+                  >
+                    Date
+                  </th>
+                  <td  
+                    style="
+                      text-align: left;
+                      background-color: #dfdfdf;
+                      padding-left: 1rem;
+                      height: 2.5rem;
+                      border-top: 1px solid; 
+                      border-bottom: 1px solid;
+                    "
+                  >`
+                    + moment(resultBook[0].booked_date).format("YYYY-MM-DD") +
+                  `</td>
+                </tr>
+              </tbody>
+            </table>
+          </tr>
+          <tr>
+            <td>
+              <p style="text-indent:1rem;"><a href="` + config.env.BASE_URL + `">Terms and Conditions</a></p>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <p style="text-indent:1rem;">Come back to <a href="` + config.env.BASE_URL + `">Greetings PH</a> to book your next greeting to surprise someone you love!</p>
             </td>
           </tr>
   
@@ -1343,6 +1419,15 @@ export const PaymentController = {
       </table>  
     </body>
     `;
+
+    /*
+          <tr>
+            <td>
+              <p>Hello ` + resultCus[0].firstName + `,</p>
+              <p style="text-indent:1rem;"> Thank you for your payment. This is to confirm that we have received your booking payment with reference # . Your greeting will be displayed at your selected location [` + resultBook[0].locName + `] on your selected date [`+ resultBook[0].booked_date + `]. You're always welcome to visit <a href="` + config.env.BASE_URL + `booking">Greetings PH</a> and book more greetings.</p>
+            </td>
+          </tr>
+    */
 
     EmailUtils.sendEmailMS(email_addr, full_name, subject, email_body, attachments);
 
@@ -1388,7 +1473,7 @@ export const PaymentController = {
         transition: all 0.3s;
         padding-bottom: 2px;
         width: 60%;
-        height: 300px;
+        height: 500px;
         background-color: #f2f2f2;
       "
     >
@@ -1453,10 +1538,94 @@ export const PaymentController = {
         "
       >
         <tbody>
+
           <tr>
             <td>
-              <p>Hello sir/ma'am ` + resultAdmins[a].firstName + `,</p>
-              <p style="text-indent:1rem;"> We received payment from customer ` + resultCus[0].firstName + ` (`+ resultCus[0].emailAddr + `). The details of the customer's booking are provided below:
+              <p>Hello ` + resultAdmins[a].firstName + `,</p>
+              <p style="text-indent:1rem;" align="justify"> Payment has been received from ` + resultCus[0].firstName + ` (`+ resultCus[0].emailAddr + `). Please see the details of the booking below:
+            </td>
+          </tr>
+          <tr>
+            <table
+              style="        
+                width: 100%;
+                padding-left: 1rem;
+                padding-right: 1rem;
+                border-spacing: 0px;
+              "
+            >
+              <tbody>
+                <tr>
+                  <th                       
+                    style="
+                      text-align: left;
+                      background-color: #dfdfdf;
+                      padding-left: 1rem;
+                      height: 2.5rem;
+                      border-top: 1px solid; 
+                      border-bottom: 1px solid;
+                    "
+                  >
+                    Location
+                  </th>
+                  <td  
+                    style="
+                      text-align: left;
+                      background-color: #dfdfdf;
+                      padding-left: 1rem;
+                      height: 2.5rem;
+                      border-top: 1px solid; 
+                      border-bottom: 1px solid;
+                    "
+                  >`
+                    + resultBook[0].locName +
+                  `</td>
+                </tr>
+                <tr>
+                  <th                       
+                    style="
+                      text-align: left;
+                      background-color: #dfdfdf;
+                      padding-left: 1rem;
+                      height: 2.5rem;
+                      border-top: 1px solid; 
+                      border-bottom: 1px solid;
+                    "
+                  >
+                    Date
+                  </th>
+                  <td  
+                    style="
+                      text-align: left;
+                      background-color: #dfdfdf;
+                      padding-left: 1rem;
+                      height: 2.5rem;
+                      border-top: 1px solid; 
+                      border-bottom: 1px solid;
+                    "
+                  >`
+                    + moment(resultBook[0].booked_date).format("YYYY-MM-DD") +
+                  `</td>
+                </tr>
+              </tbody>
+            </table>
+          </tr>
+          <tr>
+            <td>
+              <p style="text-indent:1rem;">You may review the material <a href="` + resultBook[0].materialURL + ` ">here</a>. You may also review the booking details and the material by logging in at <a href="` + config.env.BASE_URL + `pendingbookings">Greetings PH</a></p>
+            </td>
+          <tr>
+  
+        </tbody>
+      </table>  
+    </body>
+    `;
+
+    /*
+          <tr>
+            <td>
+              <p>Hello ` + resultAdmins[a].firstName + `,</p>
+              <p style="text-indent:1rem;"> Payment has been received from ` + resultCus[0].firstName + ` (`+ resultCus[0].emailAddr + `). The details of the customer's booking are provided below:
               <ul>
                 <li>Location: ` + resultBook[0].locName +`</li>
                 <li>Booked Date: ` + resultBook[0].booked_date + `</li>
@@ -1464,11 +1633,7 @@ export const PaymentController = {
               <p style="text-indent:1rem;">Get a copy of the customer's material <a href="` + resultBook[0].materialURL + ` ">here</a>. You may also check the booking details and material by logging in at <a href="` + config.env.BASE_URL + `pendingbookings">Greetings PH</a></p>
             </td>
           </tr>
-  
-        </tbody>
-      </table>  
-    </body>
-    `;
+    */
 
     admin_details.push({
       emailAddr: ad_email_addr,
@@ -1595,7 +1760,8 @@ export const PaymentController = {
               <tr>
                 <td>
                   <p>Hello ` + resultCus[c].firstName + `,</p>
-                  <p style="text-indent:1rem;"> We're very sorry to inform you that your booking will not proceed due to site unavailability after bookings, submitted earlier than yours, were approved and paid for. Feel free to go back to <a href="` + config.env.BASE_URL + `">Greetings PH</a> and make a booking for a different location or on a different date.</p>
+                  <p style="text-indent:1rem;"> We regret to inform you that as we operate on a first paid first served basis, the site you have requested is no longer available. You may book again thru <a href="` + config.env.BASE_URL + `">Greetings PH</a> and we strongly recommend that you pay immediately upon approval in order to secure your spot immediately.</p>
+                  <p>Thank you!</p>
                 </td>
               </tr>
       
@@ -1764,7 +1930,7 @@ export const PaymentController = {
             <tr>
               <td>
                 <p>Hello ` + resultApprovers[0].firstName + `,</p>
-                <p style="text-indent:1rem;"> A new booking request has been reviewed and is now subject to your approval. Please check this link: <a href="` + config.env.BASE_URL + `pendingbookings">Greetings PH Dashboard</a> to review the material for your final approval.</p>
+                <p style="text-indent:1rem;"> A new booking request has passed initial review and is now subject to your approval. Please check this link: <a href="` + config.env.BASE_URL + `pendingbookings">Greetings PH Dashboard</a> to review the material for your final approval.</p>
               </td>
             </tr>
     
