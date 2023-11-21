@@ -887,6 +887,8 @@ export const PaymentController = {
           booking_cnt[result[row].locName][moment(result[row].booked_date).format("YYYY-MM-DD")] = 1;
           queue_stat = "Open";
         }
+      } else if (result[row].status == "Rejected"){
+        queue_stat = "Rejected";
       } else{
         queue_stat = "Failed";
       }
