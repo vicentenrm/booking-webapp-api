@@ -304,6 +304,7 @@ export const PaymentController = {
     //  });
     //} else{
     if(result[0].status != "Paid"){
+      var units = 128;
       var data:any = {
         buyerInfo: {
           firstName: result[0].firstName,
@@ -322,7 +323,7 @@ export const PaymentController = {
         data["items"].push({
           name: result[row].productName,
           totalAmount: {
-            value: result[row].totalAmount
+            value: result[row].totalAmount * units
           }
         });
       }
@@ -2510,7 +2511,7 @@ export const PaymentController = {
           transition: all 0.3s;
           padding-bottom: 2px;
           width: 60%;
-          height: 300px;
+          height: 600px;
           background-color: #f2f2f2;
         "
       >
