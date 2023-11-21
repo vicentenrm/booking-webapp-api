@@ -869,7 +869,7 @@ export const PaymentController = {
     var booking_cnt:any = {}
     for(let row in result){
       // Check booking count for given location on given date
-      if(result[row].status != "Payment Failed"){
+      if(result[row].status != "Payment Failed" && result[row].status != "Rejected"){
         if(Object.keys(booking_cnt).includes(result[row].locName)){
           if(Object.keys(booking_cnt[result[row].locName]).includes(moment(result[row].booked_date).format("YYYY-MM-DD"))){
             if(booking_cnt[result[row].locName][moment(result[row].booked_date).format("YYYY-MM-DD")] >= 3){
