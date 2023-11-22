@@ -605,7 +605,7 @@ export const PaymentController = {
         transition: all 0.3s;
         padding-bottom: 2px;
         width: 60%;
-        height: 300px;
+        height: auto;
         background-color: #f2f2f2;
       "
     >
@@ -709,7 +709,7 @@ export const PaymentController = {
         transition: all 0.3s;
         padding-bottom: 2px;
         width: 60%;
-        height: 300px;
+        height: auto;
         background-color: #f2f2f2;
       "
     >
@@ -1133,7 +1133,7 @@ export const PaymentController = {
         transition: all 0.3s;
         padding-bottom: 2px;
         width: 60%;
-        height: 300px;
+        height: auto;
         background-color: #f2f2f2;
       "
     >
@@ -1270,7 +1270,7 @@ export const PaymentController = {
         transition: all 0.3s;
         padding-bottom: 2px;
         width: 60%;
-        height: 300px;
+        height: auto;
         background-color: #f2f2f2;
       "
     >
@@ -1476,7 +1476,7 @@ export const PaymentController = {
         transition: all 0.3s;
         padding-bottom: 2px;
         width: 60%;
-        height: 500px;
+        height: auto;
         background-color: #f2f2f2;
       "
     >
@@ -1695,7 +1695,7 @@ export const PaymentController = {
           transition: all 0.3s;
           padding-bottom: 2px;
           width: 60%;
-          height: 300px;
+          height: auto;
           background-color: #f2f2f2;
         "
         >
@@ -1865,7 +1865,7 @@ export const PaymentController = {
           transition: all 0.3s;
           padding-bottom: 2px;
           width: 60%;
-          height: 300px;
+          height: auto;
           background-color: #f2f2f2;
         "
       >
@@ -2513,7 +2513,7 @@ export const PaymentController = {
           transition: all 0.3s;
           padding-bottom: 2px;
           width: 60%;
-          height: 600px;
+          height: auto;
           background-color: #f2f2f2;
         "
       >
