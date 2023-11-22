@@ -2616,7 +2616,7 @@ export const PaymentController = {
 
   async mayaPaymentSuccess(req:Request, res:Response){
     console.log(req.body);
-    res.status(200).send({});
+    res.status(200).send({success: true});
   },
 
   async mayaPaymentFailed(req:Request, res:Response){
