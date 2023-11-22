@@ -2614,6 +2614,21 @@ export const PaymentController = {
     res.status(200).send({success: true});
   },
 
+  async mayaPaymentSuccess(req:Request, res:Response){
+    console.log(req.body);
+    res.status(200).send({});
+  },
+
+  async mayaPaymentFailed(req:Request, res:Response){
+    console.log(req.body);
+    res.status(200).send({}); 
+  },
+
+  async mayaPaymentExpired(req:Request, res:Response){
+    console.log(req.body);
+    res.status(200).send({});
+  },
+
   async disburseFund(req:Request, res:Response){
     sdk2.auth('xL4njVZKZLL7Pd0Q4UOnP68Hqkpo7COG');  //('sk-8MqXdZYWV9UJB92Mc0i149CtzTWT7BYBQeiarM27iAi'); //('xL4njVZKZLL7Pd0Q4UOnP68Hqkpo7COG');
     sdk2.submitDisbursementFile({

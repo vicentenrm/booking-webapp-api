@@ -19,6 +19,9 @@ router.post("/getbookdet", Auth.verifyToken, PaymentController.getBookDetails); 
 router.post("/setstatus", PaymentController.setStatus); // reimplemented call in frontend
 router.post("/eval", Auth.verifyToken, PaymentController.setEvalResult); // reimplemented call in frontend
 router.post("/getbooktracker", PaymentController.getBookTracking);
+router.post("/payment-success", PaymentController.mayaPaymentSuccess);
+router.post("/payment-failed", PaymentController.mayaPaymentFailed);
+router.post("/payment-expired", PaymentController.mayaPaymentExpired);
 router.post("/disburse", PaymentController.disburseFund);
 
 export const PaymentRoute = router;
