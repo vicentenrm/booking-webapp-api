@@ -2615,8 +2615,593 @@ export const PaymentController = {
   },
 
   async mayaPaymentSuccess(req:Request, res:Response){
-    console.log(req.body);
+    //console.log(req.body);
+    //res.status(200).send({success: true});
+    var refNo = req.body.requestReferenceNumber
+
+    // Set status
+    var sql = SqlString.format(`UPDATE booking_items 
+    SET status = "Paid"
+    WHERE book_id IN (SELECT book_id FROM bookings WHERE refNo = ?);`,
+    [refNo]);
+    
+    var result:any = await DB.query(sql);
+    
+    // Get Customer Info
+    var sqlCus = SqlString.format(`SELECT firstName, middleName, lastName, emailAddr FROM customers WHERE cus_id IN (SELECT cus_id FROM bookings WHERE refNo = ?);`,
+    [refNo]);
+    
+    var resultCus:any = await DB.query(sqlCus);
+    
+    // Get booking details
+    var sqlBook = SqlString.format(`SELECT bi.booked_date, bi.materialURL, bi.loc_id,
+    l.locName 
+    FROM booking_items bi
+    JOIN locations l ON bi.loc_id = l.loc_id
+    WHERE book_id IN (SELECT book_id FROM bookings WHERE refNo = ?);`,
+    [refNo]);
+    
+    var resultBook:any = await DB.query(sqlBook);
+    
+    // Get admins and stakeholders
+    var sqlAdmins = SqlString.format(`SELECT firstName, role, emailAddr 
+    FROM users 
+    WHERE role IN ("admin", "approver", "stakeholder");`,
+    []);
+    
+    var resultAdmins:any = await DB.query(sqlAdmins);
+    
+    // Send email to customer -> Payment received message and booking details
+    var email_addr = resultCus[0].emailAddr; // "nesthy@retailgate.tech";
+    var full_name = resultCus[0].firstName + ' ' + resultCus[0].middleName + ' ' + resultCus[0].lastName;
+    var subject = 'GreetingsPH Booking Request';
+    var attachments = null;
+    var email_body = `
+    <body
+      style="
+        font-family: 'Montserrat', sans-serif;
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: 3px 8px 12px rgba(0, 0, 0, 0.3);
+        border-radius: 20px;
+        transition: all 0.3s;
+        padding-bottom: 2px;
+        width: 60%;
+        height: auto;
+        background-color: #f2f2f2;
+      "
+    >
+      <table 
+        style="
+          background-color: #c8ffff;
+          width: 100%;
+          padding: 1rem;
+          border-top-left-radius:20px;
+          border-top-right-radius:20px;
+          table-layout: fixed;
+        "
+      >
+        <tbody>
+          <tr>
+            <td style="
+                width=50%;
+              "
+            >
+              <table>
+              
+              
+                <tbody>
+                  <tr>
+                    <td>
+                      <h1>GREETINGS PH</h1>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <h3>&ltinsert tagline&gt</h3>
+                    </td>
+                  </tr>
+                </tbody>
+              
+              
+              </table>
+            </td>
+  
+            <td style="
+                width=50%;
+                text-align:right;
+              "
+            >
+              <img 
+               style="
+                 width:25%;
+                 height:25%;
+               "
+               src="https://rti-lrmc.s3.ap-southeast-1.amazonaws.com/Retailgate+logo-circle.png">
+              </img>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      
+      <table
+        style="
+          background-color: #f2f2f2;
+          width: 100%;
+          padding: 1rem;
+        "
+      >
+        <tbody>
+
+          <tr>
+            <td>
+              <p>Hello ` + resultCus[0].firstName + `,</p>
+              <p style="text-indent:1rem;" align="justify"> Thank you for your payment. This is to confirm that we have received your booking payment with reference # refNo. Watch out for your greeting to be displayed according to the following details:</p>
+            </td>
+          </tr>
+          <tr>
+            <table
+              style="        
+                width: 100%;
+                padding-left: 1rem;
+                padding-right: 1rem;
+                border-spacing: 0px;
+              "
+            >
+              <tbody>
+                <tr>
+                  <th                       
+                    style="
+                      text-align: left;
+                      background-color: #dfdfdf;
+                      padding-left: 1rem;
+                      height: 2.5rem;
+                      border-top: 1px solid; 
+                      border-bottom: 1px solid;
+                    "
+                  >
+                    Location
+                  </th>
+                  <td  
+                    style="
+                      text-align: left;
+                      background-color: #dfdfdf;
+                      padding-left: 1rem;
+                      height: 2.5rem;
+                      border-top: 1px solid; 
+                      border-bottom: 1px solid;
+                    "
+                  >`
+                    + resultBook[0].locName +
+                  `</td>
+                </tr>
+                <tr>
+                  <th                       
+                    style="
+                      text-align: left;
+                      background-color: #dfdfdf;
+                      padding-left: 1rem;
+                      height: 2.5rem;
+                      border-top: 1px solid; 
+                      border-bottom: 1px solid;
+                    "
+                  >
+                    Date
+                  </th>
+                  <td  
+                    style="
+                      text-align: left;
+                      background-color: #dfdfdf;
+                      padding-left: 1rem;
+                      height: 2.5rem;
+                      border-top: 1px solid; 
+                      border-bottom: 1px solid;
+                    "
+                  >`
+                    + moment(resultBook[0].booked_date).format("YYYY-MM-DD") +
+                  `</td>
+                </tr>
+              </tbody>
+            </table>
+          </tr>
+          <tr>
+            <td>
+              <p style="text-indent:1rem;"><a href="` + config.env.BASE_URL + `">Terms and Conditions</a></p>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <p style="text-indent:1rem;">Come back to <a href="` + config.env.BASE_URL + `">Greetings PH</a> to book your next greeting to surprise someone you love!</p>
+            </td>
+          </tr>
+  
+        </tbody>
+      </table>  
+    </body>
+    `;
+    
+    /*
+          <tr>
+            <td>
+              <p>Hello ` + resultCus[0].firstName + `,</p>
+              <p style="text-indent:1rem;"> Thank you for your payment. This is to confirm that we have received your booking payment with reference # . Your greeting will be displayed at your selected location [` + resultBook[0].locName + `] on your selected date [`+ resultBook[0].booked_date + `]. You're always welcome to visit <a href="` + config.env.BASE_URL + `booking">Greetings PH</a> and book more greetings.</p>
+            </td>
+          </tr>
+    */
+    
+    EmailUtils.sendEmailMS(email_addr, full_name, subject, email_body, attachments);
+    
+    // Send email to admins and stakeholders
+    var admin_details:any = [];
+    //var cc_details:any = [];
+    
+    /*for(let a in resultAdmins){
+      admin_details.push({
+        emailAddr: resultAdmins[a].emailAddr,
+        fullName: resultAdmins[a].firstName + " " + resultAdmins[a].lastName
+      })
+    }
+    
+    console.log(admin_details);*/
+    
+    // Get video from URL
+    //var videoFile = await FileUtils.urlToB64(resultBook[0].materialURL);
+    
+    //console.log("Video B64 string: ", videoFile)
+    var vid_attach:any = [];
+    /*vid_attach.push({
+        b64: videoFile,
+        fname: resultCus[0].lastName + "_" + resultCus[0].firstName + ".mp4"
+    })*/
+        
+    for(let a in resultAdmins){
+    
+    var ad_email_addr = resultAdmins[a].emailAddr; // "nesthy@retailgate.tech";
+    var ad_full_name = resultAdmins[a].firstName + ' ' + resultAdmins[a].middleName + ' ' + resultAdmins[a].lastName;
+    var ad_subject = 'GreetingsPH [Payment Received]';
+    var ad_attachments = null;
+    var ad_email_body = `
+    <body
+      style="
+        font-family: 'Montserrat', sans-serif;
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: 3px 8px 12px rgba(0, 0, 0, 0.3);
+        border-radius: 20px;
+        transition: all 0.3s;
+        padding-bottom: 2px;
+        width: 60%;
+        height: auto;
+        background-color: #f2f2f2;
+      "
+    >
+      <table 
+        style="
+          background-color: #c8ffff;
+          width: 100%;
+          padding: 1rem;
+          border-top-left-radius:20px;
+          border-top-right-radius:20px;
+          table-layout: fixed;
+        "
+      >
+        <tbody>
+          <tr>
+            <td style="
+                width=50%;
+              "
+            >
+              <table>
+              
+              
+                <tbody>
+                  <tr>
+                    <td>
+                      <h1>GREETINGS PH</h1>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <h3>&ltinsert tagline&gt</h3>
+                    </td>
+                  </tr>
+                </tbody>
+              
+              
+              </table>
+            </td>
+  
+            <td style="
+                width=50%;
+                text-align:right;
+              "
+            >
+              <img 
+               style="
+                 width:25%;
+                 height:25%;
+               "
+               src="https://rti-lrmc.s3.ap-southeast-1.amazonaws.com/Retailgate+logo-circle.png">
+              </img>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      
+      <table
+        style="
+          background-color: #f2f2f2;
+          width: 100%;
+          padding: 1rem;
+        "
+      >
+        <tbody>
+
+          <tr>
+            <td>
+              <p>Hello ` + resultAdmins[a].firstName + `,</p>
+              <p style="text-indent:1rem;" align="justify"> Payment has been received from ` + resultCus[0].firstName + ` (`+ resultCus[0].emailAddr + `). Please see the details of the booking below:
+            </td>
+          </tr>
+          <tr>
+            <table
+              style="        
+                width: 100%;
+                padding-left: 1rem;
+                padding-right: 1rem;
+                border-spacing: 0px;
+              "
+            >
+              <tbody>
+                <tr>
+                  <th                       
+                    style="
+                      text-align: left;
+                      background-color: #dfdfdf;
+                      padding-left: 1rem;
+                      height: 2.5rem;
+                      border-top: 1px solid; 
+                      border-bottom: 1px solid;
+                    "
+                  >
+                    Location
+                  </th>
+                  <td  
+                    style="
+                      text-align: left;
+                      background-color: #dfdfdf;
+                      padding-left: 1rem;
+                      height: 2.5rem;
+                      border-top: 1px solid; 
+                      border-bottom: 1px solid;
+                    "
+                  >`
+                    + resultBook[0].locName +
+                  `</td>
+                </tr>
+                <tr>
+                  <th                       
+                    style="
+                      text-align: left;
+                      background-color: #dfdfdf;
+                      padding-left: 1rem;
+                      height: 2.5rem;
+                      border-top: 1px solid; 
+                      border-bottom: 1px solid;
+                    "
+                  >
+                    Date
+                  </th>
+                  <td  
+                    style="
+                      text-align: left;
+                      background-color: #dfdfdf;
+                      padding-left: 1rem;
+                      height: 2.5rem;
+                      border-top: 1px solid; 
+                      border-bottom: 1px solid;
+                    "
+                  >`
+                    + moment(resultBook[0].booked_date).format("YYYY-MM-DD") +
+                  `</td>
+                </tr>
+              </tbody>
+            </table>
+          </tr>
+          <tr>
+            <td>
+              <p style="text-indent:1rem;">You may review the material <a href="` + resultBook[0].materialURL + ` ">here</a>. You may also review the booking details and the material by logging in at <a href="` + config.env.BASE_URL + `pendingbookings">Greetings PH</a></p>
+            </td>
+          <tr>
+  
+        </tbody>
+      </table>  
+    </body>
+    `;
+    
+    /*
+          <tr>
+            <td>
+              <p>Hello ` + resultAdmins[a].firstName + `,</p>
+              <p style="text-indent:1rem;"> Payment has been received from ` + resultCus[0].firstName + ` (`+ resultCus[0].emailAddr + `). The details of the customer's booking are provided below:
+              <ul>
+                <li>Location: ` + resultBook[0].locName +`</li>
+                <li>Booked Date: ` + resultBook[0].booked_date + `</li>
+              </ul>
+              <p style="text-indent:1rem;">Get a copy of the customer's material <a href="` + resultBook[0].materialURL + ` ">here</a>. You may also check the booking details and material by logging in at <a href="` + config.env.BASE_URL + `pendingbookings">Greetings PH</a></p>
+            </td>
+          </tr>
+    */
+    
+    admin_details.push({
+      emailAddr: ad_email_addr,
+      fullName: ad_full_name,
+      subject: ad_subject,
+      attachments: ad_attachments,
+      emailBody: ad_email_body
+    });
+    
+    }
+    
+    //console.log(admin_details);
+    EmailUtils.sendBulk(admin_details, vid_attach);
+    //EmailUtils.sendEmailMS_withCC(admin_details, cc_details, ad_subject, ad_email_body, ad_attachments);
+    
+    // After latest payment, check if all slots of the site for the specified date is already taken
+    // Get number of paid bookings for the site for the specified date
+    var sqlPaid = SqlString.format(`SELECT COUNT(bookitem_id) AS cnt
+    FROM booking_items
+    WHERE status = "Paid"
+    AND loc_id = ?
+    AND booked_date = ?;`,
+    [resultBook[0].loc_id, moment(resultBook[0].booked_date).format("YYYY-MM-DD")]);
+    var resultPaid:any = await DB.query(sqlPaid);
+        
+    // If no slots left after latest payment, send email to other customers who booked the site on the same date
+    if(resultPaid[0].cnt >= 3){
+      // Get other customers who booked for the site on the same date
+      var sqlCus = SqlString.format(`SELECT c.firstName, c.middleName, c.lastName, c.emailAddr
+      FROM customers c
+      JOIN bookings b ON b.cus_id = c.cus_id
+      JOIN booking_items bi ON bi.book_id = b.book_id
+      WHERE loc_id = ?
+      AND bi.booked_date = ?
+      AND bi.status = "Pending Booking"; `,
+      [resultBook[0].loc_id, moment(resultBook[0].booked_date).format("YYYY-MM-DD")]);
+      var resultCus:any = await DB.query(sqlCus);
+      // Send email to unfortunate customers
+      var vid_attach:any = [];
+      var customer_details:any = [];
+      for(let c in resultCus){
+        var cus_email_addr = resultCus[c].emailAddr; // "nesthy@retailgate.tech";
+        var cus_full_name = resultCus[c].firstName + ' ' + resultCus[c].middleName + ' ' + resultCus[c].lastName;
+        var cus_subject = 'GreetingsPH Site Fully Booked';
+        var cus_attachments = null;
+        var cus_email_body = `
+        <body
+        style="
+          font-family: 'Montserrat', sans-serif;
+          margin-left: auto;
+          margin-right: auto;
+          margin-top: 2rem;
+          margin-bottom: 2rem;
+          box-shadow: 3px 8px 12px rgba(0, 0, 0, 0.3);
+          border-radius: 20px;
+          transition: all 0.3s;
+          padding-bottom: 2px;
+          width: 60%;
+          height: auto;
+          background-color: #f2f2f2;
+        "
+        >
+          <table 
+            style="
+              background-color: #c8ffff;
+              width: 100%;
+              padding: 1rem;
+              border-top-left-radius:20px;
+              border-top-right-radius:20px;
+              table-layout: fixed;
+            "
+          >
+            <tbody>
+              <tr>
+                <td style="
+                    width=50%;
+                  "
+                >
+                  <table>
+                  
+                  
+                    <tbody>
+                      <tr>
+                        <td>
+                          <h1>GREETINGS PH</h1>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <h3>&ltinsert tagline&gt</h3>
+                        </td>
+                      </tr>
+                    </tbody>
+                  
+                  
+                  </table>
+                </td>
+      
+                <td style="
+                    width=50%;
+                    text-align:right;
+                  "
+                >
+                  <img 
+                   style="
+                     width:25%;
+                     height:25%;
+                   "
+                   src="https://rti-lrmc.s3.ap-southeast-1.amazonaws.com/Retailgate+logo-circle.png">
+                  </img>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          
+          <table
+            style="
+              background-color: #f2f2f2;
+              width: 100%;
+              padding: 1rem;
+            "
+          >
+            <tbody>
+              <tr>
+                <td>
+                  <p>Hello ` + resultCus[c].firstName + `,</p>
+                  <p style="text-indent:1rem;"> We regret to inform you that as we operate on a first paid first served basis, the site you have requested is no longer available. You may book again thru <a href="` + config.env.BASE_URL + `">Greetings PH</a> and we strongly recommend that you pay immediately upon approval in order to secure your spot immediately.</p>
+                  <p>Thank you!</p>
+                </td>
+              </tr>
+      
+            </tbody>
+          </table>  
+        </body>
+        `;
+    
+        customer_details.push({
+          emailAddr: cus_email_addr,
+          fullName: cus_full_name,
+          subject: cus_subject,
+          attachments: cus_attachments,
+          emailBody: cus_email_body
+        });
+    
+      }
+    
+      //console.log(customer_details);
+      EmailUtils.sendBulk(customer_details, vid_attach);
+      
+      console.log(resultBook[0].loc_id);
+      console.log(moment(resultBook[0].booked_date).format("YYYY-MM-DD"));
+      //TODO Update status of bookings on fully booked day for the specified site
+      var sqlExpire = SqlString.format(`UPDATE booking_items 
+      SET status = "Expired"
+      WHERE loc_id = ?
+      AND booked_date = ?
+      AND status = "Pending Booking";`,
+      [resultBook[0].loc_id, moment(resultBook[0].booked_date).format("YYYY-MM-DD")]);
+
+      var resultExpire:any = await DB.query(sqlExpire);
+
+    }
+
     res.status(200).send({success: true});
+
+
   },
 
   async mayaPaymentFailed(req:Request, res:Response){
