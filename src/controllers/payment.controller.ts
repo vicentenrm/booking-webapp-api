@@ -297,12 +297,12 @@ export const PaymentController = {
 
     var result:any = await DB.query(sql);
 
-    //if(result[0].checkoutID){
-    //  res.status(200).send({
-    //    checkoutId: result[0].checkoutID,
-    //    redirectUrl: result[0].checkoutURL        
-    //  });
-    //} else{
+    if(result[0].checkoutID && result[0].status != "Paid" && result[0].status != "Payment Expired"){
+      res.status(200).send({
+        checkoutId: result[0].checkoutID,
+        redirectUrl: result[0].checkoutURL        
+      });
+    } else{
     if(result[0].status != "Paid"){
       var units = 128;
       var data:any = {
@@ -381,6 +381,7 @@ export const PaymentController = {
       res.status(200).send({
         status: "paid"
       })
+    }
     }
     //console.log(checkout.retrieve(callback));
   },
@@ -3211,6 +3212,15 @@ export const PaymentController = {
 
   async mayaPaymentExpired(req:Request, res:Response){
     console.log(req.body);
+    var refNo = req.body.requestReferenceNumber
+    // Set status
+    var sql = SqlString.format(`UPDATE booking_items 
+    SET status = "Payment Expired"
+    WHERE book_id IN (SELECT book_id FROM bookings WHERE refNo = ?);`,
+    [refNo]);
+    
+    var result:any = await DB.query(sql);
+
     res.status(200).send({success: true});
   },
 
