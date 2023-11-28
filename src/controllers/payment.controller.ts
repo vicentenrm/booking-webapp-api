@@ -372,6 +372,12 @@ export const PaymentController = {
             var sqlUpd = SqlString.format(`UPDATE bookings SET checkoutID = ?, checkoutURL = ? WHERE refNo = ?;`, 
             [response.checkoutId, response.redirectUrl, refNo]);
             var resultUpd:any = await DB.query(sqlUpd);
+
+            // Update status in case it became Payment Expired and requested for new Checkout ID
+            var sqlStatus = SqlString.format(`UPDATE booking_items SET status = "Approved" WHERE book_id IN (SELECT book_id FROM bookings WHERE refNo = ?);`,
+            [refNo]);
+            var resultStatus:any = await DB.query(sqlStatus);
+
             res.status(200).send(response);
           }
       });
