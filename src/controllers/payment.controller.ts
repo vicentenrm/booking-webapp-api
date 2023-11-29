@@ -1834,11 +1834,19 @@ export const PaymentController = {
       reason += req.body.reason;
     }
 
+    var sql = '';
 
-    var sql = SqlString.format(`UPDATE booking_items 
-    SET status = ?, reason = ?
-    WHERE book_id IN (SELECT book_id FROM bookings WHERE refNo = ?);`,
-    [status, reason, refNo]);
+    if(status === "Approved"){
+      sql = SqlString.format(`UPDATE booking_items 
+      SET status = ?, approval_date, reason = ?
+      WHERE book_id IN (SELECT book_id FROM bookings WHERE refNo = ?);`,
+      [status,moment(new Date()).format("YYYY-MM-DD hh:mm:ss") ,reason, refNo]);
+    } else{
+      sql = SqlString.format(`UPDATE booking_items 
+      SET status = ?, reason = ?
+      WHERE book_id IN (SELECT book_id FROM bookings WHERE refNo = ?);`,
+      [status, reason, refNo]);
+    }
 
     var result:any = await DB.query(sql);
 
