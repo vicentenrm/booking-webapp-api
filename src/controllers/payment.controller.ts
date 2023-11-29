@@ -1838,9 +1838,9 @@ export const PaymentController = {
 
     if(status === "Approved"){
       sql = SqlString.format(`UPDATE booking_items 
-      SET status = ?, approval_date, reason = ?
+      SET status = ?, approval_date = ?, reason = ?
       WHERE book_id IN (SELECT book_id FROM bookings WHERE refNo = ?);`,
-      [status,moment(new Date()).format("YYYY-MM-DD hh:mm:ss") ,reason, refNo]);
+      [status, moment(new Date()).format("YYYY-MM-DD hh:mm:ss"),reason, refNo]);
     } else{
       sql = SqlString.format(`UPDATE booking_items 
       SET status = ?, reason = ?
