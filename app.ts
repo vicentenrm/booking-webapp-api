@@ -6,6 +6,7 @@ import cluster from 'cluster';
 import { PaymentRoute } from './src/routes/payment.route';
 import { UserRoute } from './src/routes/user.route';
 import { LocationRoute } from './src/routes/location.route';
+import { PriceRoute } from './src/routes/price.route';
 import * as fs from 'fs';
 import * as https from 'https';
 
@@ -45,6 +46,7 @@ if(cluster.isMaster){
   app.use('/payment', PaymentRoute);
   app.use('/user', UserRoute);
   app.use('/location', LocationRoute);
+  app.use('/price', PriceRoute);
 
 
   app.get('/', (req, res) => {
