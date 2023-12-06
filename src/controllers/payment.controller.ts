@@ -574,7 +574,7 @@ export const PaymentController = {
         console.log("Booked date: ", moment(data.items[item].bookedDate).format("YYYY-MM-DD"));
         mat = await FileUtils.storeFile(data.materialFile, "greetings", "mat_" + data.buyerInfo.contact.email + moment(data.items[item].bookedDate).format().split('T')[0]);
 
-        sqlBookItems += SqlString.format(`INSERT INTO booking_items(bookitem_id, book_id, productName, loc_id, tier, spots, totalAmount, booked_date, status, materialURL) VALUES(?,?,?,?,?,?,?,?);`, 
+        sqlBookItems += SqlString.format(`INSERT INTO booking_items(bookitem_id, book_id, productName, loc_id, tier, spots, totalAmount, booked_date, status, materialURL) VALUES(?,?,?,?,?,?,?,?,?,?);`, 
         [bookitem_id, book_id, data.items[item].name, data.loc_id, data.tier, spots, data.items[item].totalAmount.value, moment(data.items[item].bookedDate).format(), 'Pending Booking', mat])
       }
 
@@ -594,7 +594,7 @@ export const PaymentController = {
 
         mat = await FileUtils.storeFile(data.materialFile, "greetings", "mat_" + data.buyerInfo.contact.email + moment(data.items[item].bookedDate).format().split('T')[0]);
 
-        sqlBookItems += SqlString.format(`INSERT INTO booking_items(bookitem_id, book_id, productName, loc_id, tier, spots, totalAmount, booked_date, status, materialURL) VALUES(?,?,?,?,?,?,?,?);`, 
+        sqlBookItems += SqlString.format(`INSERT INTO booking_items(bookitem_id, book_id, productName, loc_id, tier, spots, totalAmount, booked_date, status, materialURL) VALUES(?,?,?,?,?,?,?,?,?,?);`, 
         [bookitem_id, book_id, data.items[item].name, data.loc_id, data.tier, spots, data.items[item].totalAmount.value, moment(data.items[item].bookedDate).format(), 'Pending Booking', mat]);
       }
     }
