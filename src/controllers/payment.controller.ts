@@ -288,7 +288,7 @@ export const PaymentController = {
 
     var sql = SqlString.format(`SELECT c.firstName, c.middleName, c.lastName, c.emailAddr,
     b.checkoutID, b.checkoutURL, 
-    bi.productName, bi.totalAmount, bi.status
+    bi.productName, bi.spots, bi.totalAmount, bi.status
     FROM booking_items bi 
     JOIN bookings b ON b.book_id = bi.book_id
     JOIN customers c ON b.cus_id = c.cus_id
@@ -538,6 +538,15 @@ export const PaymentController = {
        }
     }
 
+    var spots = 0;
+    if(data.tier == 1){
+      spots = 63;
+    } else if(data.tier == 2){
+      spots = 127;
+    } else if(data.tier == 3){
+      spots = 225;
+    }
+
     // Check if customer email address already exists
     var sqlCheck = SqlString.format(`SELECT * FROM customers WHERE emailAddr = ?;`, [data.buyerInfo.contact.email]);
     var resultCheck:any = await DB.query(sqlCheck);
@@ -565,8 +574,8 @@ export const PaymentController = {
         console.log("Booked date: ", moment(data.items[item].bookedDate).format("YYYY-MM-DD"));
         mat = await FileUtils.storeFile(data.materialFile, "greetings", "mat_" + data.buyerInfo.contact.email + moment(data.items[item].bookedDate).format().split('T')[0]);
 
-        sqlBookItems += SqlString.format(`INSERT INTO booking_items(bookitem_id, book_id, productName, loc_id, totalAmount, booked_date, status, materialURL) VALUES(?,?,?,?,?,?,?,?);`, 
-        [bookitem_id, book_id, data.items[item].name, data.loc_id, data.items[item].totalAmount.value, moment(data.items[item].bookedDate).format(), 'Pending Booking', mat])
+        sqlBookItems += SqlString.format(`INSERT INTO booking_items(bookitem_id, book_id, productName, loc_id, tier, spots, totalAmount, booked_date, status, materialURL) VALUES(?,?,?,?,?,?,?,?);`, 
+        [bookitem_id, book_id, data.items[item].name, data.loc_id, data.tier, spots, data.items[item].totalAmount.value, moment(data.items[item].bookedDate).format(), 'Pending Booking', mat])
       }
 
     } else{
@@ -585,8 +594,8 @@ export const PaymentController = {
 
         mat = await FileUtils.storeFile(data.materialFile, "greetings", "mat_" + data.buyerInfo.contact.email + moment(data.items[item].bookedDate).format().split('T')[0]);
 
-        sqlBookItems += SqlString.format(`INSERT INTO booking_items(bookitem_id, book_id, productName, loc_id, totalAmount, booked_date, status, materialURL) VALUES(?,?,?,?,?,?,?,?);`, 
-        [bookitem_id, book_id, data.items[item].name, data.loc_id, data.items[item].totalAmount.value, moment(data.items[item].bookedDate).format(), 'Pending Booking', mat]);
+        sqlBookItems += SqlString.format(`INSERT INTO booking_items(bookitem_id, book_id, productName, loc_id, tier, spots, totalAmount, booked_date, status, materialURL) VALUES(?,?,?,?,?,?,?,?);`, 
+        [bookitem_id, book_id, data.items[item].name, data.loc_id, data.tier, spots, data.items[item].totalAmount.value, moment(data.items[item].bookedDate).format(), 'Pending Booking', mat]);
       }
     }
 
@@ -1852,7 +1861,7 @@ export const PaymentController = {
 
     var sqlSel = SqlString.format(`SELECT c.firstName, c.middleName, c.lastName, c.emailAddr,
     b.checkoutID, b.checkoutURL, 
-    bi.productName, bi.loc_id, bi.totalAmount, bi.booked_date,
+    bi.productName, bi.loc_id, bi.spots, bi.totalAmount, bi.booked_date,
     l.locName 
     FROM booking_items bi 
     JOIN bookings b ON b.book_id = bi.book_id
@@ -2182,7 +2191,7 @@ export const PaymentController = {
                           border-bottom: 1px solid;
                         "
                       >`
-                        + units +
+                        + resultSel[0].spots + // units +
                       `</td>
                     </tr>
     
@@ -2263,7 +2272,7 @@ export const PaymentController = {
                           border-bottom: 1px solid;
                         "
                       >`
-                        + resultSel[0].totalAmount * units +
+                        + resultSel[0].totalAmount + //* units +
                       `</td>
                     </tr>
     
