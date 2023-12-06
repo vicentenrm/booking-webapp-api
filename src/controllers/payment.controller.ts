@@ -907,7 +907,7 @@ export const PaymentController = {
         contactNo: result[row].contactNo,
         emailAddr: result[row].emailAddr,
         refNo: result[row].refNo,
-        booking_date: moment.utc(result[row].created_at).utcOffset(8).format("YYYY-MM-DD hh:mm:ss"),
+        booking_date: moment(result[row].created_at).format("YYYY-MM-DD HH:mm:ss"),
         productName: result[row].productName,
         totalAmount: result[row].totalAmount,
         booked_date: moment(result[row].booked_date).format("YYYY-MM-DD"),
@@ -1840,7 +1840,7 @@ export const PaymentController = {
       sql = SqlString.format(`UPDATE booking_items 
       SET status = ?, approval_date = ?, reason = ?
       WHERE book_id IN (SELECT book_id FROM bookings WHERE refNo = ?);`,
-      [status, moment(new Date()).format("YYYY-MM-DD hh:mm:ss"),reason, refNo]);
+      [status, moment(new Date()).format("YYYY-MM-DD HH:mm:ss"),reason, refNo]);
     } else{
       sql = SqlString.format(`UPDATE booking_items 
       SET status = ?, reason = ?
