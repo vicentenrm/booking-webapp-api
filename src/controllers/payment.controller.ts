@@ -323,7 +323,7 @@ export const PaymentController = {
         data["items"].push({
           name: result[row].productName,
           totalAmount: {
-            value: result[row].totalAmount * units
+            value: result[row].totalAmount // * units
           }
         });
       }
@@ -907,7 +907,7 @@ export const PaymentController = {
         contactNo: result[row].contactNo,
         emailAddr: result[row].emailAddr,
         refNo: result[row].refNo,
-        booking_date: moment(result[row].created_at).format("YYYY-MM-DD hh:mm:ss"),
+        booking_date: result[row].created_at, // moment(result[row].created_at).format("YYYY-MM-DD hh:mm:ss"),
         productName: result[row].productName,
         totalAmount: result[row].totalAmount,
         booked_date: moment(result[row].booked_date).format("YYYY-MM-DD"),
