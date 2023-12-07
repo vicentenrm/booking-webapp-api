@@ -303,7 +303,7 @@ export const PaymentController = {
         redirectUrl: result[0].checkoutURL        
       });
     } else{
-    if(result[0].status != "Paid"){
+    if(result[0].status != "Paid" && result[0].status != "Payment Failed"){
       var units = 128;
       var data:any = {
         buyerInfo: {
