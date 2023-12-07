@@ -297,7 +297,7 @@ export const PaymentController = {
 
     var result:any = await DB.query(sql);
 
-    if(result[0].checkoutID && result[0].status != "Paid" && result[0].status != "Payment Expired" && result[0].status != "Payment Error"){
+    if(result[0].checkoutID && result[0].status != "Paid" && result[0].status != "Payment Failed" && result[0].status != "Payment Expired" && result[0].status != "Payment Error"){
       res.status(200).send({
         checkoutId: result[0].checkoutID,
         redirectUrl: result[0].checkoutURL        
@@ -383,9 +383,13 @@ export const PaymentController = {
       });
 
     //}
-    } else{
+    } else if(result[0].status == "Paid"){
       res.status(200).send({
         status: "paid"
+      })
+    } else if(result[0].status == "Payment Failed"){
+      res.status(200).send({
+        status: "failed"
       })
     }
     }
