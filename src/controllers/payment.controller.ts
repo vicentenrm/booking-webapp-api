@@ -351,7 +351,7 @@ export const PaymentController = {
   
       var redirectUrl = {
         success: config.env.BASE_URL + "checkout/success/?refno=" + refNo, // "http://localhost:3000/checkout/success/?refno=" + refNo,
-        failure: config.env.BASE_URL + "checkout/failed", // "http://localhost:3000/checkout/failed",
+        failure: config.env.BASE_URL + "checkout/failed/?refno=" + refNo, // "http://localhost:3000/checkout/failed",
         cancel: config.env.BASE_URL, // "http://localhost:3000/",
       }
   
@@ -3186,7 +3186,7 @@ export const PaymentController = {
               <tr>
                 <td>
                   <p>Hello ` + resultCus[c].firstName + `,</p>
-                  <p style="text-indent:1rem;"> We regret to inform you that as we operate on a first paid first served basis, the site you have requested is no longer available. You may book again thru <a href="` + config.env.BASE_URL + `">Greetings PH</a> and we strongly recommend that you pay immediately upon approval in order to secure your spot immediately.</p>
+                  <p style="text-indent:1rem;"> We regret to inform you that as we operate on a first paid first served basis, the site you have requested is no longer available. You may book again thru <a href="` + config.env.BASE_URL + `">Greetings PH</a> to find available dates and sites.</p>
                   <p>Thank you!</p>
                 </td>
               </tr>
