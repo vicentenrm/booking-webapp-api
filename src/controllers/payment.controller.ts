@@ -1442,7 +1442,7 @@ export const PaymentController = {
             </tr>
             <tr>
               <td>
-                <p style="text-indent:1rem;"><a href="` + config.env.BASE_URL + `">Terms and Conditions</a></p>
+                <p style="text-indent:1rem;"><a href="` + config.env.BASE_URL + `terms-and-conditions` + `">Terms and Conditions</a></p>
               </td>
             </tr>
             <tr>
@@ -2836,7 +2836,7 @@ export const PaymentController = {
           </tr>
           <tr>
             <td>
-              <p style="text-indent:1rem;"><a href="` + config.env.BASE_URL + `">Terms and Conditions</a></p>
+              <p style="text-indent:1rem;"><a href="` + config.env.BASE_URL + `terms-and-conditions` + `">Terms and Conditions</a></p>
             </td>
           </tr>
           <tr>
