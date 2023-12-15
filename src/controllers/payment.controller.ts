@@ -631,7 +631,7 @@ export const PaymentController = {
     >
       <table 
         style="
-          background-color: #c8ffff;
+          background-color: #1670DF;
           width: 100%;
           padding: 1rem;
           border-top-left-radius:20px;
@@ -651,12 +651,23 @@ export const PaymentController = {
                 <tbody>
                   <tr>
                     <td>
-                      <h1>GREETINGS PH</h1>
+                      <h1 style="
+                          color: #ffffff;
+                          font-size: 24px;
+                          letter-spacing: 1px;
+                          padding: 0;
+                          margin: 8px 0;
+                        "
+                      >GreetingsPH</h1>
                     </td>
                   </tr>
                   <tr>
                     <td>
-                      <h3>&ltinsert tagline&gt</h3>
+                      <h3 style="
+                          text-align: left;
+                          color: #ffffff;
+                        "
+                      ></h3>
                     </td>
                   </tr>
                 </tbody>
@@ -664,16 +675,19 @@ export const PaymentController = {
               
               </table>
             </td>
-  
+    
             <td style="
-                width=50%;
-                text-align:right;
+                margin: auto;
+                align-items: right;
+                justify-content: right;
+                text-align: right;
+                padding-right: 16px;
               "
             >
               <img 
                style="
-                 width:25%;
-                 height:25%;
+                 width: 26%;
+                 height: 67%;
                "
                src="https://rti-lrmc.s3.ap-southeast-1.amazonaws.com/Retailgate+logo-circle.png">
               </img>
@@ -692,8 +706,20 @@ export const PaymentController = {
         <tbody>
           <tr>
             <td>
-              <p>Hello ` + data.buyerInfo.firstName + `,</p>
-              <p style="text-indent:1rem;"> We received your booking request. Please give us ample time to review your greeting material. We'll let you know right away once your booking is approved. You may visit <a href="` + config.env.BASE_URL + `bookstatus/?refno=` + ref_num +`">Booking Tracker</a> to check the status of your booking.</p>
+              <p style="
+                  text-align: left;
+                  font-size: 15px;
+                  padding: 0 16px;
+                  text-indent:0
+                "
+              >Hello ` + data.buyerInfo.firstName + `,</p>
+              <p style="
+                  text-align: left;
+                  font-size: 15px;
+                  padding: 0 16px;
+                  text-indent:0
+                "
+              > We received your booking request. Please give us ample time to review your greeting material. We'll let you know right away once your booking is approved. You may visit <a href="` + config.env.BASE_URL + `bookstatus/?refno=` + ref_num +`">Booking Tracker</a> to check the status of your booking.</p>
             </td>
           </tr>
   
@@ -735,7 +761,7 @@ export const PaymentController = {
     >
       <table 
         style="
-          background-color: #c8ffff;
+          background-color: #1670DF;
           width: 100%;
           padding: 1rem;
           border-top-left-radius:20px;
@@ -755,12 +781,23 @@ export const PaymentController = {
                 <tbody>
                   <tr>
                     <td>
-                      <h1>GREETINGS PH</h1>
+                      <h1 style="
+                          color: #ffffff;
+                          font-size: 24px;
+                          letter-spacing: 1px;
+                          padding: 0;
+                          margin: 8px 0;
+                        "
+                      >GreetingsPH</h1>
                     </td>
                   </tr>
                   <tr>
                     <td>
-                      <h3>&ltinsert tagline&gt</h3>
+                      <h3 style="
+                          text-align: left;
+                          color: #ffffff;
+                        "
+                      ></h3>
                     </td>
                   </tr>
                 </tbody>
@@ -768,16 +805,19 @@ export const PaymentController = {
               
               </table>
             </td>
-  
+    
             <td style="
-                width=50%;
-                text-align:right;
+                margin: auto;
+                align-items: right;
+                justify-content: right;
+                text-align: right;
+                padding-right: 16px;
               "
             >
               <img 
                style="
-                 width:25%;
-                 height:25%;
+                 width: 26%;
+                 height: 67%;
                "
                src="https://rti-lrmc.s3.ap-southeast-1.amazonaws.com/Retailgate+logo-circle.png">
               </img>
@@ -796,8 +836,20 @@ export const PaymentController = {
         <tbody>
           <tr>
             <td>
-              <p>Hello ` + resultAdmin[0].firstName + `,</p>
-              <p style="text-indent:1rem;"> A new booking request has been received. See the material here: <a href="` + config.env.BASE_URL + `pendingbookings">Greetings PH Dashboard</a> for your review and approval.</p>
+              <p style="
+                  text-align: left;
+                  font-size: 15px;
+                  padding: 0 16px;
+                  text-indent:0
+                "
+              >Hello ` + resultAdmin[0].firstName + `,</p>
+              <p style="
+                  text-align: left;
+                  font-size: 15px;
+                  padding: 0 16px;
+                  text-indent:0
+                "
+              > A new booking request has been received. See the material here: <a href="` + config.env.BASE_URL + `pendingbookings">Greetings PH Dashboard</a> for your review and approval.</p>
             </td>
           </tr>
   
@@ -1159,7 +1211,7 @@ export const PaymentController = {
     >
       <table 
         style="
-          background-color: #c8ffff;
+          background-color: #1670DF;
           width: 100%;
           padding: 1rem;
           border-top-left-radius:20px;
@@ -1179,12 +1231,23 @@ export const PaymentController = {
                 <tbody>
                   <tr>
                     <td>
-                      <h1>GREETINGS PH</h1>
+                      <h1 style="
+                          color: #ffffff;
+                          font-size: 24px;
+                          letter-spacing: 1px;
+                          padding: 0;
+                          margin: 8px 0;
+                        "
+                      >GreetingsPH</h1>
                     </td>
                   </tr>
                   <tr>
                     <td>
-                      <h3>&ltinsert tagline&gt</h3>
+                      <h3 style="
+                          text-align: left;
+                          color: #ffffff;
+                        "
+                      ></h3>
                     </td>
                   </tr>
                 </tbody>
@@ -1192,16 +1255,19 @@ export const PaymentController = {
               
               </table>
             </td>
-  
+    
             <td style="
-                width=50%;
-                text-align:right;
+                margin: auto;
+                align-items: right;
+                justify-content: right;
+                text-align: right;
+                padding-right: 16px;
               "
             >
               <img 
                style="
-                 width:25%;
-                 height:25%;
+                 width: 26%;
+                 height: 67%;
                "
                src="https://rti-lrmc.s3.ap-southeast-1.amazonaws.com/Retailgate+logo-circle.png">
               </img>
@@ -1220,8 +1286,20 @@ export const PaymentController = {
         <tbody>
           <tr>
             <td>
-              <p>Hello ` + resultCus[0].firstName + `,</p>
-              <p style="text-indent:1rem;"> We received your booking payment. Thank you! Your greeting will be displayed at your selected location [` + resultBook[0].locName + `] on your selected date [`+ resultBook[0].booked_date + `]. You're always welcome to visit <a href="` + config.env.BASE_URL + `booking">Greetings PH</a> and book more greetings.</p>
+              <p style="
+                  text-align: left;
+                  font-size: 15px;
+                  padding: 0 16px;
+                  text-indent:0
+                "
+              >Hello ` + resultCus[0].firstName + `,</p>
+              <p style="
+                   text-align: left;
+                   font-size: 15px;
+                   padding: 0 16px;
+                   text-indent:0
+                 "
+               > We received your booking payment. Thank you! Your greeting will be displayed at your selected location [` + resultBook[0].locName + `] on your selected date [`+ resultBook[0].booked_date + `]. You're always welcome to visit <a href="` + config.env.BASE_URL + `booking">Greetings PH</a> and book more greetings.</p>
             </td>
           </tr>
   
@@ -1309,7 +1387,7 @@ export const PaymentController = {
       >
         <table 
           style="
-            background-color: #c8ffff;
+            background-color: #1670DF;
             width: 100%;
             padding: 1rem;
             border-top-left-radius:20px;
@@ -1329,12 +1407,23 @@ export const PaymentController = {
                   <tbody>
                     <tr>
                       <td>
-                        <h1>GREETINGS PH</h1>
+                        <h1 style="
+                            color: #ffffff;
+                            font-size: 24px;
+                            letter-spacing: 1px;
+                            padding: 0;
+                            margin: 8px 0;
+                          "
+                        >GreetingsPH</h1>
                       </td>
                     </tr>
                     <tr>
                       <td>
-                        <h3>&ltinsert tagline&gt</h3>
+                        <h3 style="
+                            text-align: left;
+                            color: #ffffff;
+                          "
+                        ></h3>
                       </td>
                     </tr>
                   </tbody>
@@ -1342,16 +1431,19 @@ export const PaymentController = {
                 
                 </table>
               </td>
-    
+      
               <td style="
-                  width=50%;
-                  text-align:right;
+                  margin: auto;
+                  align-items: right;
+                  justify-content: right;
+                  text-align: right;
+                  padding-right: 16px;
                 "
               >
                 <img 
                  style="
-                   width:25%;
-                   height:25%;
+                   width: 26%;
+                   height: 67%;
                  "
                  src="https://rti-lrmc.s3.ap-southeast-1.amazonaws.com/Retailgate+logo-circle.png">
                 </img>
@@ -1371,8 +1463,20 @@ export const PaymentController = {
   
             <tr>
               <td>
-                <p>Hello ` + resultCus[0].firstName + `,</p>
-                <p style="text-indent:1rem;" align="justify"> Thank you for your payment. This is to confirm that we have received your booking payment with reference # refNo. Watch out for your greeting to be displayed according to the following details:</p>
+                <p style="
+                    text-align: left;
+                    font-size: 15px;
+                    padding: 0 16px;
+                    text-indent:0
+                  "
+                >Hello ` + resultCus[0].firstName + `,</p>
+                <p style="
+                    text-align: left;
+                    font-size: 15px;
+                    padding: 0 16px;
+                    text-indent:0
+                  "
+                > Thank you for your payment. This is to confirm that we have received your booking payment with reference # refNo. Watch out for your greeting to be displayed according to the following details:</p>
               </td>
             </tr>
             <tr>
@@ -1390,10 +1494,11 @@ export const PaymentController = {
                       style="
                         text-align: left;
                         background-color: #dfdfdf;
-                        padding-left: 1rem;
                         height: 2.5rem;
-                        border-top: 1px solid; 
-                        border-bottom: 1px solid;
+                        border: 1px 0 solid #7D8390;
+                        font-size: 15px;
+                        padding: 0 16px;
+                        text-indent:0
                       "
                     >
                       Location
@@ -1402,10 +1507,11 @@ export const PaymentController = {
                       style="
                         text-align: left;
                         background-color: #dfdfdf;
-                        padding-left: 1rem;
                         height: 2.5rem;
-                        border-top: 1px solid; 
-                        border-bottom: 1px solid;
+                        border: 1px 0 solid #7D8390;
+                        font-size: 15px;
+                        padding: 0 16px;
+                        text-indent:0
                       "
                     >`
                       + resultBook[0].locName +
@@ -1416,10 +1522,11 @@ export const PaymentController = {
                       style="
                         text-align: left;
                         background-color: #dfdfdf;
-                        padding-left: 1rem;
                         height: 2.5rem;
-                        border-top: 1px solid; 
-                        border-bottom: 1px solid;
+                        border: 1px 0 solid #7D8390;
+                        font-size: 15px;
+                        padding: 0 16px;
+                        text-indent:0
                       "
                     >
                       Date
@@ -1428,10 +1535,11 @@ export const PaymentController = {
                       style="
                         text-align: left;
                         background-color: #dfdfdf;
-                        padding-left: 1rem;
                         height: 2.5rem;
-                        border-top: 1px solid; 
-                        border-bottom: 1px solid;
+                        border: 1px 0 solid #7D8390;
+                        font-size: 15px;
+                        padding: 0 16px;
+                        text-indent:0
                       "
                     >`
                       + moment(resultBook[0].booked_date).format("YYYY-MM-DD") +
@@ -1442,12 +1550,24 @@ export const PaymentController = {
             </tr>
             <tr>
               <td>
-                <p style="text-indent:1rem;"><a href="` + config.env.BASE_URL + `terms-and-conditions` + `">Terms and Conditions</a></p>
+                <p style="
+                    text-align: left;
+                    font-size: 15px;
+                    padding: 0 16px;
+                    text-indent:0
+                  "
+                ><a href="` + config.env.BASE_URL + `terms-and-conditions` + `">Terms and Conditions</a></p>
               </td>
             </tr>
             <tr>
               <td>
-                <p style="text-indent:1rem;">Come back to <a href="` + config.env.BASE_URL + `">Greetings PH</a> to book your next greeting to surprise someone you love!</p>
+                <p style="
+                    text-align: left;
+                    font-size: 15px;
+                    padding: 0 16px;
+                    text-indent:0
+                  "
+                >Come back to <a href="` + config.env.BASE_URL + `">Greetings PH</a> to book your next greeting to surprise someone you love!</p>
               </td>
             </tr>
     
@@ -1515,7 +1635,7 @@ export const PaymentController = {
       >
         <table 
           style="
-            background-color: #c8ffff;
+            background-color: #1670DF;
             width: 100%;
             padding: 1rem;
             border-top-left-radius:20px;
@@ -1535,12 +1655,23 @@ export const PaymentController = {
                   <tbody>
                     <tr>
                       <td>
-                        <h1>GREETINGS PH</h1>
+                        <h1 style="
+                            color: #ffffff;
+                            font-size: 24px;
+                            letter-spacing: 1px;
+                            padding: 0;
+                            margin: 8px 0;
+                          "
+                        >GreetingsPH</h1>
                       </td>
                     </tr>
                     <tr>
                       <td>
-                        <h3>&ltinsert tagline&gt</h3>
+                        <h3 style="
+                            text-align: left;
+                            color: #ffffff;
+                          "
+                        ></h3>
                       </td>
                     </tr>
                   </tbody>
@@ -1548,16 +1679,19 @@ export const PaymentController = {
                 
                 </table>
               </td>
-    
+      
               <td style="
-                  width=50%;
-                  text-align:right;
+                  margin: auto;
+                  align-items: right;
+                  justify-content: right;
+                  text-align: right;
+                  padding-right: 16px;
                 "
               >
                 <img 
                  style="
-                   width:25%;
-                   height:25%;
+                   width: 26%;
+                   height: 67%;
                  "
                  src="https://rti-lrmc.s3.ap-southeast-1.amazonaws.com/Retailgate+logo-circle.png">
                 </img>
@@ -1577,8 +1711,20 @@ export const PaymentController = {
   
             <tr>
               <td>
-                <p>Hello ` + resultAdmins[a].firstName + `,</p>
-                <p style="text-indent:1rem;" align="justify"> Payment has been received from ` + resultCus[0].firstName + ` (`+ resultCus[0].emailAddr + `). Please see the details of the booking below:
+                <p style="
+                    text-align: left;
+                    font-size: 15px;
+                    padding: 0 16px;
+                    text-indent:0
+                  "
+                >Hello ` + resultAdmins[a].firstName + `,</p>
+                <p style="
+                    text-align: left;
+                    font-size: 15px;
+                    padding: 0 16px;
+                    text-indent:0
+                  "
+                > Payment has been received from ` + resultCus[0].firstName + ` (`+ resultCus[0].emailAddr + `). Please see the details of the booking below:
               </td>
             </tr>
             <tr>
@@ -1596,10 +1742,11 @@ export const PaymentController = {
                       style="
                         text-align: left;
                         background-color: #dfdfdf;
-                        padding-left: 1rem;
                         height: 2.5rem;
-                        border-top: 1px solid; 
-                        border-bottom: 1px solid;
+                        border: 1px 0 solid #7D8390;
+                        font-size: 15px;
+                        padding: 0 16px;
+                        text-indent:0
                       "
                     >
                       Location
@@ -1608,10 +1755,11 @@ export const PaymentController = {
                       style="
                         text-align: left;
                         background-color: #dfdfdf;
-                        padding-left: 1rem;
                         height: 2.5rem;
-                        border-top: 1px solid; 
-                        border-bottom: 1px solid;
+                        border: 1px 0 solid #7D8390;
+                        font-size: 15px;
+                        padding: 0 16px;
+                        text-indent:0
                       "
                     >`
                       + resultBook[0].locName +
@@ -1622,10 +1770,11 @@ export const PaymentController = {
                       style="
                         text-align: left;
                         background-color: #dfdfdf;
-                        padding-left: 1rem;
                         height: 2.5rem;
-                        border-top: 1px solid; 
-                        border-bottom: 1px solid;
+                        border: 1px 0 solid #7D8390;
+                        font-size: 15px;
+                        padding: 0 16px;
+                        text-indent:0
                       "
                     >
                       Date
@@ -1634,10 +1783,11 @@ export const PaymentController = {
                       style="
                         text-align: left;
                         background-color: #dfdfdf;
-                        padding-left: 1rem;
                         height: 2.5rem;
-                        border-top: 1px solid; 
-                        border-bottom: 1px solid;
+                        border: 1px 0 solid #7D8390;
+                        font-size: 15px;
+                        padding: 0 16px;
+                        text-indent:0
                       "
                     >`
                       + moment(resultBook[0].booked_date).format("YYYY-MM-DD") +
@@ -1648,7 +1798,13 @@ export const PaymentController = {
             </tr>
             <tr>
               <td>
-                <p style="text-indent:1rem;">You may review the material <a href="` + resultBook[0].materialURL + ` ">here</a>. You may also review the booking details and the material by logging in at <a href="` + config.env.BASE_URL + `pendingbookings">Greetings PH</a></p>
+                <p style="
+                    text-align: left;
+                    font-size: 15px;
+                    padding: 0 16px;
+                    text-indent:0
+                  "
+                >You may review the material <a href="` + resultBook[0].materialURL + ` ">here</a>. You may also review the booking details and the material by logging in at <a href="` + config.env.BASE_URL + `pendingbookings">Greetings PH</a></p>
               </td>
             <tr>
     
@@ -1734,7 +1890,7 @@ export const PaymentController = {
           >
             <table 
               style="
-                background-color: #c8ffff;
+                background-color: #1670DF;
                 width: 100%;
                 padding: 1rem;
                 border-top-left-radius:20px;
@@ -1754,12 +1910,23 @@ export const PaymentController = {
                       <tbody>
                         <tr>
                           <td>
-                            <h1>GREETINGS PH</h1>
+                            <h1 style="
+                                color: #ffffff;
+                                font-size: 24px;
+                                letter-spacing: 1px;
+                                padding: 0;
+                                margin: 8px 0;
+                              "
+                            >GreetingsPH</h1>
                           </td>
                         </tr>
                         <tr>
                           <td>
-                            <h3>&ltinsert tagline&gt</h3>
+                            <h3 style="
+                                text-align: left;
+                                color: #ffffff;
+                              "
+                            ></h3>
                           </td>
                         </tr>
                       </tbody>
@@ -1767,16 +1934,19 @@ export const PaymentController = {
                     
                     </table>
                   </td>
-        
+          
                   <td style="
-                      width=50%;
-                      text-align:right;
+                      margin: auto;
+                      align-items: right;
+                      justify-content: right;
+                      text-align: right;
+                      padding-right: 16px;
                     "
                   >
                     <img 
                      style="
-                       width:25%;
-                       height:25%;
+                       width: 26%;
+                       height: 67%;
                      "
                      src="https://rti-lrmc.s3.ap-southeast-1.amazonaws.com/Retailgate+logo-circle.png">
                     </img>
@@ -1795,9 +1965,27 @@ export const PaymentController = {
               <tbody>
                 <tr>
                   <td>
-                    <p>Hello ` + resultCus[c].firstName + `,</p>
-                    <p style="text-indent:1rem;"> We regret to inform you that as we operate on a first paid first served basis, the site you have requested is no longer available. You may book again thru <a href="` + config.env.BASE_URL + `">Greetings PH</a> and we strongly recommend that you pay immediately upon approval in order to secure your spot immediately.</p>
-                    <p>Thank you!</p>
+                    <p style="
+                        text-align: left;
+                        font-size: 15px;
+                        padding: 0 16px;
+                        text-indent:0
+                      "
+                    >Hello ` + resultCus[c].firstName + `,</p>
+                    <p style="
+                        text-align: left;
+                        font-size: 15px;
+                        padding: 0 16px;
+                        text-indent:0
+                      "
+                    > We regret to inform you that as we operate on a first paid first served basis, the site you have requested is no longer available. You may book again thru <a href="` + config.env.BASE_URL + `">Greetings PH</a> and we strongly recommend that you pay immediately upon approval in order to secure your spot immediately.</p>
+                    <p style="
+                        text-align: left;
+                        font-size: 15px;
+                        padding: 0 16px;
+                        text-indent:0
+                      "
+                    >Thank you!</p>
                   </td>
                 </tr>
         
@@ -1913,7 +2101,7 @@ export const PaymentController = {
       >
         <table 
           style="
-            background-color: #c8ffff;
+            background-color: #1670DF;
             width: 100%;
             padding: 1rem;
             border-top-left-radius:20px;
@@ -1933,12 +2121,23 @@ export const PaymentController = {
                   <tbody>
                     <tr>
                       <td>
-                        <h1>GREETINGS PH</h1>
+                        <h1 style="
+                            color: #ffffff;
+                            font-size: 24px;
+                            letter-spacing: 1px;
+                            padding: 0;
+                            margin: 8px 0;
+                          "
+                        >GreetingsPH</h1>
                       </td>
                     </tr>
                     <tr>
                       <td>
-                        <h3>&ltinsert tagline&gt</h3>
+                        <h3 style="
+                            text-align: left;
+                            color: #ffffff;
+                          "
+                        ></h3>
                       </td>
                     </tr>
                   </tbody>
@@ -1946,16 +2145,19 @@ export const PaymentController = {
                 
                 </table>
               </td>
-    
+      
               <td style="
-                  width=50%;
-                  text-align:right;
+                  margin: auto;
+                  align-items: right;
+                  justify-content: right;
+                  text-align: right;
+                  padding-right: 16px;
                 "
               >
                 <img 
                  style="
-                   width:25%;
-                   height:25%;
+                   width: 26%;
+                   height: 67%;
                  "
                  src="https://rti-lrmc.s3.ap-southeast-1.amazonaws.com/Retailgate+logo-circle.png">
                 </img>
@@ -1974,8 +2176,20 @@ export const PaymentController = {
           <tbody>
             <tr>
               <td>
-                <p>Hello ` + resultApprovers[0].firstName + `,</p>
-                <p style="text-indent:1rem;"> A new booking request has passed initial review and is now subject to your approval. Please check this link: <a href="` + config.env.BASE_URL + `pendingbookings">Greetings PH Dashboard</a> to review the material for your final approval.</p>
+                <p style="
+                    text-align: left;
+                    font-size: 15px;
+                    padding: 0 16px;
+                    text-indent:0
+                  "
+                >Hello ` + resultApprovers[0].firstName + `,</p>
+                <p style="
+                    text-align: left;
+                    font-size: 15px;
+                    padding: 0 16px;
+                    text-indent:0
+                  "
+                > A new booking request has passed initial review and is now subject to your approval. Please check this link: <a href="` + config.env.BASE_URL + `pendingbookings">Greetings PH Dashboard</a> to review the material for your final approval.</p>
               </td>
             </tr>
     
@@ -2014,7 +2228,7 @@ export const PaymentController = {
         >
           <table 
             style="
-              background-color: #c8ffff;
+              background-color: #1670DF;
               width: 100%;
               padding: 1rem;
               border-top-left-radius:20px;
@@ -2034,12 +2248,23 @@ export const PaymentController = {
                     <tbody>
                       <tr>
                         <td>
-                          <h1>GREETINGS PH</h1>
+                          <h1 style="
+                              color: #ffffff;
+                              font-size: 24px;
+                              letter-spacing: 1px;
+                              padding: 0;
+                              margin: 8px 0;
+                            "
+                          >GreetingsPH</h1>
                         </td>
                       </tr>
                       <tr>
                         <td>
-                          <h3>&ltinsert tagline&gt</h3>
+                          <h3 style="
+                              text-align: left;
+                              color: #ffffff;
+                            "
+                          ></h3>
                         </td>
                       </tr>
                     </tbody>
@@ -2047,16 +2272,19 @@ export const PaymentController = {
                   
                   </table>
                 </td>
-      
+        
                 <td style="
-                    width=50%;
-                    text-align:right;
+                    margin: auto;
+                    align-items: right;
+                    justify-content: right;
+                    text-align: right;
+                    padding-right: 16px;
                   "
                 >
                   <img 
                    style="
-                     width:25%;
-                     height:25%;
+                     width: 26%;
+                     height: 67%;
                    "
                    src="https://rti-lrmc.s3.ap-southeast-1.amazonaws.com/Retailgate+logo-circle.png">
                   </img>
@@ -2075,7 +2303,11 @@ export const PaymentController = {
             <tbody>
               <tr>
                 <td>
-                  <h2>INVOICE</h2>
+                  <h2 style="
+                      text-align: center;
+                      margin: 8px 0;
+                    "
+                  >INVOICE</h2>
                 </td>
               </tr>
               <tr>
@@ -2095,10 +2327,11 @@ export const PaymentController = {
                         style="
                           text-align: left;
                           background-color: #dfdfdf;
-                          padding-left: 1rem;
                           height: 2.5rem;
-                          border-top: 1px solid; 
-                          border-bottom: 1px solid;
+                          border: 1px 0 solid #7D8390;
+                          font-size: 15px;
+                          padding: 0 16px;
+                          text-indent:0
                         "
                       >
                       Service
@@ -2107,10 +2340,11 @@ export const PaymentController = {
                         style="
                           text-align: left;
                           background-color: #dfdfdf;
-                          padding-left: 1rem;
                           height: 2.5rem;
-                          border-top: 1px solid; 
-                          border-bottom: 1px solid;
+                          border: 1px 0 solid #7D8390;
+                          font-size: 15px;
+                          padding: 0 16px;
+                          text-indent:0
                         "
                       >`
                         + resultSel[0].productName +
@@ -2122,10 +2356,11 @@ export const PaymentController = {
                         style="
                           text-align: left;
                           background-color: #fffff;
-                          padding-left: 1rem;
                           height: 2.5rem;
-                          border-top: 1px solid; 
-                          border-bottom: 1px solid;
+                          border: 1px 0 solid #7D8390;
+                          font-size: 15px;
+                          padding: 0 16px;
+                          text-indent:0
                         "
                       >
                       Booking Location
@@ -2134,10 +2369,11 @@ export const PaymentController = {
                         style="
                           text-align: left;
                           background-color: #fffff;
-                          padding-left: 1rem;
                           height: 2.5rem;
-                          border-top: 1px solid; 
-                          border-bottom: 1px solid;
+                          border: 1px 0 solid #7D8390;
+                          font-size: 15px;
+                          padding: 0 16px;
+                          text-indent:0
                         "
                       >`
                         + resultSel[0].locName +
@@ -2150,10 +2386,11 @@ export const PaymentController = {
                         style="
                           text-align: left;
                           background-color: #dfdfdf;
-                          padding-left: 1rem;
                           height: 2.5rem;
-                          border-top: 1px solid; 
-                          border-bottom: 1px solid;
+                          border: 1px 0 solid #7D8390;
+                          font-size: 15px;
+                          padding: 0 16px;
+                          text-indent:0
                         "
                       >
                       Booking Date
@@ -2162,10 +2399,11 @@ export const PaymentController = {
                         style="
                           text-align: left;
                           background-color: #dfdfdf;
-                          padding-left: 1rem;
                           height: 2.5rem;
-                          border-top: 1px solid; 
-                          border-bottom: 1px solid;
+                          border: 1px 0 solid #7D8390;
+                          font-size: 15px;
+                          padding: 0 16px;
+                          text-indent:0
                         "
                       >`
                         + moment(resultSel[0].booked_date).format("YYYY-MM-DD") +
@@ -2177,10 +2415,11 @@ export const PaymentController = {
                         style="
                           text-align: left;
                           background-color: #fffff;
-                          padding-left: 1rem;
                           height: 2.5rem;
-                          border-top: 1px solid; 
-                          border-bottom: 1px solid;
+                          border: 1px 0 solid #7D8390;
+                          font-size: 15px;
+                          padding: 0 16px;
+                          text-indent:0
                         "
                       >
                       Unit (spots)
@@ -2189,10 +2428,11 @@ export const PaymentController = {
                         style="
                           text-align: left;
                           background-color: #fffff;
-                          padding-left: 1rem;
                           height: 2.5rem;
-                          border-top: 1px solid; 
-                          border-bottom: 1px solid;
+                          border: 1px 0 solid #7D8390;
+                          font-size: 15px;
+                          padding: 0 16px;
+                          text-indent:0
                         "
                       >`
                         + resultSel[0].spots + // units +
@@ -2204,10 +2444,11 @@ export const PaymentController = {
                         style="
                           text-align: left;
                           background-color: #dfdfdf;
-                          padding-left: 1rem;
                           height: 2.5rem;
-                          border-top: 1px solid; 
-                          border-bottom: 1px solid;
+                          border: 1px 0 solid #7D8390;
+                          font-size: 15px;
+                          padding: 0 16px;
+                          text-indent:0
                         "
                       >
                       Unit Cost
@@ -2216,10 +2457,11 @@ export const PaymentController = {
                         style="
                           text-align: left;
                           background-color: #dfdfdf;
-                          padding-left: 1rem;
                           height: 2.5rem;
-                          border-top: 1px solid; 
-                          border-bottom: 1px solid;
+                          border: 1px 0 solid #7D8390;
+                          font-size: 15px;
+                          padding: 0 16px;
+                          text-indent:0
                         "
                       >`
                         + resultSel[0].totalAmount +
@@ -2231,10 +2473,11 @@ export const PaymentController = {
                         style="
                           text-align: left;
                           background-color: #fffff;
-                          padding-left: 1rem;
                           height: 2.5rem;
-                          border-top: 1px solid; 
-                          border-bottom: 1px solid;
+                          border: 1px 0 solid #7D8390;
+                          font-size: 15px;
+                          padding: 0 16px;
+                          text-indent:0
                         "
                       >
                       Qty
@@ -2243,10 +2486,11 @@ export const PaymentController = {
                         style="
                           text-align: left;
                           background-color: #fffff;
-                          padding-left: 1rem;
                           height: 2.5rem;
-                          border-top: 1px solid; 
-                          border-bottom: 1px solid;
+                          border: 1px 0 solid #7D8390;
+                          font-size: 15px;
+                          padding: 0 16px;
+                          text-indent:0
                         "
                       >`
                         + qty +
@@ -2258,10 +2502,11 @@ export const PaymentController = {
                         style="
                           text-align: left;
                           background-color: #dfdfdf;
-                          padding-left: 1rem;
                           height: 2.5rem;
-                          border-top: 1px solid; 
-                          border-bottom: 1px solid;
+                          border: 1px 0 solid #7D8390;
+                          font-size: 15px;
+                          padding: 0 16px;
+                          text-indent:0
                         "
                       >
                       Total Cost
@@ -2270,10 +2515,11 @@ export const PaymentController = {
                         style="
                           text-align: left;
                           background-color: #dfdfdf;
-                          padding-left: 1rem;
                           height: 2.5rem;
-                          border-top: 1px solid; 
-                          border-bottom: 1px solid;
+                          border: 1px 0 solid #7D8390;
+                          font-size: 15px;
+                          padding: 0 16px;
+                          text-indent:0
                         "
                       >`
                         + resultSel[0].totalAmount + //* units +
@@ -2468,12 +2714,12 @@ export const PaymentController = {
                     <tbody>
                       <tr>
                         <td>
-                          <h1>GREETINGS PH</h1>
+                          <h1>GreetingsPH</h1>
                         </td>
                       </tr>
                       <tr>
                         <td>
-                          <h3>&ltinsert tagline&gt</h3>
+                          <h3></h3>
                         </td>
                       </tr>
                     </tbody>
@@ -2561,7 +2807,7 @@ export const PaymentController = {
       >
         <table 
           style="
-            background-color: #c8ffff;
+            background-color: #1670DF;
             width: 100%;
             padding: 1rem;
             border-top-left-radius:20px;
@@ -2581,12 +2827,23 @@ export const PaymentController = {
                   <tbody>
                     <tr>
                       <td>
-                        <h1>GREETINGS PH</h1>
+                        <h1 style="
+                            color: #ffffff;
+                            font-size: 24px;
+                            letter-spacing: 1px;
+                            padding: 0;
+                            margin: 8px 0;
+                          "
+                        >GreetingsPH</h1>
                       </td>
                     </tr>
                     <tr>
                       <td>
-                        <h3>&ltinsert tagline&gt</h3>
+                        <h3 style="
+                            text-align: left;
+                            color: #ffffff;
+                          "
+                        ></h3>
                       </td>
                     </tr>
                   </tbody>
@@ -2594,16 +2851,19 @@ export const PaymentController = {
                 
                 </table>
               </td>
-    
+      
               <td style="
-                  width=50%;
-                  text-align:right;
+                  margin: auto;
+                  align-items: right;
+                  justify-content: right;
+                  text-align: right;
+                  padding-right: 16px;
                 "
               >
                 <img 
                  style="
-                   width:25%;
-                   height:25%;
+                   width: 26%;
+                   height: 67%;
                  "
                  src="https://rti-lrmc.s3.ap-southeast-1.amazonaws.com/Retailgate+logo-circle.png">
                 </img>
@@ -2622,12 +2882,36 @@ export const PaymentController = {
           <tbody>
             <tr>
               <td>
-                <p>Dear ` + resultSel[0].firstName + `,</p>
-                <p style="text-indent:1rem;">We regret to inform you that your greeting material has been rejected for the following reason(s):</p> 
+                <p style="
+                    text-align: left;
+                    font-size: 15px;
+                    padding: 0 16px;
+                    text-indent:0
+                  "
+                >Dear ` + resultSel[0].firstName + `,</p>
+                <p style="
+                    text-align: left;
+                    font-size: 15px;
+                    padding: 0 16px;
+                    text-indent:0
+                  "
+                >We regret to inform you that your greeting material has been rejected for the following reason(s):</p> 
                 <ul>
-                  <li>` + reason + `</li>
+                  <li style="
+                      text-align: left;
+                      font-size: 15px;
+                      padding: 0 16px;
+                      text-indent:0
+                    "
+                  >` + reason + `</li>
                 </ul>
-                <p style="text-indent:1rem;"> Please see the guidelines through this link <a href="` + config.env.BASE_URL + `guide">Materials Guideline</a> and you may book another date with your updated material through <a href="` + config.env.BASE_URL + `">Greetings PH</a>.</p>
+                <p style="
+                    text-align: left;
+                    font-size: 15px;
+                    padding: 0 16px;
+                    text-indent:0
+                  "
+                > Please see the guidelines through this link <a href="` + config.env.BASE_URL + `guide">Materials Guideline</a> and you may book another date with your updated material through <a href="` + config.env.BASE_URL + `">Greetings PH</a>.</p>
               </td>
             </tr>
     
@@ -2703,7 +2987,7 @@ export const PaymentController = {
     >
       <table 
         style="
-          background-color: #c8ffff;
+          background-color: #1670DF;
           width: 100%;
           padding: 1rem;
           border-top-left-radius:20px;
@@ -2723,12 +3007,23 @@ export const PaymentController = {
                 <tbody>
                   <tr>
                     <td>
-                      <h1>GREETINGS PH</h1>
+                      <h1 style="
+                          color: #ffffff;
+                          font-size: 24px;
+                          letter-spacing: 1px;
+                          padding: 0;
+                          margin: 8px 0;
+                        "
+                      >GreetingsPH</h1>
                     </td>
                   </tr>
                   <tr>
                     <td>
-                      <h3>&ltinsert tagline&gt</h3>
+                      <h3 style="
+                          text-align: left;
+                          color: #ffffff;
+                        "
+                      ></h3>
                     </td>
                   </tr>
                 </tbody>
@@ -2736,16 +3031,19 @@ export const PaymentController = {
               
               </table>
             </td>
-  
+    
             <td style="
-                width=50%;
-                text-align:right;
+                margin: auto;
+                align-items: right;
+                justify-content: right;
+                text-align: right;
+                padding-right: 16px;
               "
             >
               <img 
                style="
-                 width:25%;
-                 height:25%;
+                 width: 26%;
+                 height: 67%;
                "
                src="https://rti-lrmc.s3.ap-southeast-1.amazonaws.com/Retailgate+logo-circle.png">
               </img>
@@ -2765,8 +3063,20 @@ export const PaymentController = {
 
           <tr>
             <td>
-              <p>Hello ` + resultCus[0].firstName + `,</p>
-              <p style="text-indent:1rem;" align="justify"> Thank you for your payment. This is to confirm that we have received your booking payment with reference # refNo. Watch out for your greeting to be displayed according to the following details:</p>
+              <p style="
+                  text-align: left;
+                  font-size: 15px;
+                  padding: 0 16px;
+                  text-indent:0
+                "
+              >Hello ` + resultCus[0].firstName + `,</p>
+              <p style="
+                  text-align: left;
+                  font-size: 15px;
+                  padding: 0 16px;
+                  text-indent:0
+                "
+              > Thank you for your payment. This is to confirm that we have received your booking payment with reference # refNo. Watch out for your greeting to be displayed according to the following details:</p>
             </td>
           </tr>
           <tr>
@@ -2784,10 +3094,11 @@ export const PaymentController = {
                     style="
                       text-align: left;
                       background-color: #dfdfdf;
-                      padding-left: 1rem;
                       height: 2.5rem;
-                      border-top: 1px solid; 
-                      border-bottom: 1px solid;
+                      border: 1px 0 solid #7D8390;
+                      font-size: 15px;
+                      padding: 0 16px;
+                      text-indent:0
                     "
                   >
                     Location
@@ -2796,10 +3107,11 @@ export const PaymentController = {
                     style="
                       text-align: left;
                       background-color: #dfdfdf;
-                      padding-left: 1rem;
                       height: 2.5rem;
-                      border-top: 1px solid; 
-                      border-bottom: 1px solid;
+                      border: 1px 0 solid #7D8390;
+                      font-size: 15px;
+                      padding: 0 16px;
+                      text-indent:0
                     "
                   >`
                     + resultBook[0].locName +
@@ -2810,10 +3122,11 @@ export const PaymentController = {
                     style="
                       text-align: left;
                       background-color: #dfdfdf;
-                      padding-left: 1rem;
                       height: 2.5rem;
-                      border-top: 1px solid; 
-                      border-bottom: 1px solid;
+                      border: 1px 0 solid #7D8390;
+                      font-size: 15px;
+                      padding: 0 16px;
+                      text-indent:0
                     "
                   >
                     Date
@@ -2822,10 +3135,11 @@ export const PaymentController = {
                     style="
                       text-align: left;
                       background-color: #dfdfdf;
-                      padding-left: 1rem;
                       height: 2.5rem;
-                      border-top: 1px solid; 
-                      border-bottom: 1px solid;
+                      border: 1px 0 solid #7D8390;
+                      font-size: 15px;
+                      padding: 0 16px;
+                      text-indent:0
                     "
                   >`
                     + moment(resultBook[0].booked_date).format("YYYY-MM-DD") +
@@ -2836,12 +3150,24 @@ export const PaymentController = {
           </tr>
           <tr>
             <td>
-              <p style="text-indent:1rem;"><a href="` + config.env.BASE_URL + `terms-and-conditions` + `">Terms and Conditions</a></p>
+              <p style="
+                  text-align: left;
+                  font-size: 15px;
+                  padding: 0 16px;
+                  text-indent:0
+                "
+              ><a href="` + config.env.BASE_URL + `terms-and-conditions` + `">Terms and Conditions</a></p>
             </td>
           </tr>
           <tr>
             <td>
-              <p style="text-indent:1rem;">Come back to <a href="` + config.env.BASE_URL + `">Greetings PH</a> to book your next greeting to surprise someone you love!</p>
+              <p style="
+                  text-align: left;
+                  font-size: 15px;
+                  padding: 0 16px;
+                  text-indent:0
+                "
+              >Come back to <a href="` + config.env.BASE_URL + `">Greetings PH</a> to book your next greeting to surprise someone you love!</p>
             </td>
           </tr>
   
@@ -2909,7 +3235,7 @@ export const PaymentController = {
     >
       <table 
         style="
-          background-color: #c8ffff;
+          background-color: #1670DF;
           width: 100%;
           padding: 1rem;
           border-top-left-radius:20px;
@@ -2929,12 +3255,23 @@ export const PaymentController = {
                 <tbody>
                   <tr>
                     <td>
-                      <h1>GREETINGS PH</h1>
+                      <h1 style="
+                          color: #ffffff;
+                          font-size: 24px;
+                          letter-spacing: 1px;
+                          padding: 0;
+                          margin: 8px 0;
+                        "
+                      >GreetingsPH</h1>
                     </td>
                   </tr>
                   <tr>
                     <td>
-                      <h3>&ltinsert tagline&gt</h3>
+                      <h3 style="
+                          text-align: left;
+                          color: #ffffff;
+                        "
+                      ></h3>
                     </td>
                   </tr>
                 </tbody>
@@ -2942,16 +3279,19 @@ export const PaymentController = {
               
               </table>
             </td>
-  
+    
             <td style="
-                width=50%;
-                text-align:right;
+                margin: auto;
+                align-items: right;
+                justify-content: right;
+                text-align: right;
+                padding-right: 16px;
               "
             >
               <img 
                style="
-                 width:25%;
-                 height:25%;
+                 width: 26%;
+                 height: 67%;
                "
                src="https://rti-lrmc.s3.ap-southeast-1.amazonaws.com/Retailgate+logo-circle.png">
               </img>
@@ -2971,8 +3311,20 @@ export const PaymentController = {
 
           <tr>
             <td>
-              <p>Hello ` + resultAdmins[a].firstName + `,</p>
-              <p style="text-indent:1rem;" align="justify"> Payment has been received from ` + resultCus[0].firstName + ` (`+ resultCus[0].emailAddr + `). Please see the details of the booking below:
+              <p style="
+                  text-align: left;
+                  font-size: 15px;
+                  padding: 0 16px;
+                  text-indent:0
+                "
+              >Hello ` + resultAdmins[a].firstName + `,</p>
+              <p style="
+                  text-align: left;
+                  font-size: 15px;
+                  padding: 0 16px;
+                  text-indent:0
+                "
+              > Payment has been received from ` + resultCus[0].firstName + ` (`+ resultCus[0].emailAddr + `). Please see the details of the booking below:
             </td>
           </tr>
           <tr>
@@ -2990,10 +3342,11 @@ export const PaymentController = {
                     style="
                       text-align: left;
                       background-color: #dfdfdf;
-                      padding-left: 1rem;
                       height: 2.5rem;
-                      border-top: 1px solid; 
-                      border-bottom: 1px solid;
+                      border: 1px 0 solid #7D8390;
+                      font-size: 15px;
+                      padding: 0 16px;
+                      text-indent:0
                     "
                   >
                     Location
@@ -3002,10 +3355,11 @@ export const PaymentController = {
                     style="
                       text-align: left;
                       background-color: #dfdfdf;
-                      padding-left: 1rem;
                       height: 2.5rem;
-                      border-top: 1px solid; 
-                      border-bottom: 1px solid;
+                      border: 1px 0 solid #7D8390;
+                      font-size: 15px;
+                      padding: 0 16px;
+                      text-indent:0
                     "
                   >`
                     + resultBook[0].locName +
@@ -3016,10 +3370,11 @@ export const PaymentController = {
                     style="
                       text-align: left;
                       background-color: #dfdfdf;
-                      padding-left: 1rem;
                       height: 2.5rem;
-                      border-top: 1px solid; 
-                      border-bottom: 1px solid;
+                      border: 1px 0 solid #7D8390;
+                      font-size: 15px;
+                      padding: 0 16px;
+                      text-indent:0
                     "
                   >
                     Date
@@ -3028,10 +3383,11 @@ export const PaymentController = {
                     style="
                       text-align: left;
                       background-color: #dfdfdf;
-                      padding-left: 1rem;
                       height: 2.5rem;
-                      border-top: 1px solid; 
-                      border-bottom: 1px solid;
+                      border: 1px 0 solid #7D8390;
+                      font-size: 15px;
+                      padding: 0 16px;
+                      text-indent:0
                     "
                   >`
                     + moment(resultBook[0].booked_date).format("YYYY-MM-DD") +
@@ -3042,7 +3398,13 @@ export const PaymentController = {
           </tr>
           <tr>
             <td>
-              <p style="text-indent:1rem;">You may review the material <a href="` + resultBook[0].materialURL + ` ">here</a>. You may also review the booking details and the material by logging in at <a href="` + config.env.BASE_URL + `pendingbookings">Greetings PH</a></p>
+              <p style="
+                  text-align: left;
+                  font-size: 15px;
+                  padding: 0 16px;
+                  text-indent:0
+                "
+              >You may review the material <a href="` + resultBook[0].materialURL + ` ">here</a>. You may also review the booking details and the material by logging in at <a href="` + config.env.BASE_URL + `pendingbookings">Greetings PH</a></p>
             </td>
           <tr>
   
@@ -3128,7 +3490,7 @@ export const PaymentController = {
         >
           <table 
             style="
-              background-color: #c8ffff;
+              background-color: #1670DF;
               width: 100%;
               padding: 1rem;
               border-top-left-radius:20px;
@@ -3148,12 +3510,23 @@ export const PaymentController = {
                     <tbody>
                       <tr>
                         <td>
-                          <h1>GREETINGS PH</h1>
+                          <h1 style="
+                              color: #ffffff;
+                              font-size: 24px;
+                              letter-spacing: 1px;
+                              padding: 0;
+                              margin: 8px 0;
+                            "
+                          >GreetingsPH</h1>
                         </td>
                       </tr>
                       <tr>
                         <td>
-                          <h3>&ltinsert tagline&gt</h3>
+                          <h3 style="
+                              text-align: left;
+                              color: #ffffff;
+                            "
+                          ></h3>
                         </td>
                       </tr>
                     </tbody>
@@ -3161,16 +3534,19 @@ export const PaymentController = {
                   
                   </table>
                 </td>
-      
+        
                 <td style="
-                    width=50%;
-                    text-align:right;
+                    margin: auto;
+                    align-items: right;
+                    justify-content: right;
+                    text-align: right;
+                    padding-right: 16px;
                   "
                 >
                   <img 
                    style="
-                     width:25%;
-                     height:25%;
+                     width: 26%;
+                     height: 67%;
                    "
                    src="https://rti-lrmc.s3.ap-southeast-1.amazonaws.com/Retailgate+logo-circle.png">
                   </img>
@@ -3189,9 +3565,27 @@ export const PaymentController = {
             <tbody>
               <tr>
                 <td>
-                  <p>Hello ` + resultCus[c].firstName + `,</p>
-                  <p style="text-indent:1rem;"> We regret to inform you that as we operate on a first paid first served basis, the site you have requested is no longer available. You may book again thru <a href="` + config.env.BASE_URL + `">Greetings PH</a> to find available dates and sites.</p>
-                  <p>Thank you!</p>
+                  <p style="
+                      text-align: left;
+                      font-size: 15px;
+                      padding: 0 16px;
+                      text-indent:0
+                    "
+                  >Hello ` + resultCus[c].firstName + `,</p>
+                  <p style="
+                      text-align: left;
+                      font-size: 15px;
+                      padding: 0 16px;
+                      text-indent:0
+                    "
+                  > We regret to inform you that as we operate on a first paid first served basis, the site you have requested is no longer available. You may book again thru <a href="` + config.env.BASE_URL + `">Greetings PH</a> to find available dates and sites.</p>
+                  <p style="
+                      text-align: left;
+                      font-size: 15px;
+                      padding: 0 16px;
+                      text-indent:0
+                    "
+                  >Thank you!</p>
                 </td>
               </tr>
       
