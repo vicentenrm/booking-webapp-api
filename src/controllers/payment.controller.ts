@@ -2945,6 +2945,8 @@ export const PaymentController = {
     
     var resultCus:any = await DB.query(sqlCus);
     
+    if(resultCus.length){
+
     // Get booking details
     var sqlBook = SqlString.format(`SELECT bi.booked_date, bi.materialURL, bi.loc_id,
     l.locName 
@@ -3618,6 +3620,8 @@ export const PaymentController = {
       [resultBook[0].loc_id, moment(resultBook[0].booked_date).format("YYYY-MM-DD")]);
 
       var resultExpire:any = await DB.query(sqlExpire);
+
+    }
 
     }
 
