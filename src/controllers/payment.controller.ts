@@ -45,7 +45,8 @@ var PaymayaSDK = sdk.PaymayaSDK;
 PaymayaSDK.initCheckout(
   config.env.MAYA_PK, // 'pk-TnpIh5X432Qw1DJLlMhzxRhBN4fvUp3SHPuHT3m5wv6',
   config.env.MAYA_SK, // 'sk-SNCvnXbvtAxU6mszPMoDl2M1d4e1ivko1E6PLGiOiqm',
-  PaymayaSDK.ENVIRONMENT.SANDBOX
+  PaymayaSDK.ENVIRONMENT.PRODUCTION //PaymayaSDK.ENVIRONMENT.SANDBOX
+  
 );
 
 // Initialize Maya checkout page customization
