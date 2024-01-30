@@ -1,5 +1,5 @@
 import * as config from '../config/config';
-import { MailerSend, EmailParams, Sender, Recipient, Attachment } from 'mailersend';
+import { MailerSend, EmailParams, Sender, Recipient, Attachment, ActivityEventType } from 'mailersend';
 import * as nodemailer from 'nodemailer';
 
 const mailerSend = new MailerSend({
@@ -27,9 +27,21 @@ export const EmailUtils = {
         .setHtml(emailBody);
 
       await mailerSend.email.send(emailParams);
+      //var ms_res = await mailerSend.email.send(emailParams);
+      //console.log("MS Response: ", ms_res);
+      //console.log(ms_res["body"]["warnings"]);
+      //console.log(ms_res["body"]["warnings"][0]["recipients"]);
+      //console.log(JSON.parse(JSON.stringify(ms_res))["body"]["errors"]["to"]);
+      //console.log(JSON.parse(JSON.stringify(ms_res))["body"]["errors"]["from.email"]);
+      //console.log(JSON.parse(JSON.stringify(ms_res))["body"]["errors"]["from.email"]);
+      //console.log(JSON.parse(JSON.stringify(ms_res))["body"]["errors"]["to.0.email"]);
       resolve(true);
-      } catch(err){
+      } catch(err:any){
         console.log(err);
+        //console.log(err["body"]["errors"]["to"]);
+        //console.log(err["body"]["errors"]["from.email"]);
+        //console.log(err["body"]["errors"]["from.email"]);
+        //console.log(err["body"]["errors"]["to.0.email"]);
       } 
     });
     return response;
@@ -158,6 +170,37 @@ export const EmailUtils = {
           resolve(true)
         }
       });
+    });
+    return response;
+  },
+
+  async getActivities(){
+    const response = await new Promise(async (resolve, reject) => {
+      try{
+        
+        const queryParams = {
+          limit: 20, // Min: 10, Max: 100, Default: 25
+          //page: 2,
+          date_from: 1706500000,
+          date_to: 1706593444,
+          event: [ActivityEventType.DELIVERED, ActivityEventType.SOFT_BOUNCED, ActivityEventType.HARD_BOUNCED]
+        }
+        
+        mailerSend.email.activity.domain("3yxj6ljwpmqgdo2r", queryParams)
+          .then((response) => {
+            console.log(response.body)
+            for(let x in response.body.data){
+              console.log(response.body.data[x].email)
+            }
+            
+          })
+          .catch((error) => console.log(error));
+
+
+
+      } catch(err){
+
+      }
     });
     return response;
   }
