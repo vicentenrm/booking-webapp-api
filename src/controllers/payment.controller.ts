@@ -1026,7 +1026,7 @@ export const PaymentController = {
     // Send email to customer -> Payment received message and booking details
     var email_addr = resultCus[0].emailAddr;
     var full_name = resultCus[0].firstName + ' ' + resultCus[0].middleName + ' ' + resultCus[0].lastName;
-    var subject = 'GreetingsPH Booking Request';
+    var subject = 'Booking Request';
     var attachments = null;
     var email_body = `
     <body
@@ -1421,9 +1421,9 @@ export const PaymentController = {
       
       for(let a in resultAdmins){
   
-      var ad_email_addr = resultAdmins[a].emailAddr; // "nesthy@retailgate.tech";
+      var ad_email_addr = resultAdmins[a].emailAddr; 
       var ad_full_name = resultAdmins[a].firstName + ' ' + resultAdmins[a].middleName + ' ' + resultAdmins[a].lastName;
-      var ad_subject = 'GreetingsPH [Payment Received]';
+      var ad_subject = '[Payment Received]';
       var ad_attachments = null;
       var ad_email_body = `
       <body
@@ -1660,9 +1660,9 @@ export const PaymentController = {
         var vid_attach:any = [];
         var customer_details:any = [];
         for(let c in resultCus){
-          var cus_email_addr = resultCus[c].emailAddr; // "nesthy@retailgate.tech";
+          var cus_email_addr = resultCus[c].emailAddr; 
           var cus_full_name = resultCus[c].firstName + ' ' + resultCus[c].middleName + ' ' + resultCus[c].lastName;
-          var cus_subject = 'GreetingsPH Site Fully Booked';
+          var cus_subject = 'Site Fully Booked';
           var cus_attachments = null;
           var cus_email_body = `
           <body
@@ -1873,7 +1873,7 @@ export const PaymentController = {
     if(status === "Reviewed"){
       email_addr = resultApprovers[0].emailAddr; 
       full_name = resultApprovers[0].firstName + ' ' + resultApprovers[0].middleName + ' ' + resultApprovers[0].lastName;
-      subject = 'GreetingsPH Booking Request';
+      subject = ' Booking Request';
       attachments = null;
       email_body += `
       <body
@@ -1998,7 +1998,7 @@ export const PaymentController = {
       //Send approval email
       var units = 128;
       var qty = 1;
-      email_addr = resultSel[0].emailAddr // 'nesthy@retailgate.tech';
+      email_addr = resultSel[0].emailAddr 
       full_name = resultSel[0].firstName + ' ' + resultSel[0].middleName + ' ' + resultSel[0].lastName;
       subject = 'Payment';
       attachments = null;
@@ -2354,7 +2354,7 @@ export const PaymentController = {
       //Send rejection email
       email_addr = resultSel[0].emailAddr;
       full_name = resultSel[0].firstName + ' ' + resultSel[0].middleName + ' ' + resultSel[0].lastName;
-      subject = 'GreetingsPH Material Rejection';
+      subject = 'Material Rejection';
       attachments = null;
       email_body += `
       <body
@@ -2613,7 +2613,7 @@ export const PaymentController = {
                  width: 26%;
                  height: 67%;
                "
-               src="https://rti-lrmc.s3.ap-southeast-1.amazonaws.com/Retailgate+logo-circle.png">
+               src="https://google.com/">
               </img>
             </td>
           </tr>
@@ -2754,7 +2754,7 @@ export const PaymentController = {
         
     for(let a in resultAdmins){
     
-    var ad_email_addr = resultAdmins[a].emailAddr; // "nesthy@retailgate.tech";
+    var ad_email_addr = resultAdmins[a].emailAddr; 
     var ad_full_name = resultAdmins[a].firstName + ' ' + resultAdmins[a].middleName + ' ' + resultAdmins[a].lastName;
     var ad_subject = '[Payment Received]';
     var ad_attachments = null;
@@ -2994,9 +2994,9 @@ export const PaymentController = {
       var vid_attach:any = [];
       var customer_details:any = [];
       for(let c in resultCus){
-        var cus_email_addr = resultCus[c].emailAddr; // "nesthy@retailgate.tech";
+        var cus_email_addr = resultCus[c].emailAddr; 
         var cus_full_name = resultCus[c].firstName + ' ' + resultCus[c].middleName + ' ' + resultCus[c].lastName;
-        var cus_subject = 'GreetingsPH Site Fully Booked';
+        var cus_subject = 'Site Fully Booked';
         var cus_attachments = null;
         var cus_email_body = `
         <body
