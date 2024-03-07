@@ -6,7 +6,6 @@ const mailerSend = new MailerSend({
   apiKey: config.env.MAILER_API_KEY
 })
 
-//const sentFrom = new Sender("nesthy@retailgate.tech", "Greetings PH")
 const sentFrom = new Sender(config.env.EMAIL_SENDER, "Greetings PH");
 
 export const EmailUtils = {
@@ -27,21 +26,10 @@ export const EmailUtils = {
         .setHtml(emailBody);
 
       await mailerSend.email.send(emailParams);
-      //var ms_res = await mailerSend.email.send(emailParams);
-      //console.log("MS Response: ", ms_res);
-      //console.log(ms_res["body"]["warnings"]);
-      //console.log(ms_res["body"]["warnings"][0]["recipients"]);
-      //console.log(JSON.parse(JSON.stringify(ms_res))["body"]["errors"]["to"]);
-      //console.log(JSON.parse(JSON.stringify(ms_res))["body"]["errors"]["from.email"]);
-      //console.log(JSON.parse(JSON.stringify(ms_res))["body"]["errors"]["from.email"]);
-      //console.log(JSON.parse(JSON.stringify(ms_res))["body"]["errors"]["to.0.email"]);
+
       resolve(true);
       } catch(err:any){
         console.log(err);
-        //console.log(err["body"]["errors"]["to"]);
-        //console.log(err["body"]["errors"]["from.email"]);
-        //console.log(err["body"]["errors"]["from.email"]);
-        //console.log(err["body"]["errors"]["to.0.email"]);
       } 
     });
     return response;
@@ -50,17 +38,7 @@ export const EmailUtils = {
   async sendBulk(admin_details:any, attachment:any) {  
     const response = await new Promise(async (resolve, reject) => {
       try{
-        console.log("AAAAA");
         var recipients:any = [];
-
-        /*const attachments = [
-          new Attachment(
-            attachment[0].b64,
-            attachment[0].fname,
-            'attachment',
-            //'0123456789'
-          )
-        ]*/
 
         for(let admin in admin_details){
           recipients.push(new EmailParams()
@@ -144,20 +122,16 @@ export const EmailUtils = {
         //port: 465,
         auth: {
           user: config.env.EMAIL,
-          pass: config.env.EMAIL_PASS //'RTLchatmaster@2020'
+          pass: config.env.EMAIL_PASS
         }
       });
   
       var mailOptions = {
         from: config.env.EMAIL,
-        to: emailAdd, //'rienaldnesthy96@gmail.com',
+        to: emailAdd, 
         subject: subject, //'Email Confirmation',
         html: emailBody
       };
-  
-      //if(attachments){
-      //  mailOptions['attachments'] = attachments;
-      //}
   
       transporter.sendMail(mailOptions, function(error, info){
         if (error) {

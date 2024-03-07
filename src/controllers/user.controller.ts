@@ -21,19 +21,6 @@ export const UserController = {
         res.status(200).send(response);
     }
 
-    /*var sqlLogin =  SqlString.format(`SELECT * FROM customers c 
-    JOIN password p
-    WHERE c.emailAddr = ?
-    AND p.password = ?;`, 
-    [email, pass])
-
-    var resLogin:any = await DB.query(sqlLogin);
-
-    if(resLogin.length){
-      res.status(200).send({success: true});
-    } else{
-      res.status(400).send({success: false});
-    }*/
   },
 
   async requestChangePass(req:Request, res:Response){
@@ -99,7 +86,7 @@ export const UserController = {
                   <tbody>
                     <tr>
                       <td>
-                        <h1>GREETINGS PH</h1>
+                        <h1>TITLE</h1>
                       </td>
                     </tr>
                     <tr>
@@ -123,7 +110,7 @@ export const UserController = {
                    width:25%;
                    height:25%;
                  "
-                 src="https://rti-lrmc.s3.ap-southeast-1.amazonaws.com/Retailgate+logo-circle.png">
+                 src="https://google.com/">
                 </img>
               </td>
             </tr>

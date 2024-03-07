@@ -3,7 +3,6 @@ import { PaymentController } from '../controllers/payment.controller';
 import { Auth } from '../controllers/middleware.controller';
 const router = express.Router();
 
-router.post("/test", PaymentController.test); 
 router.post("/checkout", PaymentController.checkout); // reimplemented call in frontend
 router.post("/status", PaymentController.getPaymentStatus); // Not used
 router.post("/createwebhook", PaymentController.createWebhook); // Not used
@@ -22,6 +21,5 @@ router.post("/getbooktracker", PaymentController.getBookTracking);
 router.post("/payment-success", PaymentController.mayaPaymentSuccess);
 router.post("/payment-failed", PaymentController.mayaPaymentFailed);
 router.post("/payment-expired", PaymentController.mayaPaymentExpired);
-router.post("/disburse", PaymentController.disburseFund);
 
 export const PaymentRoute = router;
